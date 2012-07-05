@@ -88,6 +88,7 @@ autoplot_pca <- function(object, type=c("observations", "variables"), mapping=ae
   } else if (type == "variables") {
     p <- autoplot_pca_vars(data=data, mapping=mapping)
 	}
+  # TODO add "all" as the default for type and return a list of plots + implement a print/plot method for this list of plots which prints like plot.lm() does (asking the user for the next plot is the session in interactive)
 
 	return(p)
 }
