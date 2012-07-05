@@ -65,7 +65,7 @@ autoplot.prcomp <- function(object, type=c("observations", "variables"), mapping
   autoplot_pca(object=object, type=type, mapping=mapping, ...)
 }
 
-#' @method autoplot prcomp
+#' @method autoplot PCA
 #' @rdname autoplot.pca
 #' @export
 autoplot.PCA <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {

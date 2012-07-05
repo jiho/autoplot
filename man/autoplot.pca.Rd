@@ -8,7 +8,7 @@
     type = c("observations", "variables"), mapping = aes(),
     ...)
 
-  \method{autoplot}{prcomp} (object,
+  \method{autoplot}{PCA} (object,
     type = c("observations", "variables"), mapping = aes(),
     ...)
 }
