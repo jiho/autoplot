@@ -17,11 +17,61 @@ varF <- fortify(pcaF, type="variables")
 
 # TODO add ade4
 
-test_that("eigenvalues are equal", {
-  eigS <- pcaS$sdev^2
-  eigF <- pcaF$eig$eigenvalue
+# PCA with pcaMethods::pca
+library("pcaMethods")
+pcaMsvd <- pca(d, method="svd", scale="uv", nPcs=3)
+obsMsvd <- fortify(pcaMsvd, type="observations")
+varMsvd <- fortify(pcaMsvd, type="variables")
 
-  expect_equal(eigS, eigF)
+
+test_that("eigenvalues are equal", {
+  # NB: those are computed inside the fortify methods but are not returned
+  #     here we only verify that the computations are accurate, but a change in the implementation is fortify won't affect the test
+  eigS    <- pcaS$sdev^2
+  eigF    <- pcaF$eig$eigenvalue
+  eigMsvd <- pcaMsvd@sDev^2
+
+  expect_equivalent(eigS, eigF)
+  expect_equivalent(eigS, eigMsvd)
 })
 
-# TODO add some more tests, comparing the values returned by the various fortify methods. Ideally, they should all be equivalent.
+
+test_that("scores are equivalent, proportional to each other", {
+  scoresS    <- obsS[,c(".PC1", ".PC2")]
+  scoresF    <- obsF[,c(".PC1", ".PC2")]
+  scoresMsvd <- obsMsvd[,c(".PC1", ".PC2")]
+
+  # FactoMineR scales scores differently from prcomp, test that the ratio is always the same
+  expect_true(length( unique( round( unlist( scoresS / scoresF ), 10) ) ) == 1)
+  expect_equivalent(scoresS, scoresMsvd)
+})
+
+test_that("loadings are equal or at least proportional to each other", {
+  loadingsS    <- varS[,c(".PC1", ".PC2")]
+  loadingsF    <- varF[,c(".PC1", ".PC2")]
+  loadingsMsvd <- varMsvd[,c(".PC1", ".PC2")]
+
+  expect_equivalent(loadingsS, loadingsF)
+  expect_equivalent(loadingsS, loadingsMsvd)
+})
+
+test_that("cos2 of observations are equal", {
+  expect_equal(obsS$.cos2, obsF$.cos2)
+  expect_equal(obsS$.cos2, obsMsvd$.cos2)
+})
+
+test_that("cos2 of variables are equal", {
+  expect_equal(varS$.cos2, varF$.cos2)
+  expect_equal(varS$.cos2, varMsvd$.cos2)
+})
+
+test_that("contributions of observations are equal", {
+  # FactoMineR scales contributions differently from prcomp, test that the ratio is always the same
+  expect_true(length( unique( round( obsS$.contrib / obsF$.contrib, 10) ) ) == 1)
+  expect_equal(obsS$.contrib, obsMsvd$.contrib)
+})
+
+test_that("contributions of variables are equal or at least proportional to each other", {
+  expect_equal(varS$.contrib, varF$.contrib)
+  expect_equal(varS$.contrib, varMsvd$.contrib)
+})
