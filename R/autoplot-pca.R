@@ -32,23 +32,19 @@
 #' \dontrun{
 #' # PCA with FactoMineR::PCA
 #' library("FactoMineR")
-#'
-#' # add a missing value
-#' d <- USArrests
-#' d[1,2] <- NA
 #' # use supplementary observations and variables
-#' pca <- PCA(d, scale = TRUE, graph=FALSE, ind.sup = 2, quanti.sup = 4)
+#' pca <- PCA(USArrests, scale = TRUE, graph=FALSE, ind.sup = 2, quanti.sup = 4)
 #'
-#' library("ggplot2")
 #' # colour is mapped by default
 #' autoplot(pca, type = "observations")
 #' autoplot(pca, type = "variables")
 #'
 #' # but the mapping can be overridden
-#' autoplot(pca, type = "obs", mapping = aes(colour=.cos2))
-#' autoplot(pca, type = "obs", mapping = aes(shape=.kind, colour=.contrib))
+#' autoplot(pca, type = "obs", mapping = aes(colour=.contrib))
+#' # and additional mappings can be specified
+#' autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.kind))
 #'
-#' # with FactoMineR, the data is present by default
+#' # with FactoMineR, the data is present by default and can be mapped
 #' names(fortify(pca, type = "obs"))
 #' autoplot(pca, "obs", aes(alpha=.cos2, size=Murder))
 #'
