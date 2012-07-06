@@ -1,4 +1,5 @@
 S3method(autoplot,PCA)
+S3method(autoplot,pcaRes)
 S3method(autoplot,prcomp)
 S3method(fortify,PCA)
 S3method(fortify,pcaRes)

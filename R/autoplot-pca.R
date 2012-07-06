@@ -48,6 +48,20 @@
 #' names(fortify(pca, type = "obs"))
 #' autoplot(pca, "obs", aes(alpha=.cos2, size=Murder))
 #'
+#' # PCA with pcaMethods::pca, from bioconductor
+#' library("pcaMethods")
+#' # equivalent to `prcomp`
+#' pca <- pca(USArrests, method="svd", scale="uv", completeObs=TRUE, nPcs=4)
+#'
+#' autoplot(pca)
+#' autoplot(pca, mapping=aes(alpha=.cos2))
+#' autoplot(pca, type="var")
+#'
+#' pca <- pca(USArrests, method="ppca", scale="uv", completeObs=TRUE, nPcs=4)
+#'
+#' autoplot(pca)
+#' autoplot(pca, type="var")
+#'
 #' }
 #'
 #' @aliases autoplot.pca autoplot.prcomp autoplot.PCA
@@ -69,6 +83,14 @@ autoplot.PCA <- function(object, type=c("observations", "variables"), mapping=ae
 }
 
 # TODO add a method for ade4
+
+#' @method autoplot pcaRes
+#' @rdname autoplot.pca
+#' @export
+autoplot.pcaRes <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
+  autoplot_pca(object=object, type=type, mapping=mapping, ...)
+}
+
 
 autoplot_pca <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
 

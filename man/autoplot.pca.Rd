@@ -1,6 +1,7 @@
 \name{autoplot.prcomp}
 \alias{autoplot.PCA}
 \alias{autoplot.pca}
+\alias{autoplot.pcaRes}
 \alias{autoplot.prcomp}
 \title{Automatic ggplot for a Principal Component Analysis}
 \usage{
@@ -9,6 +10,10 @@
     ...)
 
   \method{autoplot}{PCA} (object,
+    type = c("observations", "variables"), mapping = aes(),
+    ...)
+
+  \method{autoplot}{pcaRes} (object,
     type = c("observations", "variables"), mapping = aes(),
     ...)
 }
@@ -74,6 +79,20 @@ autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.k
 # with FactoMineR, the data is present by default and can be mapped
 names(fortify(pca, type = "obs"))
 autoplot(pca, "obs", aes(alpha=.cos2, size=Murder))
+
+# PCA with pcaMethods::pca, from bioconductor
+library("pcaMethods")
+# equivalent to `prcomp`
+pca <- pca(USArrests, method="svd", scale="uv", completeObs=TRUE, nPcs=4)
+
+autoplot(pca)
+autoplot(pca, mapping=aes(alpha=.cos2))
+autoplot(pca, type="var")
+
+pca <- pca(USArrests, method="ppca", scale="uv", completeObs=TRUE, nPcs=4)
+
+autoplot(pca)
+autoplot(pca, type="var")
 
 }
 }
