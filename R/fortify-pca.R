@@ -20,7 +20,7 @@
 #'
 #' @author Jean-Olivier Irisson \email{irisson@@normalesup.org}
 #'
-#' @seealso \code{\link[stats:prcomp]{prcomp}}, \code{\link[FactoMineR:PCA]{PCA}}
+#' @seealso , \code{\link[stats:prcomp]{prcomp}} in package stats, \code{\link[FactoMineR:PCA]{PCA}} in package FactoMineR, \code{\link[pcaMethods:pca]{pca}} in package pcaMethods, \link{autoplot_pca} to produce plots based on the output for \code{fortify}
 #'
 #' @examples
 #' # PCA with stats::prcomp
@@ -65,12 +65,14 @@
 #'
 #' }
 #'
-#' @aliases fortify.pca fortify.prcomp fortify.PCA
-#'
-# TODO Make it so that the help file actually prints fortify.pca as the function name
+
+# TODO this function is there only to change the name of the documentation file and avoid having fortify.prcomp appear as the topic in the help, but it shouldn't be exported and really shouldn't exist. There must be a solution to trick roxygen.
+fortify_pca <- function(model, data, type=c("observations", "variables"), PC=c(1,2), ...) {
+  invisible(NULL)
+}
 
 #' @method fortify prcomp
-#' @rdname fortify.pca
+#' @rdname fortify_pca
 #' @export
 fortify.prcomp <- function(model, data=NULL, type=c("observations", "variables"), PC=c(1,2), ...) {
   #
@@ -172,7 +174,7 @@ fortify.prcomp <- function(model, data=NULL, type=c("observations", "variables")
 }
 
 #' @method fortify PCA
-#' @rdname fortify.pca
+#' @rdname fortify_pca
 #' @export
 fortify.PCA <- function(model, data=model$call$X, type=c("observations", "variables"), PC=c(1,2), ...) {
   #
@@ -273,7 +275,7 @@ fortify.PCA <- function(model, data=model$call$X, type=c("observations", "variab
 # TODO add a method for ade4
 
 #' @method fortify pcaRes
-#' @rdname fortify.pca
+#' @rdname fortify_pca
 #' @export
 fortify.pcaRes <- function(model, data=model@completeObs, type=c("observations", "variables"), PC=c(1,2), ...) {
   #

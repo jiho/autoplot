@@ -4,15 +4,15 @@
 #'
 #' @param type whether to extract observations (i.e. rows, individuals) or variables (i.e. columns, descriptors); can be abbreviated
 #'
-#' @param mapping a call to aes() specifying additional mappings between variables and plot aesthetics; by default, positions in x and y are mapped to the scores or loadings on the principal components and colour is mapped to the nature of the data (active or supplementary) when relevant. See \link{fortify.pca} for a list of the other mappable variables returned by the \code{fortify} methods
+#' @param mapping a call to aes() specifying additional mappings between variables and plot aesthetics; by default, positions in x and y are mapped to the scores or loadings on the principal components and colour is mapped to the nature of the data (active or supplementary) when relevant. See \link{fortify_pca} for a list of the other mappable variables returned by the \code{fortify} methods
 #'
-#' @param ... passed to \code{\link{fortify.pca}}, in particular to provide the original data if it cannot be retrieved from the object or to select wich principal components to plot
+#' @param ... passed to \code{\link{fortify_pca}}, in particular to provide the original data if it cannot be retrieved from the object or to select wich principal components to plot
 #'
 #' @return A ggplot2 object defining the plot
 #'
 #' @author Jean-Olivier Irisson \email{irisson@@normalesup.org}
 #'
-#' @seealso \link{fortify.pca}, \code{\link[stats:prcomp]{prcomp}}, \code{\link[FactoMineR:PCA]{PCA}}
+#' @seealso \link{fortify_pca}, \code{\link[stats:prcomp]{prcomp}} in package stats, \code{\link[FactoMineR:PCA]{PCA}} in package FactoMineR, \code{\link[pcaMethods:pca]{pca}} in package pcaMethods
 #'
 #' @examples
 #' # PCA with stats::prcomp
@@ -59,34 +59,9 @@
 #'
 #' }
 #'
-#' @aliases autoplot.pca autoplot.prcomp autoplot.PCA
-#'
 # TODO actually describe the plots, layers, mappings, as recommended on https://github.com/hadley/ggplot2/wiki/autoplot
 
-#' @method autoplot prcomp
-#' @rdname autoplot.pca
 #' @export
-autoplot.prcomp <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
-  autoplot_pca(object=object, type=type, mapping=mapping, ...)
-}
-
-#' @method autoplot PCA
-#' @rdname autoplot.pca
-#' @export
-autoplot.PCA <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
-  autoplot_pca(object=object, type=type, mapping=mapping, ...)
-}
-
-# TODO add a method for ade4
-
-#' @method autoplot pcaRes
-#' @rdname autoplot.pca
-#' @export
-autoplot.pcaRes <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
-  autoplot_pca(object=object, type=type, mapping=mapping, ...)
-}
-
-
 autoplot_pca <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
 
   # check arguments
@@ -109,6 +84,29 @@ autoplot_pca <- function(object, type=c("observations", "variables"), mapping=ae
   class(p) <- c("ggplot_list", "list")
 
   return(p)
+}
+
+#' @method autoplot prcomp
+#' @rdname autoplot_pca
+#' @export
+autoplot.prcomp <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
+  autoplot_pca(object=object, type=type, mapping=mapping, ...)
+}
+
+#' @method autoplot PCA
+#' @rdname autoplot_pca
+#' @export
+autoplot.PCA <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
+  autoplot_pca(object=object, type=type, mapping=mapping, ...)
+}
+
+# TODO add a method for ade4
+
+#' @method autoplot pcaRes
+#' @rdname autoplot_pca
+#' @export
+autoplot.pcaRes <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
+  autoplot_pca(object=object, type=type, mapping=mapping, ...)
 }
 
 autoplot_pca_axes_labels <- function(data) {

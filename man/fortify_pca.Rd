@@ -1,10 +1,14 @@
-\name{fortify.prcomp}
+\name{fortify_pca}
 \alias{fortify.PCA}
-\alias{fortify.pca}
 \alias{fortify.pcaRes}
 \alias{fortify.prcomp}
+\alias{fortify_pca}
 \title{Extract information from a Principal Component Analysis into a data.frame}
 \usage{
+  fortify_pca(model, data,
+    type = c("observations", "variables"), PC = c(1, 2),
+    ...)
+
   \method{fortify}{prcomp} (model, data = NULL,
     type = c("observations", "variables"), PC = c(1, 2),
     ...)
@@ -103,7 +107,10 @@ fortify(pca, type="var")
   Jean-Olivier Irisson \email{irisson@normalesup.org}
 }
 \seealso{
-  \code{\link[stats:prcomp]{prcomp}},
-  \code{\link[FactoMineR:PCA]{PCA}}
+  , \code{\link[stats:prcomp]{prcomp}} in package stats,
+  \code{\link[FactoMineR:PCA]{PCA}} in package FactoMineR,
+  \code{\link[pcaMethods:pca]{pca}} in package pcaMethods,
+  \link{autoplot_pca} to produce plots based on the output
+  for \code{fortify}
 }
 

@@ -1,10 +1,14 @@
-\name{autoplot.prcomp}
+\name{autoplot_pca}
 \alias{autoplot.PCA}
-\alias{autoplot.pca}
 \alias{autoplot.pcaRes}
 \alias{autoplot.prcomp}
+\alias{autoplot_pca}
 \title{Automatic ggplot for a Principal Component Analysis}
 \usage{
+  autoplot_pca(object,
+    type = c("observations", "variables"), mapping = aes(),
+    ...)
+
   \method{autoplot}{prcomp} (object,
     type = c("observations", "variables"), mapping = aes(),
     ...)
@@ -31,11 +35,11 @@
   default, positions in x and y are mapped to the scores or
   loadings on the principal components and colour is mapped
   to the nature of the data (active or supplementary) when
-  relevant. See \link{fortify.pca} for a list of the other
+  relevant. See \link{fortify_pca} for a list of the other
   mappable variables returned by the \code{fortify}
   methods}
 
-  \item{...}{passed to \code{\link{fortify.pca}}, in
+  \item{...}{passed to \code{\link{fortify_pca}}, in
   particular to provide the original data if it cannot be
   retrieved from the object or to select wich principal
   components to plot}
@@ -95,7 +99,9 @@ autoplot(pca)
   Jean-Olivier Irisson \email{irisson@normalesup.org}
 }
 \seealso{
-  \link{fortify.pca}, \code{\link[stats:prcomp]{prcomp}},
-  \code{\link[FactoMineR:PCA]{PCA}}
+  \link{fortify_pca}, \code{\link[stats:prcomp]{prcomp}} in
+  package stats, \code{\link[FactoMineR:PCA]{PCA}} in
+  package FactoMineR, \code{\link[pcaMethods:pca]{pca}} in
+  package pcaMethods
 }
 
