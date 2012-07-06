@@ -81,7 +81,7 @@ autoplot_pca <- function(object, type=c("observations", "variables"), mapping=ae
   }
 
   # give the output a special class with an appropriate print method
-  class(p) <- c("ggplot_list", "list")
+  class(p) <- c("ggplot_list", "ggplot", "list")
 
   return(p)
 }
