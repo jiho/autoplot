@@ -56,7 +56,7 @@
 #'
 #' # PCA with pcaMethods::pca, from bioconductor
 #' library("pcaMethods")
-#' pca <- pca(d, method = "svd", scale = "uv", completeObs = TRUE)
+#' pca <- pca(d, method = "svd", scale = "uv", completeObs = TRUE, nPcs = 4)
 #'
 #' # the missing value is imputed by iterative PCA
 #' head(fortify(pca))
