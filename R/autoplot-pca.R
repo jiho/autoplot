@@ -167,7 +167,7 @@ autoplot_pca_vars <- function(data, mapping) {
   return(p)
 }
 
-autoplot_pca_obs <- function(data, mapping, var) {
+autoplot_pca_obs <- function(data, mapping) {
 
 	# Construct default aesthetic mappings
   # get PC numbers
