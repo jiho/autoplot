@@ -42,7 +42,7 @@ print.ggplot_list <- function(x) {
   if (length(x) > 1) {
     # ask for the next plots if the device is interactive
     devAsk <- devAskNewPage()
-    if (dev.interactive() | names(dev.cur()) == "null device") {
+    if (dev.interactive() || names(dev.cur()) == "null device") {
       devAskNewPage(TRUE)
     }
 
