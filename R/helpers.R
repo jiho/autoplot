@@ -18,7 +18,7 @@ choose_plots <- function(type, choices) {
   # character
   else if (is.character(type)){
     # allow abbreviations
-  	type <- match.arg(type, choices, several.ok=TRUE)
+    type <- match.arg(type, choices, several.ok=TRUE)
   } 
 
   else {

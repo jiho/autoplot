@@ -76,89 +76,89 @@ fortify.prcomp <- function(model, data=NULL, type=c("observations", "variables")
   #
   # Method for stats::prcomp
   #
-	# NB: those objects do not contain the original data, so data is NULL by default
+  # NB: those objects do not contain the original data, so data is NULL by default
   #
 
-	# Checks
-	if (any(PC > ncol(model$x))) {
-		stop("At least one of the principal components does not exist")
-	}
-	if (length(PC) < 1) {
-		stop("You must choose at least one principal component")
-	}
-	if (length(PC) > 2) {
-		warning("Extracting information for more than two principal components. The plot might be difficult to read.")
-	}
+  # Checks
+  if (any(PC > ncol(model$x))) {
+    stop("At least one of the principal components does not exist")
+  }
+  if (length(PC) < 1) {
+    stop("You must choose at least one principal component")
+  }
+  if (length(PC) > 2) {
+    warning("Extracting information for more than two principal components. The plot might be difficult to read.")
+  }
   type <- match.arg(type)
 
 
   # Compute variance explained
-	# eigenvalues (scaled to be homogeneous with other packages)
-	eig <- model$sdev^2
-	# variance explained by each PC
-	explainedVar <- eig / sum(eig)
-	explainedVar <- explainedVar[PC]
+  # eigenvalues (scaled to be homogeneous with other packages)
+  eig <- model$sdev^2
+  # variance explained by each PC
+  explainedVar <- eig / sum(eig)
+  explainedVar <- explainedVar[PC]
 
 
   # Extract appropriate data
   if (type == "variables") {
 
-  	# Variables
-  	# variable identifier
-  	.id <- row.names(model$rotation)
+    # Variables
+    # variable identifier
+    .id <- row.names(model$rotation)
 
-  	# loadings on the PCs
-  	loadings <- as.data.frame((t(t(model$rotation)*model$sdev)))
+    # loadings on the PCs
+    loadings <- as.data.frame((t(t(model$rotation)*model$sdev)))
     # TODO select PCs here rather than later and save a bit of memory/cpu?
-  	# NB: loadings are scaled by std deviation, to be consistent with FactoMineR and ADE4, but this will result in a plot different from the one produced by stat::biplot, where loadings are not scaled
-  	names(loadings) <- paste(".", names(loadings), sep="")
+    # NB: loadings are scaled by std deviation, to be consistent with FactoMineR and ADE4, but this will result in a plot different from the one produced by stat::biplot, where loadings are not scaled
+    names(loadings) <- paste(".", names(loadings), sep="")
 
-  	# squared cosine: quality of the representation on the current space
-  	.cos2 <- ( loadings / sqrt(rowSums(loadings^2)) )^2
-  	.cos2 <- .cos2[,PC]
+    # squared cosine: quality of the representation on the current space
+    .cos2 <- ( loadings / sqrt(rowSums(loadings^2)) )^2
+    .cos2 <- .cos2[,PC]
 
-  	# contribution to the current PCs
-  	.contrib <- as.data.frame(t(t(loadings^2) / eig)) * 100
-  	.contrib <- .contrib[,PC]
+    # contribution to the current PCs
+    .contrib <- as.data.frame(t(t(loadings^2) / eig)) * 100
+    .contrib <- .contrib[,PC]
 
-  	if (length(PC > 1)) {
-  		# the squared cos are additive
-  		.cos2 <- rowSums(.cos2)
-  		# contributions are scaled by the percentage of variance explained by each PC so that the contribution displayed is the contribution to the total variance projectable in the current space
-  		.contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
-  	}
+    if (length(PC > 1)) {
+      # the squared cos are additive
+      .cos2 <- rowSums(.cos2)
+      # contributions are scaled by the percentage of variance explained by each PC so that the contribution displayed is the contribution to the total variance projectable in the current space
+      .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
+    }
 
-  	res <- data.frame(.id, loadings[,PC], .cos2, .contrib, .kind=type)
+    res <- data.frame(.id, loadings[,PC], .cos2, .contrib, .kind=type)
 
   }
   else if (type == "observations") {
 
-  	# Observations
-  	# observation identifier
-  	.id <- row.names(model$x)
+    # Observations
+    # observation identifier
+    .id <- row.names(model$x)
     if (is.null(.id)) {
       .id <- 1:nrow(model$x)
     }
 
-  	# scores (i.e. coordinates) on the PCs
-  	scores <- as.data.frame(model$x[,PC])
-  	names(scores) <- paste(".", names(scores), sep="")
-  	# TODO check why these are different from ind$coord of FactoMineR (the difference is a scale factor which is always the same: 1.11803398874989)
+    # scores (i.e. coordinates) on the PCs
+    scores <- as.data.frame(model$x[,PC])
+    names(scores) <- paste(".", names(scores), sep="")
+    # TODO check why these are different from ind$coord of FactoMineR (the difference is a scale factor which is always the same: 1.11803398874989)
 
-  	# square cosine
-  	.cos2 <- ( model$x^2 / rowSums(model$x^2) )
-  	.cos2 <- .cos2[,PC]
+    # square cosine
+    .cos2 <- ( model$x^2 / rowSums(model$x^2) )
+    .cos2 <- .cos2[,PC]
 
-  	# contributions
-  	.contrib <- as.data.frame( t( t(model$x^2) * (1/nrow(model$x)) / eig ) ) * 100
-  	.contrib <- .contrib[,PC]
+    # contributions
+    .contrib <- as.data.frame( t( t(model$x^2) * (1/nrow(model$x)) / eig ) ) * 100
+    .contrib <- .contrib[,PC]
 
-  	if (length(PC > 1)) {
-  		.cos2 <- rowSums(.cos2)
-  		.contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
-  	}
+    if (length(PC > 1)) {
+      .cos2 <- rowSums(.cos2)
+      .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
+    }
 
-  	res <- data.frame(.id, scores, .cos2, .contrib, .kind=type)
+    res <- data.frame(.id, scores, .cos2, .contrib, .kind=type)
     if (!is.null(data)) {
       res <- cbind(data, res)
     }
@@ -168,7 +168,7 @@ fortify.prcomp <- function(model, data=NULL, type=c("observations", "variables")
   # store variance explained as attribute
   attr(res, "explained.variance") <- explainedVar
 
-	return(res)
+  return(res)
 }
 
 #' @method fortify PCA
@@ -179,22 +179,22 @@ fortify.PCA <- function(model, data=model$call$X, type=c("observations", "variab
   # Method for FactoMineR::PCA
   #
 
-	# Checks
-	if (any(PC > ncol(model$x))) {
-		stop("At least one of the principal components does not exist")
-	}
-	if (length(PC) < 1) {
-		stop("You must choose at least one principal component")
-	}
-	if (length(PC) > 2) {
-		warning("Extracting information for more than two principal components. The plot might be difficult to read.")
-	}
+  # Checks
+  if (any(PC > ncol(model$x))) {
+    stop("At least one of the principal components does not exist")
+  }
+  if (length(PC) < 1) {
+    stop("You must choose at least one principal component")
+  }
+  if (length(PC) > 2) {
+    warning("Extracting information for more than two principal components. The plot might be difficult to read.")
+  }
   type <- match.arg(type)
 
 
   # Compute variance explained
-	explainedVar <- model$eig$eigenvalue / sum(model$eig$eigenvalue)
-	explainedVar <- explainedVar[PC]
+  explainedVar <- model$eig$eigenvalue / sum(model$eig$eigenvalue)
+  explainedVar <- explainedVar[PC]
 
 
   # Extract appropriate data
@@ -206,50 +206,50 @@ fortify.PCA <- function(model, data=model$call$X, type=c("observations", "variab
   }
 
   # prepare storage
-	d <- list()
+  d <- list()
 
-	for (i in extract) {
+  for (i in extract) {
 
-		if (!is.null(model[[i]])) {
+    if (!is.null(model[[i]])) {
 
-			# variable identifier
-			.id <- row.names(model[[i]]$coord)
+      # variable identifier
+      .id <- row.names(model[[i]]$coord)
 
-			# scores on the PC
-			scores <- as.data.frame(model[[i]]$coord[,PC])
-			names(scores) <- paste(".PC", PC, sep="")
+      # scores on the PC
+      scores <- as.data.frame(model[[i]]$coord[,PC])
+      names(scores) <- paste(".PC", PC, sep="")
 
-			# square cosine : quality of the representation on the current space
-			.cos2=model[[i]]$cos2[,PC]
-			if (length(PC > 1)) {
-				.cos2 <- rowSums(.cos2)
-			}
+      # square cosine : quality of the representation on the current space
+      .cos2=model[[i]]$cos2[,PC]
+      if (length(PC > 1)) {
+        .cos2 <- rowSums(.cos2)
+      }
 
-			# contribution to the current PCs (for active variables and individuals only)
-			if ("contrib" %in% names(model[[i]])) {
-				.contrib=model[[i]]$contrib[,PC]
-				if (length(PC > 1)) {
-					.contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
-				}
-			} else {
-				.contrib <- 0
-			}
+      # contribution to the current PCs (for active variables and individuals only)
+      if ("contrib" %in% names(model[[i]])) {
+        .contrib=model[[i]]$contrib[,PC]
+        if (length(PC > 1)) {
+          .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
+        }
+      } else {
+        .contrib <- 0
+      }
 
-			# TODO what is "cor" and what to do with it?
+      # TODO what is "cor" and what to do with it?
 
       # prepare result
-			cD <- data.frame(.id, scores, .cos2, .contrib, .kind=i, stringsAsFactors=FALSE)
+      cD <- data.frame(.id, scores, .cos2, .contrib, .kind=i, stringsAsFactors=FALSE)
 
-		} else {
+    } else {
 
-			cD <- NULL
+      cD <- NULL
 
-		}
+    }
 
     # store the result
-		d <- c(d, list(cD))
+    d <- c(d, list(cD))
 
-	}
+  }
 
   # put everything in the same data.frame
   d <- do.call(rbind, d)
@@ -267,7 +267,7 @@ fortify.PCA <- function(model, data=model$call$X, type=c("observations", "variab
   # store variance explained are attribute
   attr(d, "explained.variance") <- explainedVar
 
-	return(d)
+  return(d)
 }
 
 # TODO add a method for ade4
@@ -280,85 +280,85 @@ fortify.pcaRes <- function(model, data=model@completeObs, type=c("observations",
   # Method for pcaMethods::pca
   #
 
-	# Checks
-	if (any(PC > ncol(model@scores))) {
-		stop("At least one of the principal components does not exist")
-	}
-	if (length(PC) < 1) {
-		stop("You must choose at least one principal component")
-	}
-	if (length(PC) > 2) {
-		warning("Extracting information for more than two principal components. The plot might be difficult to read.")
-	}
+  # Checks
+  if (any(PC > ncol(model@scores))) {
+    stop("At least one of the principal components does not exist")
+  }
+  if (length(PC) < 1) {
+    stop("You must choose at least one principal component")
+  }
+  if (length(PC) > 2) {
+    warning("Extracting information for more than two principal components. The plot might be difficult to read.")
+  }
   type <- match.arg(type)
 
 
   # Compute variance explained
-	# eigenvalues (scaled to be homogeneous with other packages)
-	eig <- model@sDev^2
-	# variance explained by each PC
-	explainedVar <- eig / sum(eig)
-	explainedVar <- explainedVar[PC]
+  # eigenvalues (scaled to be homogeneous with other packages)
+  eig <- model@sDev^2
+  # variance explained by each PC
+  explainedVar <- eig / sum(eig)
+  explainedVar <- explainedVar[PC]
 
 
   # Extract appropriate data
   if (type == "variables") {
 
-  	# Variables
-  	# variable identifier
-  	.id <- row.names(model@loadings)
+    # Variables
+    # variable identifier
+    .id <- row.names(model@loadings)
 
-  	# loadings on the PCs
-  	loadings <- as.data.frame((t(t(model@loadings)*model@sDev)))
+    # loadings on the PCs
+    loadings <- as.data.frame((t(t(model@loadings)*model@sDev)))
     # TODO select PCs here rather than later and save a bit of memory/cpu?
-  	# NB: loadings are scaled by std deviation, to be consistent with FactoMineR and ADE4, but this will result in a plot different from the one produced by stat::biplot, where loadings are not scaled
-  	names(loadings) <- paste(".", names(loadings), sep="")
+    # NB: loadings are scaled by std deviation, to be consistent with FactoMineR and ADE4, but this will result in a plot different from the one produced by stat::biplot, where loadings are not scaled
+    names(loadings) <- paste(".", names(loadings), sep="")
 
-  	# squared cosine: quality of the representation on the current space
-  	.cos2 <- ( loadings / sqrt(rowSums(loadings^2)) )^2
-  	.cos2 <- .cos2[,PC]
+    # squared cosine: quality of the representation on the current space
+    .cos2 <- ( loadings / sqrt(rowSums(loadings^2)) )^2
+    .cos2 <- .cos2[,PC]
 
-  	# contribution to the current PCs
-  	.contrib <- as.data.frame(t(t(loadings^2) / eig)) * 100
-  	.contrib <- .contrib[,PC]
+    # contribution to the current PCs
+    .contrib <- as.data.frame(t(t(loadings^2) / eig)) * 100
+    .contrib <- .contrib[,PC]
 
-  	if (length(PC > 1)) {
-  		# the squared cos are additive
-  		.cos2 <- rowSums(.cos2)
-  		# contributions are scaled by the percentage of variance explained by each PC so that the contribution displayed is the contribution to the total variance projectable in the current space
-  		.contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
-  	}
+    if (length(PC > 1)) {
+      # the squared cos are additive
+      .cos2 <- rowSums(.cos2)
+      # contributions are scaled by the percentage of variance explained by each PC so that the contribution displayed is the contribution to the total variance projectable in the current space
+      .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
+    }
 
-  	res <- data.frame(.id, loadings[,PC], .cos2, .contrib, .kind=type)
+    res <- data.frame(.id, loadings[,PC], .cos2, .contrib, .kind=type)
 
   }
   else if (type == "observations") {
 
-  	# Observations
-  	# observation identifier
-  	.id <- row.names(model@scores)
+    # Observations
+    # observation identifier
+    .id <- row.names(model@scores)
     if (is.null(.id)) {
       .id <- 1:nrow(model@scores)
     }
 
-  	# scores (i.e. coordinates) on the PCs
-  	scores <- as.data.frame(model@scores[,PC])
-  	names(scores) <- paste(".", names(scores), sep="")
+    # scores (i.e. coordinates) on the PCs
+    scores <- as.data.frame(model@scores[,PC])
+    names(scores) <- paste(".", names(scores), sep="")
 
-  	# square cosine
-  	.cos2 <- ( model@scores^2 / rowSums(model@scores^2) )
-  	.cos2 <- .cos2[,PC]
+    # square cosine
+    .cos2 <- ( model@scores^2 / rowSums(model@scores^2) )
+    .cos2 <- .cos2[,PC]
 
-  	# contributions
-  	.contrib <- as.data.frame( t( t(model@scores^2) * (1/nrow(model@scores)) / eig ) ) * 100
-  	.contrib <- .contrib[,PC]
+    # contributions
+    .contrib <- as.data.frame( t( t(model@scores^2) * (1/nrow(model@scores)) / eig ) ) * 100
+    .contrib <- .contrib[,PC]
 
-  	if (length(PC > 1)) {
-  		.cos2 <- rowSums(.cos2)
-  		.contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
-  	}
+    if (length(PC > 1)) {
+      .cos2 <- rowSums(.cos2)
+      .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
+    }
 
-  	res <- data.frame(.id, scores, .cos2, .contrib, .kind=type)
+    res <- data.frame(.id, scores, .cos2, .contrib, .kind=type)
     if (!is.null(data)) {
       res <- cbind(data, res)
     }
@@ -368,6 +368,6 @@ fortify.pcaRes <- function(model, data=model@completeObs, type=c("observations",
   # store variance explained as attribute
   attr(res, "explained.variance") <- explainedVar
 
-	return(res)
+  return(res)
 }
 
