@@ -28,3 +28,4 @@ Collate:
     'autoplot-package.R'
     'autoplot-pca.R'
     'fortify-pca.R'
+    'helpers.R'

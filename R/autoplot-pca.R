@@ -19,8 +19,7 @@
 #' pca <- prcomp(USArrests, scale = TRUE)
 #'
 #' library("ggplot2")
-#' autoplot(pca, type = "observations")
-#' autoplot(pca, type = "variables")
+#' autoplot(pca)
 #'
 #' # add further aesthetic mappings
 #' names(fortify(pca, type = "obs"))
@@ -36,8 +35,7 @@
 #' pca <- PCA(USArrests, scale = TRUE, graph=FALSE, ind.sup = 2, quanti.sup = 4)
 #'
 #' # colour is mapped by default
-#' autoplot(pca, type = "observations")
-#' autoplot(pca, type = "variables")
+#' autoplot(pca)
 #'
 #' # but the mapping can be overridden
 #' autoplot(pca, type = "obs", mapping = aes(colour=.contrib))
@@ -52,15 +50,12 @@
 #' library("pcaMethods")
 #' # equivalent to `prcomp`
 #' pca <- pca(USArrests, method="svd", scale="uv", completeObs=TRUE, nPcs=4)
-#'
 #' autoplot(pca)
-#' autoplot(pca, mapping=aes(alpha=.cos2))
-#' autoplot(pca, type="var")
+#' autoplot(pca, type="obs", mapping=aes(alpha=.cos2))
 #'
+#' # other computation method specific to pcaMethods
 #' pca <- pca(USArrests, method="ppca", scale="uv", completeObs=TRUE, nPcs=4)
-#'
 #' autoplot(pca)
-#' autoplot(pca, type="var")
 #'
 #' }
 #'
@@ -95,18 +90,23 @@ autoplot.pcaRes <- function(object, type=c("observations", "variables"), mapping
 autoplot_pca <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
 
 	# check arguments
-	type <- match.arg(type)
+	type <- choose_plots(type, choices=c("observations", "variables"))
 
-	# extract data
-	data <- fortify(object, type=type, ...)
+  # prepare the appropriate plots
+  p <- list()
 
-  # perform the appropriate plot
-	if (type == "observations") {
-    p <- autoplot_pca_obs(data=data, mapping=mapping)
-  } else if (type == "variables") {
-    p <- autoplot_pca_vars(data=data, mapping=mapping)
+	if ("observations" %in% type) {
+  	data <- fortify(object, type="observations", ...)
+    p <- c(p, list(observations=autoplot_pca_obs(data=data, mapping=mapping)))
+  }
+
+  if ("variables" %in% type) {
+  	data <- fortify(object, type="variables", ...)
+    p <- c(p, list(variables=autoplot_pca_vars(data=data, mapping=mapping)))
 	}
-  # TODO add "all" as the default for type and return a list of plots + implement a print/plot method for this list of plots which prints like plot.lm() does (asking the user for the next plot is the session in interactive)
+
+  # give the output a special class with an appropriate print method
+  class(p) <- c("ggplot_list", "list")
 
 	return(p)
 }

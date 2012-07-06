@@ -51,8 +51,7 @@
 pca <- prcomp(USArrests, scale = TRUE)
 
 library("ggplot2")
-autoplot(pca, type = "observations")
-autoplot(pca, type = "variables")
+autoplot(pca)
 
 # add further aesthetic mappings
 names(fortify(pca, type = "obs"))
@@ -68,8 +67,7 @@ library("FactoMineR")
 pca <- PCA(USArrests, scale = TRUE, graph=FALSE, ind.sup = 2, quanti.sup = 4)
 
 # colour is mapped by default
-autoplot(pca, type = "observations")
-autoplot(pca, type = "variables")
+autoplot(pca)
 
 # but the mapping can be overridden
 autoplot(pca, type = "obs", mapping = aes(colour=.contrib))
@@ -84,15 +82,12 @@ autoplot(pca, "obs", aes(alpha=.cos2, size=Murder))
 library("pcaMethods")
 # equivalent to `prcomp`
 pca <- pca(USArrests, method="svd", scale="uv", completeObs=TRUE, nPcs=4)
-
 autoplot(pca)
-autoplot(pca, mapping=aes(alpha=.cos2))
-autoplot(pca, type="var")
+autoplot(pca, type="obs", mapping=aes(alpha=.cos2))
 
+# other computation method specific to pcaMethods
 pca <- pca(USArrests, method="ppca", scale="uv", completeObs=TRUE, nPcs=4)
-
 autoplot(pca)
-autoplot(pca, type="var")
 
 }
 }
