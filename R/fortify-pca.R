@@ -46,7 +46,6 @@
 #' # use supplementary observations and variables
 #' pca <- PCA(d, scale = TRUE, graph=FALSE, ind.sup = 2, quanti.sup = 4)
 #'
-#' library("ggplot2")
 #' # the missing value is replaced by the column mean
 #' # the supplementary observation is identified as such
 #' head(fortify(pca))
