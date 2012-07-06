@@ -1,6 +1,7 @@
 \name{fortify.prcomp}
 \alias{fortify.PCA}
 \alias{fortify.pca}
+\alias{fortify.pcaRes}
 \alias{fortify.prcomp}
 \title{Extract information from a Principal Component Analysis into a data.frame}
 \usage{
@@ -11,11 +12,18 @@
   \method{fortify}{PCA} (model, data = model$call$X,
     type = c("observations", "variables"), PC = c(1, 2),
     ...)
+
+  \method{fortify}{pcaRes} (model,
+    data = model@completeObs,
+    type = c("observations", "variables"), PC = c(1, 2),
+    ...)
 }
 \arguments{
   \item{model}{an object resulting from a PCA, using
-  \code{\link[stats:prcomp]{stats::prcomp}} or
-  \code{\link[FactoMineR:PCA]{FactoMineR::PCA}}}
+  \code{\link[stats:prcomp]{stats::prcomp}},
+  \code{\link[FactoMineR:PCA]{FactoMineR::PCA}} or
+  \code{\link[pcaMethods:pca]{pcaMethods::pca}} (from
+  bioconductor)}
 
   \item{data}{the original data used to compute the PCA, to
   be concatenated to the output when extracting
@@ -80,6 +88,15 @@ head(fortify(pca, data = d))
 
 # the supplementary variable is identified as such
 fortify(pca, type = "variables")
+
+# PCA with pcaMethods::pca, from bioconductor
+library("pcaMethods")
+pca <- pca(d, method="svd", scale="uv", completeObs=T)
+
+# the missing value is imputed by iterative PCA
+head(fortify(pca))
+
+fortify(pca, type="var")
 
 }
 }

@@ -1,6 +1,7 @@
 S3method(autoplot,PCA)
 S3method(autoplot,prcomp)
 S3method(fortify,PCA)
+S3method(fortify,pcaRes)
 S3method(fortify,prcomp)
 importFrom(ggplot2,autoplot)
 importFrom(ggplot2,fortify)
