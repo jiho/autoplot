@@ -44,7 +44,7 @@
 #' d <- USArrests
 #' d[1,2] <- NA
 #' # use supplementary observations and variables
-#' pca <- PCA(d, scale = TRUE, graph=FALSE, ind.sup = 2, quanti.sup = 4)
+#' pca <- PCA(d, scale = TRUE, graph = FALSE, ind.sup = 2, quanti.sup = 4)
 #'
 #' # the missing value is replaced by the column mean
 #' # the supplementary observation is identified as such
@@ -56,7 +56,7 @@
 #'
 #' # PCA with pcaMethods::pca, from bioconductor
 #' library("pcaMethods")
-#' pca <- pca(d, method="svd", scale="uv", completeObs=T)
+#' pca <- pca(d, method = "svd", scale = "uv", completeObs = TRUE)
 #'
 #' # the missing value is imputed by iterative PCA
 #' head(fortify(pca))
