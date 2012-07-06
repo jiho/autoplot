@@ -99,7 +99,7 @@ autoplot_pca <- function(object, type=c("observations", "variables"), mapping=ae
 
 	# extract data
 	data <- fortify(object, type=type, ...)
-  
+
   # perform the appropriate plot
 	if (type == "observations") {
     p <- autoplot_pca_obs(data=data, mapping=mapping)
@@ -116,14 +116,14 @@ autoplot_pca_axes_labels <- function(data) {
 
   # get variance explained
   explVar <- attr(data, "explained.variance") * 100
-  
+
   # get PC numbers
 	PCs <- grep("PC", names(data), value=TRUE)
   PCs <- sub(".", "", PCs, fixed=TRUE)
-  
+
   # concatenate with variance explained
 	axesLabels <- paste(PCs, " (", format(explVar, digits=3), "%)", sep="")
-  
+
   return(axesLabels)
 }
 
@@ -142,7 +142,7 @@ autoplot_pca_vars <- function(data, mapping) {
 	p <- ggplot(data, mapping=mapping)
 
 	# set plot aspect
-	p <- p + 
+	p <- p +
     # square
     coord_fixed() +
   	# plot a circle of radius 1
@@ -163,7 +163,7 @@ autoplot_pca_vars <- function(data, mapping) {
 	# nice axes labels
   axesLabels <- autoplot_pca_axes_labels(data)
 	p <- p + scale_x_continuous(axesLabels[1], breaks=seq(-1,1,0.5)) + scale_y_continuous(axesLabels[2], breaks=seq(-1,1,0.5))
-  
+
   return(p)
 }
 

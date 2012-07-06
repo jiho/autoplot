@@ -163,7 +163,7 @@ fortify.prcomp <- function(model, data=NULL, type=c("observations", "variables")
       res <- cbind(data, res)
     }
   }
-  
+
 
   # store variance explained as attribute
   attr(res, "explained.variance") <- explainedVar
