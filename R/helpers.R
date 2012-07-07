@@ -28,7 +28,7 @@ choose_plots <- function(type, choices) {
   return(type)
 }
 
-
+#' @export
 print.ggplot_list <- function(x) {
   #
   # Print a list of ggplots
@@ -56,5 +56,6 @@ print.ggplot_list <- function(x) {
   return(invisible(x))
 }
 
+#' @export
 plot.ggplot_list <- print.ggplot_list
  
