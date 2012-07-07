@@ -28,8 +28,17 @@ choose_plots <- function(type, choices) {
   return(type)
 }
 
+#' Draw a several plots successively on current graphics device
+#'
+#' When plotting several plots on an interactive device, the user is given the chance to examine each successive plot and has to press enter to see the next one.
+#' When plotting to a file, all plots are produced in sequence, without user interaction. This results in several pages in a PDF file. For image files (JPEG, PNG, etc.) the file name has to contain a numeric placeholder to produce several files instead of overwritting them (e.g. "Rplot%03d.png").
+#'
+#' @param x list of ggplots to display
+#' @param ... other arguments not used by this method
+#'
+#' @method print ggplot_list
 #' @export
-print.ggplot_list <- function(x) {
+print.ggplot_list <- function(x, ...) {
   #
   # Print a list of ggplots
   # Ask for the next plot when plotting interactively
@@ -56,6 +65,8 @@ print.ggplot_list <- function(x) {
   return(invisible(x))
 }
 
+#' @method plot ggplot_list
+#' @rdname print.ggplot_list
 #' @export
 plot.ggplot_list <- print.ggplot_list
  
