@@ -80,8 +80,18 @@ autoplot_pca <- function(object, type=c("observations", "variables"), mapping=ae
     p <- c(p, list(variables=autoplot_pca_vars(data=data, mapping=mapping)))
   }
 
-  # give the output a special class with an appropriate print method
-  class(p) <- c("ggplot_list", "ggplot", "list")
+  if (length(p) == 1) {
+    # when there is only one plot, just return it instead of a list
+    # this allows to do
+    #   autoplot() + geom_***
+    # instead of having to do
+    #   autoplot()[[1]] + geom_***
+    # which is not very intuitive
+    p <- p[[1]]
+  } else {
+    # give the output a special class with an appropriate print method
+    class(p) <- c("ggplot_list", "ggplot", "list")
+  }
 
   return(p)
 }
