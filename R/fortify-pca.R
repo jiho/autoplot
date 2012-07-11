@@ -64,6 +64,7 @@
 #'
 #' }
 #'
+#' @importFrom plyr join
 
 # TODO this function is there only to change the name of the documentation file and avoid having fortify.prcomp appear as the topic in the help, but it shouldn't be exported and really shouldn't exist. There must be a solution to trick roxygen.
 fortify_pca <- function(model, data=NULL, type=c("observations", "variables"), PC=c(1,2), ...) {
@@ -161,7 +162,8 @@ fortify.prcomp <- function(model, data=NULL, type=c("observations", "variables")
 
     res <- data.frame(.id, scores, .cos2, .contrib, .kind=type)
     if (!is.null(data)) {
-      res <- cbind(data, res)
+      data$.id <- row.names(data)
+      res <- join(data, res, by=".id", type="full")
     }
   }
 
@@ -175,7 +177,6 @@ fortify.prcomp <- function(model, data=NULL, type=c("observations", "variables")
 #' @method fortify PCA
 #' @rdname fortify_pca
 #' @export
-#' @importFrom plyr join
 fortify.PCA <- function(model, data=NULL, type=c("observations", "variables"), PC=c(1,2), ...) {
   #
   # Method for FactoMineR::PCA
@@ -367,11 +368,13 @@ fortify.pcaRes <- function(model, data=NULL, type=c("observations", "variables")
 
     # concatenate with original data
     if (is.null(data)) {
-      data <- model@completeObs
+      data <- as.data.frame(model@completeObs)
     }
     # data can still be NULL because the @completeObs slot can be NULL in model
     if (!is.null(data)) {
-      res <- cbind(data, res)
+      data$.id <- row.names(data)
+      res <- join(data, res, by=".id", type="full")
+      # TODO use the data in the object when it exists, for common columns, because it may have been imputed
     }
   }
 
