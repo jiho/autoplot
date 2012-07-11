@@ -1,4 +1,4 @@
 library("testthat")
-library("ggplot2")
+library("autoplot")
 
 test_package("autoplot")
