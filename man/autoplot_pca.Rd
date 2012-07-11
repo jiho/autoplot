@@ -17,8 +17,10 @@
 }
 \arguments{
   \item{object}{an object resulting from a PCA, using
-  \code{\link[stats:prcomp]{stats::prcomp}} or
-  \code{\link[FactoMineR:PCA]{FactoMineR::PCA}}}
+  \code{\link{prcomp}} in package \code{stats},
+  \code{\link{PCA}} in package \code{factoMineR} or
+  \code{\link{pca}} in package \code{pcaMethods} from
+  bioconductor}
 
   \item{type}{whether to extract observations (i.e. rows,
   individuals) or variables (i.e. columns, descriptors);
@@ -39,7 +41,7 @@
   aesthetics of the plot, even if those columns were not
   used in the PCA. When \code{NULL} the data used in the
   PCA will be extracted from the PCA object, when possible
-  (not for \code{\link[stats:prcomp]{prcomp}})}
+  (not for \code{\link{prcomp}})}
 
   \item{PC}{the principal components to extract; two are
   necessary to produce a plot}
@@ -90,7 +92,7 @@ autoplot(pca, "obs", aes(alpha=.cos2, size=Murder))
 
 # PCA with pcaMethods::pca, from bioconductor
 library("pcaMethods")
-# equivalent to `prcomp`
+# settings equivalent `prcomp`
 pca <- pca(USArrests, method="svd", scale="uv", completeObs=TRUE, nPcs=4)
 autoplot(pca)
 autoplot(pca, type="obs", mapping=aes(alpha=.cos2))
@@ -105,9 +107,9 @@ autoplot(pca)
   Jean-Olivier Irisson \email{irisson@normalesup.org}
 }
 \seealso{
-  \link{fortify_pca}, \code{\link[stats:prcomp]{prcomp}} in
-  package stats, \code{\link[FactoMineR:PCA]{PCA}} in
-  package FactoMineR, \code{\link[pcaMethods:pca]{pca}} in
-  package pcaMethods
+  \link{fortify_pca}, \code{\link{prcomp}} in package
+  \code{stats}, \code{\link{PCA}} in package
+  \code{factoMineR} or \code{\link{pca}} in package
+  \code{pcaMethods} from bioconductor
 }
 

@@ -23,16 +23,16 @@
 }
 \arguments{
   \item{model}{an object resulting from a PCA, using
-  \code{\link[stats:prcomp]{stats::prcomp}},
-  \code{\link[FactoMineR:PCA]{FactoMineR::PCA}} or
-  \code{\link[pcaMethods:pca]{pcaMethods::pca}} (from
-  bioconductor)}
+  \code{\link{prcomp}} in package \code{stats},
+  \code{\link{PCA}} in package \code{factoMineR} or
+  \code{\link{pca}} in package \code{pcaMethods} from
+  bioconductor}
 
   \item{data}{the original data used to compute the PCA, to
   be concatenated to the output when extracting
   observations; when \code{NULL}, the default, the data
   will be extracted from the PCA object when possible (not
-  for \code{\link[stats:prcomp]{prcomp}})}
+  for \code{\link{prcomp}})}
 
   \item{type}{the type of data to extract : observations
   (i.e. rows, individuals) or variables (i.e. columns,
@@ -92,7 +92,7 @@ fortify(pca, type = "variables")
 
 # PCA with pcaMethods::pca, from bioconductor
 library("pcaMethods")
-pca <- pca(d, method = "svd", scale = "uv", completeObs = TRUE, nPcs = 4)
+pca <- pca(d, method = "nipals", scale = "uv", completeObs = TRUE, nPcs = 4)
 
 # the missing value is imputed by iterative PCA
 head(fortify(pca))
@@ -105,10 +105,10 @@ fortify(pca, type="var")
   Jean-Olivier Irisson \email{irisson@normalesup.org}
 }
 \seealso{
-  , \code{\link[stats:prcomp]{prcomp}} in package stats,
-  \code{\link[FactoMineR:PCA]{PCA}} in package FactoMineR,
-  \code{\link[pcaMethods:pca]{pca}} in package pcaMethods,
-  \link{autoplot_pca} to produce plots based on the output
-  for \code{fortify}
+  , \code{\link{prcomp}} in package \code{stats},
+  \code{\link{PCA}} in package \code{factoMineR} or
+  \code{\link{pca}} in package \code{pcaMethods} from
+  bioconductor, \link{autoplot_pca} to produce plots based
+  on the output for \code{fortify}
 }
 
