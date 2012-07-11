@@ -56,8 +56,6 @@
 \examples{
 # PCA with stats::prcomp
 pca <- prcomp(USArrests, scale = TRUE)
-
-library("ggplot2")
 autoplot(pca)
 
 # add further aesthetic mappings
