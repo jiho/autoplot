@@ -26,7 +26,6 @@
 #' # PCA with stats::prcomp
 #' pca <- prcomp(USArrests, scale = TRUE)
 #'
-#' library("ggplot2")
 #' head(fortify(pca))
 #' fortify(pca, type = "variables")
 #'
