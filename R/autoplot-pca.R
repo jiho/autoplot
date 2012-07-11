@@ -173,7 +173,7 @@ autoplot_pca_vars <- function(data, mapping, ...) {
   # plot data
   p <- p +
     # arrows describing the variables
-    geom_segment(aes_string(x="0", y="0", xend=PCs[1], yend=PCs[2]), arrow=arrow(angle=20, length=unit(0.02, "npc")), ...) +
+    geom_segment(aes_string(x="0", y="0", xend=PCs[1], yend=PCs[2]), arrow=arrow(angle=20, length=unit(0.02, "npc")), ..., lineend="round") +
     # add variable names
     geom_text(aes_string(x=paste("1.04*", PCs[1], sep=""), y=paste("1.04*", PCs[2], sep=""), label=".id", hjust=paste("0.5-0.5*", PCs[1], sep=""), vjust=paste("0.5-0.5*", PCs[2], sep="")), ..., size=3)
     # NB: the complex computation is to place the labels intelligently at the tip of the arrows
