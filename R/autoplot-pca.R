@@ -6,7 +6,11 @@
 #'
 #' @param mapping a call to aes() specifying additional mappings between variables and plot aesthetics; by default, positions in x and y are mapped to the scores or loadings on the principal components and colour is mapped to the nature of the data (active or supplementary) when relevant. See \link{fortify_pca} for a list of the other mappable variables returned by the \code{fortify} methods
 #'
-#' @param ... passed to \code{\link{fortify_pca}}, in particular to provide the original data if it cannot be retrieved from the object or to select wich principal components to plot
+#' @param data the original data used to compute the PCA, to be concatenated to the output when extracting observations. This allows to map original data columns to aesthetics of the plot, even if those columns were not used in the PCA. When \code{NULL} the data used in the PCA will be extracted from the PCA object, when possible (not for \code{\link[stats:prcomp]{prcomp}})
+#'
+#' @param PC the principal components to extract; two are necessary to produce a plot
+#'
+#' @param ... passed to the various geoms; can be used to \emph{set} further aesthetics
 #'
 #' @return A ggplot2 object defining the plot
 #'
@@ -28,6 +32,9 @@
 #' # including from the original data
 #' autoplot(pca, type = "obs", mapping=aes(alpha=.cos2, size=Murder), data=USArrests)
 #'
+#' # aesthetics can also be set
+#' autoplot(pca, type = "obs", mapping=aes(alpha=.cos2), colour="red", size=3, shape=15)
+#'
 #' \dontrun{
 #' # PCA with FactoMineR::PCA
 #' library("FactoMineR")
@@ -37,12 +44,14 @@
 #' # colour is mapped by default
 #' autoplot(pca)
 #'
-#' # but the mapping can be overridden
+#' # but the mapping can be overridden by mapping another variable
 #' autoplot(pca, type = "obs", mapping = aes(colour=.contrib))
-#' # and additional mappings can be specified
-#' autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.kind))
+#' # or setting the corresponding aesthetic
+#' autoplot(pca, type = "obs", colour="black")
 #'
-#' # with FactoMineR, the data is present by default and can be mapped
+#' # additional mappings can be specified
+#' autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.kind))
+#' # in particular, with FactoMineR, the data is present by default and can be mapped
 #' names(fortify(pca, type = "obs"))
 #' autoplot(pca, "obs", aes(alpha=.cos2, size=Murder))
 #'
@@ -62,22 +71,25 @@
 # TODO actually describe the plots, layers, mappings, as recommended on https://github.com/hadley/ggplot2/wiki/autoplot
 
 #' @export
-autoplot_pca <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
+autoplot_pca <- function(object, type=c("observations", "variables"), mapping=aes(), data=NULL, PC=c(1, 2), ...) {
 
   # check arguments
   type <- choose_plots(type, choices=c("observations", "variables"))
+  if (length(PC) != 2) {
+    stop("You must choose exactly two principal components to plot")
+  }
 
   # prepare the appropriate plots
   p <- list()
 
   if ("observations" %in% type) {
-    data <- fortify(object, type="observations", ...)
-    p <- c(p, list(observations=autoplot_pca_obs(data=data, mapping=mapping)))
+    fData <- fortify(model=object, data=data, type="observations", PC=PC)
+    p <- c(p, list(observations=autoplot_pca_obs(data=fData, mapping=mapping, ...)))
   }
 
   if ("variables" %in% type) {
-    data <- fortify(object, type="variables", ...)
-    p <- c(p, list(variables=autoplot_pca_vars(data=data, mapping=mapping)))
+    fData <- fortify(model=object, data=data, type="variables", PC=PC)
+    p <- c(p, list(variables=autoplot_pca_vars(data=fData, mapping=mapping, ...)))
   }
 
   if (length(p) == 1) {
@@ -99,15 +111,15 @@ autoplot_pca <- function(object, type=c("observations", "variables"), mapping=ae
 #' @method autoplot prcomp
 #' @rdname autoplot_pca
 #' @export
-autoplot.prcomp <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
-  autoplot_pca(object=object, type=type, mapping=mapping, ...)
+autoplot.prcomp <- function(object, ...) {
+  autoplot_pca(object=object, ...)
 }
 
 #' @method autoplot PCA
 #' @rdname autoplot_pca
 #' @export
-autoplot.PCA <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
-  autoplot_pca(object=object, type=type, mapping=mapping, ...)
+autoplot.PCA <- function(object, ...) {
+  autoplot_pca(object=object, ...)
 }
 
 # TODO add a method for ade4
@@ -115,8 +127,8 @@ autoplot.PCA <- function(object, type=c("observations", "variables"), mapping=ae
 #' @method autoplot pcaRes
 #' @rdname autoplot_pca
 #' @export
-autoplot.pcaRes <- function(object, type=c("observations", "variables"), mapping=aes(), ...) {
-  autoplot_pca(object=object, type=type, mapping=mapping, ...)
+autoplot.pcaRes <- function(object, ...) {
+  autoplot_pca(object=object, ...)
 }
 
 autoplot_pca_axes_labels <- function(data) {
@@ -136,7 +148,7 @@ autoplot_pca_axes_labels <- function(data) {
 }
 
 #' @importFrom grid arrow unit
-autoplot_pca_vars <- function(data, mapping) {
+autoplot_pca_vars <- function(data, mapping, ...) {
 
   # Construct default aesthetic mappings
   # get PC numbers
@@ -163,9 +175,9 @@ autoplot_pca_vars <- function(data, mapping) {
   # plot data
   p <- p +
     # arrows describing the variables
-    geom_segment(aes_string(x="0", y="0", xend=PCs[1], yend=PCs[2]), arrow=arrow(angle=20, length=unit(0.02, "npc"))) +
+    geom_segment(aes_string(x="0", y="0", xend=PCs[1], yend=PCs[2]), arrow=arrow(angle=20, length=unit(0.02, "npc")), ...) +
     # add variable names
-    geom_text(aes_string(x=paste("1.04*", PCs[1], sep=""), y=paste("1.04*", PCs[2], sep=""), label=".id", hjust=paste("0.5-0.5*", PCs[1], sep=""), vjust=paste("0.5-0.5*", PCs[2], sep="")), size=3)
+    geom_text(aes_string(x=paste("1.04*", PCs[1], sep=""), y=paste("1.04*", PCs[2], sep=""), label=".id", hjust=paste("0.5-0.5*", PCs[1], sep=""), vjust=paste("0.5-0.5*", PCs[2], sep="")), ..., size=3)
     # NB: the complex computation is to place the labels intelligently at the tip of the arrows
 
   # nice axes labels
@@ -175,7 +187,7 @@ autoplot_pca_vars <- function(data, mapping) {
   return(p)
 }
 
-autoplot_pca_obs <- function(data, mapping) {
+autoplot_pca_obs <- function(data, mapping, ...) {
 
   # Construct default aesthetic mappings
   # get PC numbers
@@ -194,9 +206,9 @@ autoplot_pca_obs <- function(data, mapping) {
   # plot data
   p <- p +
     # observations
-    geom_point() +
+    geom_point(...) +
     # labels
-    geom_text(aes(label=.id), size=3, vjust=-1)
+    geom_text(aes(label=.id), ..., size=3, vjust=-1)
 
   # nice axes labels
   axesLabels <- autoplot_pca_axes_labels(data)

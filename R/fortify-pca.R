@@ -2,11 +2,11 @@
 #'
 #' @param model an object resulting from a PCA, using \code{\link[stats:prcomp]{stats::prcomp}}, \code{\link[FactoMineR:PCA]{FactoMineR::PCA}} or \code{\link[pcaMethods:pca]{pcaMethods::pca}} (from bioconductor)
 #'
-#' @param data the original data used to compute the PCA, to be concatenated to the output when extracting observations; by default, the data will be extracted from the PCA object when possible (not for \code{\link[stats:prcomp]{prcomp}})
+#' @param data the original data used to compute the PCA, to be concatenated to the output when extracting observations; when \code{NULL}, the default, the data will be extracted from the PCA object when possible (not for \code{\link[stats:prcomp]{prcomp}})
 #'
 #' @param type the type of data to extract : observations (i.e. rows, individuals) or variables (i.e. columns, descriptors); can be abbreviated
 #'
-#' @param PC the principal components to extract; more than two can be extracted but two is usual for plotting
+#' @param PC the principal components to extract; two is usual for plotting
 #'
 #' @param ... pass-through argument
 #'
@@ -67,7 +67,7 @@
 #'
 
 # TODO this function is there only to change the name of the documentation file and avoid having fortify.prcomp appear as the topic in the help, but it shouldn't be exported and really shouldn't exist. There must be a solution to trick roxygen.
-fortify_pca <- function(model, data, type=c("observations", "variables"), PC=c(1,2), ...) {
+fortify_pca <- function(model, data=NULL, type=c("observations", "variables"), PC=c(1,2), ...) {
   invisible(NULL)
 }
 
@@ -176,7 +176,7 @@ fortify.prcomp <- function(model, data=NULL, type=c("observations", "variables")
 #' @method fortify PCA
 #' @rdname fortify_pca
 #' @export
-fortify.PCA <- function(model, data=model$call$X, type=c("observations", "variables"), PC=c(1,2), ...) {
+fortify.PCA <- function(model, data=NULL, type=c("observations", "variables"), PC=c(1,2), ...) {
   #
   # Method for FactoMineR::PCA
   #
@@ -259,6 +259,10 @@ fortify.PCA <- function(model, data=model$call$X, type=c("observations", "variab
 
   # Add original data
   if (type == "observations") {
+    # fetch data from the model object if necessary
+    if (is.null(data)) {
+      data <- model$call$X
+    }
     # NB: we have to use join here and not cbind, in case there are supplementary observations
     data$.id <- row.names(data)
     require("plyr")
@@ -277,7 +281,7 @@ fortify.PCA <- function(model, data=model$call$X, type=c("observations", "variab
 #' @method fortify pcaRes
 #' @rdname fortify_pca
 #' @export
-fortify.pcaRes <- function(model, data=model@completeObs, type=c("observations", "variables"), PC=c(1,2), ...) {
+fortify.pcaRes <- function(model, data=NULL, type=c("observations", "variables"), PC=c(1,2), ...) {
   #
   # Method for pcaMethods::pca
   #
@@ -361,6 +365,12 @@ fortify.pcaRes <- function(model, data=model@completeObs, type=c("observations",
     }
 
     res <- data.frame(.id, scores, .cos2, .contrib, .kind=type)
+
+    # concatenate with original data
+    if (is.null(data)) {
+      data <- model@completeObs
+    }
+    # data can still be NULL because the @completeObs slot can be NULL in model
     if (!is.null(data)) {
       res <- cbind(data, res)
     }

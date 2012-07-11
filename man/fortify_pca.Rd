@@ -5,7 +5,7 @@
 \alias{fortify_pca}
 \title{Extract information from a Principal Component Analysis into a data.frame}
 \usage{
-  fortify_pca(model, data,
+  fortify_pca(model, data = NULL,
     type = c("observations", "variables"), PC = c(1, 2),
     ...)
 
@@ -13,12 +13,11 @@
     type = c("observations", "variables"), PC = c(1, 2),
     ...)
 
-  \method{fortify}{PCA} (model, data = model$call$X,
+  \method{fortify}{PCA} (model, data = NULL,
     type = c("observations", "variables"), PC = c(1, 2),
     ...)
 
-  \method{fortify}{pcaRes} (model,
-    data = model@completeObs,
+  \method{fortify}{pcaRes} (model, data = NULL,
     type = c("observations", "variables"), PC = c(1, 2),
     ...)
 }
@@ -31,16 +30,16 @@
 
   \item{data}{the original data used to compute the PCA, to
   be concatenated to the output when extracting
-  observations; by default, the data will be extracted from
-  the PCA object when possible (not for
-  \code{\link[stats:prcomp]{prcomp}})}
+  observations; when \code{NULL}, the default, the data
+  will be extracted from the PCA object when possible (not
+  for \code{\link[stats:prcomp]{prcomp}})}
 
   \item{type}{the type of data to extract : observations
   (i.e. rows, individuals) or variables (i.e. columns,
   descriptors); can be abbreviated}
 
-  \item{PC}{the principal components to extract; more than
-  two can be extracted but two is usual for plotting}
+  \item{PC}{the principal components to extract; two is
+  usual for plotting}
 
   \item{...}{pass-through argument}
 }

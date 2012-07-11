@@ -7,19 +7,13 @@
 \usage{
   autoplot_pca(object,
     type = c("observations", "variables"), mapping = aes(),
-    ...)
+    data = NULL, PC = c(1, 2), ...)
 
-  \method{autoplot}{prcomp} (object,
-    type = c("observations", "variables"), mapping = aes(),
-    ...)
+  \method{autoplot}{prcomp} (object, ...)
 
-  \method{autoplot}{PCA} (object,
-    type = c("observations", "variables"), mapping = aes(),
-    ...)
+  \method{autoplot}{PCA} (object, ...)
 
-  \method{autoplot}{pcaRes} (object,
-    type = c("observations", "variables"), mapping = aes(),
-    ...)
+  \method{autoplot}{pcaRes} (object, ...)
 }
 \arguments{
   \item{object}{an object resulting from a PCA, using
@@ -39,10 +33,19 @@
   mappable variables returned by the \code{fortify}
   methods}
 
-  \item{...}{passed to \code{\link{fortify_pca}}, in
-  particular to provide the original data if it cannot be
-  retrieved from the object or to select wich principal
-  components to plot}
+  \item{data}{the original data used to compute the PCA, to
+  be concatenated to the output when extracting
+  observations. This allows to map original data columns to
+  aesthetics of the plot, even if those columns were not
+  used in the PCA. When \code{NULL} the data used in the
+  PCA will be extracted from the PCA object, when possible
+  (not for \code{\link[stats:prcomp]{prcomp}})}
+
+  \item{PC}{the principal components to extract; two are
+  necessary to produce a plot}
+
+  \item{...}{passed to the various geoms; can be used to
+  \emph{set} further aesthetics}
 }
 \value{
   A ggplot2 object defining the plot
@@ -64,6 +67,9 @@ autoplot(pca, type = "obs", mapping=aes(alpha=.cos2, size=.contrib))
 # including from the original data
 autoplot(pca, type = "obs", mapping=aes(alpha=.cos2, size=Murder), data=USArrests)
 
+# aesthetics can also be set
+autoplot(pca, type = "obs", mapping=aes(alpha=.cos2), colour="red", size=3, shape=15)
+
 \dontrun{
 # PCA with FactoMineR::PCA
 library("FactoMineR")
@@ -73,12 +79,14 @@ pca <- PCA(USArrests, scale = TRUE, graph=FALSE, ind.sup = 2, quanti.sup = 4)
 # colour is mapped by default
 autoplot(pca)
 
-# but the mapping can be overridden
+# but the mapping can be overridden by mapping another variable
 autoplot(pca, type = "obs", mapping = aes(colour=.contrib))
-# and additional mappings can be specified
-autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.kind))
+# or setting the corresponding aesthetic
+autoplot(pca, type = "obs", colour="black")
 
-# with FactoMineR, the data is present by default and can be mapped
+# additional mappings can be specified
+autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.kind))
+# in particular, with FactoMineR, the data is present by default and can be mapped
 names(fortify(pca, type = "obs"))
 autoplot(pca, "obs", aes(alpha=.cos2, size=Murder))
 
