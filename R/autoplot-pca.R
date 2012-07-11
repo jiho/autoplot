@@ -1,6 +1,6 @@
 #' Automatic ggplot for a Principal Component Analysis
 #'
-#' @param object an object resulting from a PCA, using \code{\link{prcomp}} in package \code{stats}, \code{\link{PCA}} in package \code{factoMineR} or \code{\link{pca}} in package \code{pcaMethods} from bioconductor
+#' @param object an object resulting from a PCA, using \code{\link{prcomp}} in package \code{stats}, \code{\link[FactoMineR:PCA]{PCA}} in package \code{factoMineR} or \code{\link[pcaMethods:pca]{pca}} in package \code{pcaMethods} from bioconductor
 #'
 #' @param type whether to extract observations (i.e. rows, individuals) or variables (i.e. columns, descriptors); can be abbreviated
 #'
@@ -16,7 +16,7 @@
 #'
 #' @author Jean-Olivier Irisson \email{irisson@@normalesup.org}
 #'
-#' @seealso \link{fortify_pca}, \code{\link{prcomp}} in package \code{stats}, \code{\link{PCA}} in package \code{factoMineR} or \code{\link{pca}} in package \code{pcaMethods} from bioconductor
+#' @seealso \link{fortify_pca}, \code{\link{prcomp}} in package \code{stats}, \code{\link[FactoMineR:PCA]{PCA}} in package \code{factoMineR} or \code{\link[pcaMethods:pca]{pca}} in package \code{pcaMethods} from bioconductor
 #'
 #' @examples
 #' # PCA with stats::prcomp

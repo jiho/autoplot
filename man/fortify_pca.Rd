@@ -24,9 +24,9 @@
 \arguments{
   \item{model}{an object resulting from a PCA, using
   \code{\link{prcomp}} in package \code{stats},
-  \code{\link{PCA}} in package \code{factoMineR} or
-  \code{\link{pca}} in package \code{pcaMethods} from
-  bioconductor}
+  \code{\link[FactoMineR:PCA]{PCA}} in package
+  \code{factoMineR} or \code{\link[pcaMethods:pca]{pca}} in
+  package \code{pcaMethods} from bioconductor}
 
   \item{data}{the original data used to compute the PCA, to
   be concatenated to the output when extracting
@@ -106,9 +106,10 @@ fortify(pca, type="var")
 }
 \seealso{
   , \code{\link{prcomp}} in package \code{stats},
-  \code{\link{PCA}} in package \code{factoMineR} or
-  \code{\link{pca}} in package \code{pcaMethods} from
-  bioconductor, \link{autoplot_pca} to produce plots based
-  on the output for \code{fortify}
+  \code{\link[FactoMineR:PCA]{PCA}} in package
+  \code{factoMineR} or \code{\link[pcaMethods:pca]{pca}} in
+  package \code{pcaMethods} from bioconductor,
+  \link{autoplot_pca} to produce plots based on the output
+  for \code{fortify}
 }
 

@@ -18,9 +18,9 @@
 \arguments{
   \item{object}{an object resulting from a PCA, using
   \code{\link{prcomp}} in package \code{stats},
-  \code{\link{PCA}} in package \code{factoMineR} or
-  \code{\link{pca}} in package \code{pcaMethods} from
-  bioconductor}
+  \code{\link[FactoMineR:PCA]{PCA}} in package
+  \code{factoMineR} or \code{\link[pcaMethods:pca]{pca}} in
+  package \code{pcaMethods} from bioconductor}
 
   \item{type}{whether to extract observations (i.e. rows,
   individuals) or variables (i.e. columns, descriptors);
@@ -108,8 +108,9 @@ autoplot(pca)
 }
 \seealso{
   \link{fortify_pca}, \code{\link{prcomp}} in package
-  \code{stats}, \code{\link{PCA}} in package
-  \code{factoMineR} or \code{\link{pca}} in package
+  \code{stats}, \code{\link[FactoMineR:PCA]{PCA}} in
+  package \code{factoMineR} or
+  \code{\link[pcaMethods:pca]{pca}} in package
   \code{pcaMethods} from bioconductor
 }
 
