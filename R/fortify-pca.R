@@ -176,6 +176,7 @@ fortify.prcomp <- function(model, data=NULL, type=c("observations", "variables")
 #' @method fortify PCA
 #' @rdname fortify_pca
 #' @export
+#' @importFrom plyr join
 fortify.PCA <- function(model, data=NULL, type=c("observations", "variables"), PC=c(1,2), ...) {
   #
   # Method for FactoMineR::PCA
@@ -265,7 +266,6 @@ fortify.PCA <- function(model, data=NULL, type=c("observations", "variables"), P
     }
     # NB: we have to use join here and not cbind, in case there are supplementary observations
     data$.id <- row.names(data)
-    require("plyr")
     d <- join(data, d, by=".id", type="full")
   }
 

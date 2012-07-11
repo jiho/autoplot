@@ -20,9 +20,9 @@ Description: ggplot2 is a versatile plotting package which allows to produce
 License: GPL-3
 Depends:
     ggplot2 (>= 0.9.0),
-    plyr (>= 1.0)
 Imports:
-    grid
+    grid,
+    plyr
 Suggests:
     FactoMineR,
     pcaMethods,
