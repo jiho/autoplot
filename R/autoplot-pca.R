@@ -155,11 +155,10 @@ autoplot_pca_vars <- function(data, mapping) {
     # square
     coord_fixed() +
     # plot a circle of radius 1
-    geom_path(aes(x=cos(theta), y=sin(theta)), data=data.frame(theta=seq(0, 2*pi, length=100)), colour="white", size=0.5, linetype="solid", alpha=1) +
+    geom_path(aes(x=cos(theta), y=sin(theta)), data=data.frame(theta=seq(0, 2*pi, length=100)), colour="white", size=0.5, linetype="solid", alpha=1)
     # TODO adapt this to the the theme (currenty workd for theme_gray only)
     # TODO improve flexibility here: we are forced to set every unused aesthetic to avoid conflicts with the mappings inherited from the autoplot call
     # TODO R CMD check issues a note about theta being a global variable, this is probably because theta is never assigned outside of being a column of the data.frame and this caused the parser to chocke. setting "theta <- NULL" (or anything else) fixes the problem but is not very elegant
-    xlim(-1.1,1.1) + ylim(-1.1,1.1)
 
   # plot data
   p <- p +
@@ -171,7 +170,7 @@ autoplot_pca_vars <- function(data, mapping) {
 
   # nice axes labels
   axesLabels <- autoplot_pca_axes_labels(data)
-  p <- p + scale_x_continuous(axesLabels[1], breaks=seq(-1,1,0.5)) + scale_y_continuous(axesLabels[2], breaks=seq(-1,1,0.5))
+  p <- p + scale_x_continuous(axesLabels[1], breaks=seq(-1,1,0.5), limits=c(-1.1,1.1), expand=c(0.1, 0)) + scale_y_continuous(axesLabels[2], breaks=seq(-1,1,0.5), limits=c(-1.1,1.1), expand=c(0.1, 0))
 
   return(p)
 }
@@ -201,7 +200,7 @@ autoplot_pca_obs <- function(data, mapping) {
 
   # nice axes labels
   axesLabels <- autoplot_pca_axes_labels(data)
-  p <- p + scale_x_continuous(axesLabels[1], breaks=0) + scale_y_continuous(axesLabels[2], breaks=0)
+  p <- p + scale_x_continuous(axesLabels[1], breaks=0, expand=c(0.1, 0)) + scale_y_continuous(axesLabels[2], breaks=0, expand=c(0.1, 0))
 
   return(p)
 }
