@@ -10,7 +10,7 @@ obsS <- fortify(pcaS, type="observations")
 varS <- fortify(pcaS, type="variables")
 
 # PCA with FactoMineR::PCA
-library("FactoMineR")
+suppressPackageStartupMessages(library("FactoMineR"))
 pcaF <- PCA(d, scale.unit=TRUE, graph=F)
 obsF <- fortify(pcaF, type="observations")
 varF <- fortify(pcaF, type="variables")
@@ -18,7 +18,7 @@ varF <- fortify(pcaF, type="variables")
 # TODO add ade4
 
 # PCA with pcaMethods::pca
-library("pcaMethods")
+suppressPackageStartupMessages(library("pcaMethods"))
 pcaMsvd <- pca(d, method="svd", scale="uv", nPcs=3)
 obsMsvd <- fortify(pcaMsvd, type="observations")
 varMsvd <- fortify(pcaMsvd, type="variables")
