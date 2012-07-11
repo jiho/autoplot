@@ -28,8 +28,8 @@
   Springer-Verlag, New York, 2009.
 }
 \seealso{
-  See the original
-  \code{\link[ggplot2:ggplot2-package]{ggplot2}} package.
+  See the original \code{\link[ggplot2:ggplot2]{ggplot2}}
+  package.
 }
 \keyword{package}
 
