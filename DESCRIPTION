@@ -25,6 +25,7 @@ Imports:
 	grid
 Suggests:
     FactoMineR,
+    pcaMethods,
     testthat
 Collate:
     'autoplot-package.R'
