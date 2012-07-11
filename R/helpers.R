@@ -49,17 +49,20 @@ print.ggplot_list <- function(x, ...) {
   
   # if there are more than one
   if (length(x) > 1) {
+
     # ask for the next plots if the device is interactive
-    devAsk <- devAskNewPage()
     if (dev.interactive() || names(dev.cur()) == "null device") {
+      # previous behaviour
+      devAsk <- devAskNewPage()
+      # turn asking on
       devAskNewPage(TRUE)
+      # reset asking to the previous behaviour
+      on.exit(devAskNewPage(devAsk))
     }
 
     # print the plots
     lapply(x[-1], print)
 
-    # reset asking to the previous behaviour
-    devAskNewPage(devAsk)
   }
   
   return(invisible(x))
