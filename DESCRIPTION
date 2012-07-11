@@ -19,7 +19,7 @@ Description: ggplot2 is a versatile plotting package which allows to produce
     data.frames and leverage ggplot2 to produce diagnostic plots.
 License: GPL-3
 Depends:
-    ggplot2 (>= 0.9.0),
+    ggplot2 (>= 0.9.0)
 Imports:
     grid,
     plyr
