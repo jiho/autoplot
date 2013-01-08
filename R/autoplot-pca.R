@@ -193,7 +193,7 @@ autoplot_pca_vars <- function(data, mapping, ...) {
 
   # nice axes labels
   axesLabels <- autoplot_pca_axes_labels(data)
-  p <- p + scale_x_continuous(axesLabels[1], breaks=seq(-1,1,0.5), limits=c(-1.1,1.1), expand=c(0.1, 0)) + scale_y_continuous(axesLabels[2], breaks=seq(-1,1,0.5), limits=c(-1.1,1.1), expand=c(0.1, 0))
+  p <- p + scale_x_continuous(axesLabels[1], breaks=0, limits=c(-1.1,1.1), expand=c(0.1, 0)) + scale_y_continuous(axesLabels[2], breaks=0, limits=c(-1.1,1.1), expand=c(0.1, 0))
 
   return(p)
 }
