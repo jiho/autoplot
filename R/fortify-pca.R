@@ -400,7 +400,7 @@ fortify.rda <- function(model, data=NULL, type=c("observations", "variables"), P
   #
 
   # Checks
-  if (any(PC > model$rank)) {
+  if (any(PC > model$CA$rank)) {
     stop("At least one of the principal components does not exist")
   }
   if (length(PC) < 1) {
