@@ -62,6 +62,13 @@
 #'
 #' fortify(pca, type="var")
 #'
+#' # PCA with vegan::rda
+#' library("vegan")
+#' pca <- rda(USArrests, scale = TRUE)
+#'
+#' head(fortify(pca))
+#' fortify(pca, type="var")
+#'
 #' }
 #'
 #' @importFrom plyr join
@@ -382,3 +389,105 @@ fortify.pcaRes <- function(model, data=NULL, type=c("observations", "variables")
   return(res)
 }
 
+#' @method fortify rda
+#' @rdname fortify_pca
+#' @export
+fortify.rda <- function(model, data=NULL, type=c("observations", "variables"), PC=c(1,2), ...) {
+  #
+  # Method for vegan::rda
+  #
+  # NB: those objects do not contain the original data, so data is NULL by default
+  #
+
+  # Checks
+  if (any(PC > model$rank)) {
+    stop("At least one of the principal components does not exist")
+  }
+  if (length(PC) < 1) {
+    stop("You must choose at least one principal component")
+  }
+  if (length(PC) > 2) {
+    warning("Extracting information for more than two principal components. The plot might be difficult to read.")
+  }
+  type <- match.arg(type)
+
+
+  # Compute variance explained
+  # eigenvalues (scaled to be homogeneous with other packages)
+  eig <- model$CA$eig
+  # variance explained by each PC
+  explainedVar <- eig / sum(eig)
+  explainedVar <- explainedVar[PC]
+
+
+  # Extract appropriate data
+  if (type == "variables") {
+
+    # Variables
+    # variable identifier
+    .id <- row.names(model$CA$v)
+
+    # loadings on the PCs
+    loadings <- as.data.frame((t(t(model$CA$v)*sqrt(model$CA$eig))))
+    # TODO select PCs here rather than later and save a bit of memory/cpu?
+    # NB: loadings are scaled by std deviation, to be consistent with FactoMineR and ADE4, but this will result in a plot different from the one produced by stat::biplot, where loadings are not scaled
+    names(loadings) <- paste(".", names(loadings), sep="")
+
+    # squared cosine: quality of the representation on the current space
+    .cos2 <- ( loadings / sqrt(rowSums(loadings^2)) )^2
+    .cos2 <- .cos2[,PC]
+
+    # contribution to the current PCs
+    .contrib <- as.data.frame(t(t(loadings^2) / eig)) * 100
+    .contrib <- .contrib[,PC]
+
+    if (length(PC > 1)) {
+      # the squared cos are additive
+      .cos2 <- rowSums(.cos2)
+      # contributions are scaled by the percentage of variance explained by each PC so that the contribution displayed is the contribution to the total variance projectable in the current space
+      .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
+    }
+
+    res <- data.frame(.id, loadings[,PC], .cos2, .contrib, .kind=type)
+
+  }
+  else if (type == "observations") {
+
+    # Observations
+    # observation identifier
+    .id <- row.names(model$CA$u)
+    if (is.null(.id)) {
+      .id <- 1:nrow(model$CA$u)
+    }
+
+    # scores (i.e. coordinates) on the PCs
+    scores <- as.data.frame(model$CA$u[,PC])
+    names(scores) <- paste(".", names(scores), sep="")
+    # TODO those are scaled. See the vignette in vegan about the scaling to make it consistent with FactoMineR
+
+    # square cosine
+    .cos2 <- ( model$CA$u^2 / rowSums(model$CA$u^2) )
+    .cos2 <- .cos2[,PC]
+
+    # contributions
+    .contrib <- as.data.frame( t( t(model$CA$u^2) * (1/nrow(model$CA$u)) / eig ) ) * 100
+    .contrib <- .contrib[,PC]
+
+    if (length(PC > 1)) {
+      .cos2 <- rowSums(.cos2)
+      .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
+    }
+
+    res <- data.frame(.id, scores, .cos2, .contrib, .kind=type, stringsAsFactors=FALSE)
+    if (!is.null(data)) {
+      data$.id <- row.names(data)
+      res <- join(data, res, by=".id", type="full")
+    }
+  }
+
+
+  # store variance explained as attribute
+  attr(res, "explained.variance") <- explainedVar
+
+  return(res)
+}

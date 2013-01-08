@@ -2,6 +2,7 @@
 \alias{autoplot.PCA}
 \alias{autoplot.pcaRes}
 \alias{autoplot.prcomp}
+\alias{autoplot.rda}
 \alias{autoplot_pca}
 \title{Automatic ggplot for a Principal Component Analysis}
 \usage{
@@ -12,6 +13,8 @@
   \method{autoplot}{prcomp} (object, ...)
 
   \method{autoplot}{PCA} (object, ...)
+
+  \method{autoplot}{rda} (object, ...)
 
   \method{autoplot}{pcaRes} (object, ...)
 }
@@ -99,6 +102,11 @@ autoplot(pca, type="obs", mapping=aes(alpha=.cos2))
 
 # other computation method specific to pcaMethods
 pca <- pca(USArrests, method="ppca", scale="uv", completeObs=TRUE, nPcs=4)
+autoplot(pca)
+
+# PCA with vegan::rda
+library("vegan")
+pca <- rda(USArrests, scale = TRUE)
 autoplot(pca)
 
 }

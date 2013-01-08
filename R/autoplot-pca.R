@@ -64,6 +64,11 @@
 #' pca <- pca(USArrests, method="ppca", scale="uv", completeObs=TRUE, nPcs=4)
 #' autoplot(pca)
 #'
+#' # PCA with vegan::rda
+#' library("vegan")
+#' pca <- rda(USArrests, scale = TRUE)
+#' autoplot(pca)
+#'
 #' }
 #'
 # TODO actually describe the plots, layers, mappings, as recommended on https://github.com/hadley/ggplot2/wiki/autoplot
@@ -119,6 +124,14 @@ autoplot.prcomp <- function(object, ...) {
 autoplot.PCA <- function(object, ...) {
   autoplot_pca(object=object, ...)
 }
+
+#' @method autoplot rda
+#' @rdname autoplot_pca
+#' @export
+autoplot.rda <- function(object, ...) {
+  autoplot_pca(object=object, ...)
+}
+
 
 # TODO add a method for ade4
 

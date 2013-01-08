@@ -2,13 +2,10 @@
 \alias{fortify.PCA}
 \alias{fortify.pcaRes}
 \alias{fortify.prcomp}
+\alias{fortify.rda}
 \alias{fortify_pca}
 \title{Extract information from a Principal Component Analysis into a data.frame}
 \usage{
-  fortify_pca(model, data = NULL,
-    type = c("observations", "variables"), PC = c(1, 2),
-    ...)
-
   \method{fortify}{prcomp} (model, data = NULL,
     type = c("observations", "variables"), PC = c(1, 2),
     ...)
@@ -18,6 +15,10 @@
     ...)
 
   \method{fortify}{pcaRes} (model, data = NULL,
+    type = c("observations", "variables"), PC = c(1, 2),
+    ...)
+
+  \method{fortify}{rda} (model, data = NULL,
     type = c("observations", "variables"), PC = c(1, 2),
     ...)
 }
@@ -97,6 +98,13 @@ pca <- pca(d, method = "nipals", scale = "uv", completeObs = TRUE, nPcs = 4)
 # the missing value is imputed by iterative PCA
 head(fortify(pca))
 
+fortify(pca, type="var")
+
+# PCA with vegan::rda
+library("vegan")
+pca <- rda(USArrests, scale = TRUE)
+
+head(fortify(pca))
 fortify(pca, type="var")
 
 }
