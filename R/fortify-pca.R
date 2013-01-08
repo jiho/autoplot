@@ -65,11 +65,8 @@
 #' }
 #'
 #' @importFrom plyr join
-
-# TODO this function is there only to change the name of the documentation file and avoid having fortify.prcomp appear as the topic in the help, but it shouldn't be exported and really shouldn't exist. There must be a solution to trick roxygen.
-fortify_pca <- function(model, data=NULL, type=c("observations", "variables"), PC=c(1,2), ...) {
-  invisible(NULL)
-}
+#' @name fortify_pca
+NULL
 
 #' @method fortify prcomp
 #' @rdname fortify_pca
