@@ -461,16 +461,18 @@ fortify.rda <- function(model, data=NULL, type=c("observations", "variables"), P
     }
 
     # scores (i.e. coordinates) on the PCs
-    scores <- as.data.frame(model$CA$u[,PC])
-    names(scores) <- paste(".", names(scores), sep="")
-    # TODO those are scaled. See the vignette in vegan about the scaling to make it consistent with FactoMineR
+    scores <- vegan::scores(model, choices=c(1:model$CA$rank), scaling=1)$sites
+    # NB: requiring vegan::scores.rda should not be a problem since one needs vegan to produce the original object anyway
+    # remove the scaling constant added by vegan, to make it compatible with prcomp
+    scores <- scores * ( (nrow(scores)-1) * sum(model$CA$eig) ) ^ (1/4)
+    colnames(scores) <- paste(".", colnames(scores), sep="")
 
     # square cosine
-    .cos2 <- ( model$CA$u^2 / rowSums(model$CA$u^2) )
+    .cos2 <- ( scores^2 / rowSums(scores^2) )
     .cos2 <- .cos2[,PC]
 
     # contributions
-    .contrib <- as.data.frame( t( t(model$CA$u^2) * (1/nrow(model$CA$u)) / eig ) ) * 100
+    .contrib <- as.data.frame( t( t(scores^2) * (1/nrow(scores)) / eig ) ) * 100
     .contrib <- .contrib[,PC]
 
     if (length(PC > 1)) {
@@ -478,7 +480,7 @@ fortify.rda <- function(model, data=NULL, type=c("observations", "variables"), P
       .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
     }
 
-    res <- data.frame(.id, scores, .cos2, .contrib, .kind=type, stringsAsFactors=FALSE)
+    res <- data.frame(.id, scores[,PC], .cos2, .contrib, .kind=type, stringsAsFactors=FALSE)
     if (!is.null(data)) {
       data$.id <- row.names(data)
       res <- join(data, res, by=".id", type="full")
