@@ -14,7 +14,7 @@
   specialized method for this generic function. This
   package aims at reproducing this functionality in ggplot2
   while benefiting from its increased versatility. It
-  provides two sets of methods : (i) the \code{fortify()}
+  provides two sets of functions: (i) the \code{fortify()}
   methods extract data from the original object and format
   it as a data.frame; (ii) the \code{autoplot()} methods
   use these data.frames and leverage ggplot2 to produce
@@ -28,8 +28,7 @@
   Springer-Verlag, New York, 2009.
 }
 \seealso{
-  See the original \code{\link[ggplot2:ggplot2]{ggplot2}}
-  package.
+  The \code{\link[ggplot2:ggplot2]{ggplot2}} package.
 }
 \keyword{package}
 
