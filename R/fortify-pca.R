@@ -157,7 +157,7 @@ fortify.prcomp <- function(model, data=NULL, type=c("observations", "variables")
       .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
     }
 
-    res <- data.frame(.id, scores, .cos2, .contrib, .kind=type)
+    res <- data.frame(.id, scores, .cos2, .contrib, .kind=type, stringsAsFactors=FALSE)
     if (!is.null(data)) {
       data$.id <- row.names(data)
       res <- join(data, res, by=".id", type="full")
@@ -361,7 +361,7 @@ fortify.pcaRes <- function(model, data=NULL, type=c("observations", "variables")
       .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
     }
 
-    res <- data.frame(.id, scores, .cos2, .contrib, .kind=type)
+    res <- data.frame(.id, scores, .cos2, .contrib, .kind=type, stringsAsFactors=FALSE)
 
     # concatenate with original data
     if (is.null(data)) {
