@@ -223,18 +223,18 @@ fortify.PCA <- function(model, data=NULL, type=c("observations", "variables"), P
       .id <- row.names(model[[i]]$coord)
 
       # scores on the PC
-      scores <- as.data.frame(model[[i]]$coord[,PC])
+      scores <- as.data.frame(model[[i]]$coord[,PC, drop=FALSE])
       names(scores) <- paste(".PC", PC, sep="")
 
       # square cosine : quality of the representation on the current space
-      .cos2 <- model[[i]]$cos2[,PC]
+      .cos2 <- model[[i]]$cos2[,PC, drop=FALSE]
       if (length(PC > 1)) {
         .cos2 <- rowSums(.cos2)
       }
 
       # contribution to the current PCs (for active variables and individuals only)
       if ("contrib" %in% names(model[[i]])) {
-        .contrib <- model[[i]]$contrib[,PC]
+        .contrib <- model[[i]]$contrib[,PC, drop=FALSE]
         if (length(PC > 1)) {
           .contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar)
         }
