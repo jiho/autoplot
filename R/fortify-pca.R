@@ -208,7 +208,7 @@ fortify.PCA <- function(model, data=NULL, type=c("observations", "variables"), P
   # determine what to extract
   if (type == "variables") {
     extract <- c("var", "quanti.sup")
-    } else if (type == "observations") {
+  } else if (type == "observations") {
     extract <- c("ind", "ind.sup", "quali.sup")
   }
 
