@@ -77,8 +77,8 @@ match.type <- function(type, ...) {
 }
 
 
+# Generic and methods for the extraction of raw, unscaled, variables scores from a Principal Component Analysis object
 var.scores <- function(x, ...) {
-  # Generic for the extraction of raw, unscaled, variables scores from a Principal Component Analysis object
   UseMethod("var.scores")
 }
 var.scores.prcomp <- function(x, ...) { x$rotation }
@@ -97,8 +97,8 @@ var.scores.pcaRes <- function(x, ...) { x@loadings }
 var.scores.pca <- function(x, ...) { x$c1 }
 var.scores.rda <- function(x, ...) { x$CA$v }
 
+# Generic and methods for the extraction of raw, unscaled, observations scores from a Principal Component Analysis object
 obs.scores <- function(x, ...) {
-  # Generic for the extraction of raw, unscaled, observations scores from a Principal Component Analysis object
   UseMethod("obs.scores")
 }
 obs.scores.prcomp <- function(x, eig, ...) { t(t(x$x) / sqrt(nrow(x$x) - 1) / sqrt(eig)) }
