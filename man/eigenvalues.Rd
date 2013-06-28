@@ -1,0 +1,41 @@
+\name{eigenvalues}
+\alias{eigenvalues}
+\alias{eigenvalues.PCA}
+\alias{eigenvalues.pca}
+\alias{eigenvalues.pcaRes}
+\alias{eigenvalues.prcomp}
+\alias{eigenvalues.rda}
+\title{Extract eigenvalues from a Principal Component Analysis object}
+\usage{
+  eigenvalues(x, ...)
+
+  \method{eigenvalues}{prcomp} (x, ...)
+
+  \method{eigenvalues}{PCA} (x, ...)
+
+  \method{eigenvalues}{pcaRes} (x, ...)
+
+  \method{eigenvalues}{pca} (x, ...)
+
+  \method{eigenvalues}{rda} (x, ...)
+}
+\arguments{
+  \item{x}{an object resulting from a PCA}
+
+  \item{...}{pass-through argument}
+}
+\value{
+  A numeric vector containing the eigenvalues.
+}
+\description{
+  Extract eigenvalues from a Principal Component Analysis
+  object
+}
+\examples{
+pca <- prcomp(USArrests, scale = TRUE)
+eigenvalues(pca)
+}
+\author{
+  Jean-Olivier Irisson \email{irisson@normalesup.org}
+}
+
