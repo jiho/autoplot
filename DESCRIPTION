@@ -13,7 +13,7 @@ Description: ggplot2 is a versatile plotting package which allows to produce
     easily plot classic diagnostics using plot(), by defining a
     specialized method for this generic function. This package aims at
     reproducing this functionality in ggplot2 while benefiting from its
-    increased versatility. It provides two sets of methods : (i) the
+    improved versatility. It provides two sets of methods : (i) the
     fortify() methods extract data from the original object and
     format it as a data.frame; (ii) the autoplot() methods use these
     data.frames and leverage ggplot2 to produce diagnostic plots.
