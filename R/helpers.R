@@ -72,4 +72,3 @@ print.ggplot_list <- function(x, ...) {
 #' @rdname print.ggplot_list
 #' @export
 plot.ggplot_list <- print.ggplot_list
- 
