@@ -9,35 +9,37 @@ The package is under development and is not on CRAN yet. To install it, the simp
     # install.packages("devtools")
     library("devtools")
     install_github("autoplot", "jiho")
-    
+
 ## Development
 
-All suggestions and improvements are welcome. Suggestions under the form of Github "issues" (see the tab above). Improvements under the form of "pull-requests" (again, see the tab above). The best way to do so (according to me) is:
+All suggestions and improvements are welcome. Suggestions are preferred under the form of Github "issues" (see the tab above). Improvements should be submitted under the form of "pull-requests" (again, see the tab above).
+
+The best way to create a pull-request (according to me) is:
 
 1. fork the repository on GitHub's website. It creates your very own copy of `autoplot`
 
 2. clone *my version* the project
 
-    git clone https://github.com/jiho/autoplot.git
+        git clone https://github.com/jiho/autoplot.git
 
 3. create a branch
 
-    git branch myfeature
-    git checkout myfeature
+        git branch myfeature
+        git checkout myfeature
 
 4. make the changes you want and commit them to the branch
 
-    <code, code>
-    git commit
+        <code, code>
+        git commit
     
 5. push the branch to *your* github repository
 
-    git remote add mine https://github.com/<yourname>/autoplot.git
-    git push myfeature mine
+        git remote add mine https://github.com/<yourname>/autoplot.git
+        git push myfeature mine
 
 6. create the pull request from your branch to my master branch, on GitHub's website.
 
-This way, you can easily update the master branch to get my latest changes and base your next contribution on it:
+This way, you can easily update the master branch to get my latest changes and base your next contribution on it (which is necessary for things not to break):
 
     # update the master branch to match mine
     git checkout master
@@ -54,3 +56,4 @@ This way, you can easily update the master branch to get my latest changes and b
     # push it online
     git push myotherfeature mine
 
+Technically, the documentation is written with [roxygen](http://roxygen.org/), unit tests are performed with [testthat](https://github.com/hadley/testthat).
