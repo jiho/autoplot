@@ -4,7 +4,7 @@
 
 ## Installation
 
-The package is under development and is not on CRAN yet. To install it, the simplest way it therefore
+The package is under development and is not on CRAN yet. To install it, the simplest method is therefore
 
     # install.packages("devtools")
     library("devtools")
@@ -12,13 +12,13 @@ The package is under development and is not on CRAN yet. To install it, the simp
 
 ## Development
 
-All suggestions and improvements are welcome. Suggestions are preferred under the form of Github "issues" (see the tab above). Improvements should be submitted under the form of "pull-requests" (again, see the tab above).
+All suggestions and improvements are welcome. Suggestions are preferred under the form of Github "issues" (see the tab above, on the top right). Improvements should be submitted under the form of "pull-requests" (again, see the tab above).
 
 The best way to create a pull-request (according to me) is:
 
 1. fork the repository on GitHub's website. It creates your very own copy of `autoplot`
 
-2. clone *my version* the project
+2. clone *my* version the project
 
         git clone https://github.com/jiho/autoplot.git
 
@@ -30,14 +30,14 @@ The best way to create a pull-request (according to me) is:
 4. make the changes you want and commit them to the branch
 
         <code, code>
-        git commit
+        git commit -a
     
 5. push the branch to *your* github repository
 
         git remote add mine https://github.com/<yourname>/autoplot.git
         git push myfeature mine
 
-6. create the pull request from your branch to my master branch, on GitHub's website.
+6. visit your branch on GitHub's website and create a pull request. It should automatically be made against my master branch.
 
 This way, you can easily update the master branch to get my latest changes and base your next contribution on it (which is necessary for things not to break):
 
@@ -46,14 +46,14 @@ This way, you can easily update the master branch to get my latest changes and b
     git pull
     
     # create a new branch
-    git branch myotherfeature
-    git checkout myotherfeature
+    git branch myOtherFeature
+    git checkout myOtherFeature
     
     # create a new change
     <code, code>
     git commit
     
     # push it online
-    git push myotherfeature mine
+    git push myOtherFeature mine
 
-Technically, the documentation is written with [roxygen](http://roxygen.org/), unit tests are performed with [testthat](https://github.com/hadley/testthat).
+Technically, the documentation is written with [roxygen](http://roxygen.org/), unit tests are performed with [testthat](https://github.com/hadley/testthat). You should use that. It's too cool to miss out.
