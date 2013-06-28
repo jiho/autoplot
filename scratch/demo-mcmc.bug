@@ -1,0 +1,22 @@
+#
+#     Simple regression model for demonstration
+# 
+# (c) Copyright 2011 Jean-Olivier Irisson
+#     GNU General Public License v3
+#
+#------------------------------------------------------------
+
+model {
+    # description of the model
+    for (i in 1:n) {
+        y[i] ~ dnorm(mu[i], precision)
+        mu[i] <- a * x[i] + b
+    }
+    precision <- pow(sigmaR, -2)
+    # precision <- 1/sigmaR^2       # <- JAGS specific
+    
+    # priors
+    sigmaR ~ dunif(0, 100)
+    a ~ dnorm(0, 1.0E-6)
+    b ~ dnorm(0, 1.0E-6)
+}
