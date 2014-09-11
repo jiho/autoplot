@@ -22,13 +22,9 @@ Depends:
     ggplot2 (>= 0.9.0)
 Imports:
     grid,
-    plyr
+    plyr,
+    reshape2
 Suggests:
     FactoMineR,
     pcaMethods,
     testthat
-Collate:
-    'autoplot-package.R'
-    'autoplot-pca.R'
-    'fortify-pca.R'
-    'helpers.R'
