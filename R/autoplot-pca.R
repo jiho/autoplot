@@ -1,14 +1,10 @@
 #' Automatic ggplot for a Principal Component Analysis
 #'
-#' @param object an object resulting from a PCA, using \code{\link{prcomp}} in package \code{stats}, \code{\link[FactoMineR:PCA]{PCA}} in package \code{factoMineR} or \code{\link[pcaMethods:pca]{pca}} in package \code{pcaMethods} from bioconductor
+#' @param object an object resulting from a PCA
 #'
-#' @param type whether to extract observations (i.e. rows, individuals) or variables (i.e. columns, descriptors); can be abbreviated
+#' @param mapping a call to aes() specifying additional mappings between variables and plot aesthetics; by default, positions in x and y are mapped to the scores on the principal components and colour is mapped to the nature of the data (active or supplementary) when relevant. See \code{\link{fortify_pca}} for a list of the other mappable variables returned by the \code{fortify} methods
 #'
-#' @param mapping a call to aes() specifying additional mappings between variables and plot aesthetics; by default, positions in x and y are mapped to the scores or loadings on the principal components and colour is mapped to the nature of the data (active or supplementary) when relevant. See \link{fortify_pca} for a list of the other mappable variables returned by the \code{fortify} methods
-#'
-#' @param data the original data used to compute the PCA, to be concatenated to the output when extracting observations. This allows to map original data columns to aesthetics of the plot, even if those columns were not used in the PCA. When \code{NULL} the data used in the PCA will be extracted from the PCA object, when possible (not for \code{\link{prcomp}})
-#'
-#' @param PC the principal components to extract; two are necessary to produce a plot
+#' @template pca_params
 #'
 #' @param ... passed to the various geoms; can be used to \emph{set} further aesthetics
 #'
@@ -16,7 +12,8 @@
 #'
 #' @author Jean-Olivier Irisson \email{irisson@@normalesup.org}
 #'
-#' @seealso \link{fortify_pca}, \code{\link{prcomp}} in package \code{stats}, \code{\link[FactoMineR:PCA]{PCA}} in package \code{factoMineR} or \code{\link[pcaMethods:pca]{pca}} in package \code{pcaMethods} from bioconductor
+#' @seealso \code{\link{fortify_pca}} for the function which actually extracts the data from the PCA object.
+#' @template pca_seealso
 #'
 #' @examples
 #' # PCA with stats::prcomp

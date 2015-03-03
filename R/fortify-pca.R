@@ -4,13 +4,7 @@
 #'
 #' @param model an object resulting from a PCA
 #'
-#' @param data the original dataset, to be concatenated to the output when extracting observations. Whhen \code{NULL}, the default, data will be extracted from the PCA object when it contains it (i.e. not for \code{\link{prcomp}})
-#'
-#' @template type
-#'
-#' @param PC the principal components to extract; two is usual for plotting
-#'
-#' @template scaling
+#' @template pca_params
 #'
 #' @param ... pass-through argument
 #'
@@ -24,7 +18,8 @@
 #'
 #' @author Jean-Olivier Irisson \email{irisson@@normalesup.org}
 #'
-#' @seealso \code{\link{prcomp}} in package \code{stats}, \code{\link[FactoMineR:PCA]{PCA}} in package \code{factoMineR}, \code{\link[ade4:dudi.pca]{dudi.pca}} in package \code{ade4}, \code{\link[vegan:rda]{rda}} in package \code{vegan},   \code{\link[pcaMethods:pca]{pca}} in package \code{pcaMethods} from bioconductor. \code{\link{autoplot_pca}} to produce plots based on the output of \code{fortify}
+#' @seealso \code{\link{autoplot_pca}} to produce plots based on the output of \code{fortify}.
+#' @template pca_seealso
 #'
 #' @examples
 #' # PCA with stats::prcomp
