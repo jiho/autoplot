@@ -68,13 +68,14 @@
 #'
 #' }
 #'
+#' @name autoplot_pca
+NULL
 # TODO actually describe the plots, layers, mappings, as recommended on https://github.com/hadley/ggplot2/wiki/autoplot
 
-#' @export
-autoplot_pca <- function(object, type=c("observations", "variables"), mapping=aes(), data=NULL, PC=c(1, 2), ...) {
+autoplot_pca <- function(object, mapping=aes(), type=c("observations", "variables"),  data=NULL, PC=c(1, 2), scaling="auto", ...) {
 
   # check arguments
-  type <- choose_plots(type, choices=c("observations", "variables"))
+  type <- match.type(type)
   if (length(PC) != 2) {
     stop("You must choose exactly two principal components to plot")
   }
@@ -82,13 +83,13 @@ autoplot_pca <- function(object, type=c("observations", "variables"), mapping=ae
   # prepare the appropriate plots
   p <- list()
 
-  if ("observations" %in% type) {
-    fData <- fortify(model=object, data=data, type="observations", PC=PC)
+  if ("obs" %in% type) {
+    fData <- fortify(model=object, data=data, type="obs", PC=PC, scaling=scaling)
     p <- c(p, list(observations=autoplot_pca_obs(data=fData, mapping=mapping, ...)))
   }
 
-  if ("variables" %in% type) {
-    fData <- fortify(model=object, data=data, type="variables", PC=PC)
+  if ("var" %in% type) {
+    fData <- fortify(model=object, data=data, type="var", PC=PC, scaling=scaling)
     p <- c(p, list(variables=autoplot_pca_vars(data=fData, mapping=mapping, ...)))
   }
 
@@ -111,33 +112,28 @@ autoplot_pca <- function(object, type=c("observations", "variables"), mapping=ae
 #' @method autoplot prcomp
 #' @rdname autoplot_pca
 #' @export
-autoplot.prcomp <- function(object, ...) {
-  autoplot_pca(object=object, ...)
-}
+autoplot.prcomp <- autoplot_pca
 
 #' @method autoplot PCA
 #' @rdname autoplot_pca
 #' @export
-autoplot.PCA <- function(object, ...) {
-  autoplot_pca(object=object, ...)
-}
+autoplot.PCA <- autoplot_pca
 
 #' @method autoplot rda
 #' @rdname autoplot_pca
 #' @export
-autoplot.rda <- function(object, ...) {
-  autoplot_pca(object=object, ...)
-}
+autoplot.rda <- autoplot_pca
 
-
-# TODO add a method for ade4
+#' @method autoplot pca
+#' @rdname autoplot_pca
+#' @export
+autoplot.pca <- autoplot_pca
 
 #' @method autoplot pcaRes
 #' @rdname autoplot_pca
 #' @export
-autoplot.pcaRes <- function(object, ...) {
-  autoplot_pca(object=object, ...)
-}
+autoplot.pcaRes <- autoplot_pca
+
 
 autoplot_pca_axes_labels <- function(data) {
   # Prepare axes labels
