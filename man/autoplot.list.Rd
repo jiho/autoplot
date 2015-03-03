@@ -6,11 +6,11 @@
 \method{autoplot}{list}(object, mapping = aes(), ...)
 }
 \arguments{
+\item{...}{not used by this method}
+
 \item{model}{list with components x, y and z}
 
 \item{data}{not used by this method}
-
-\item{...}{not used by this method}
 }
 \description{
 Similar to \code{\link[graphics]{image}}
