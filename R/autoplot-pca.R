@@ -48,7 +48,7 @@
 #' autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.kind))
 #' # in particular, with FactoMineR, the data is present by default and can be mapped
 #' names(fortify(pca, type = "obs"))
-#' autoplot(pca, "obs", aes(alpha=.cos2, size=Murder))
+#' autoplot(pca, aes(alpha=.cos2, size=Murder), "obs")
 #'
 #' # PCA with pcaMethods::pca, from bioconductor
 #' library("pcaMethods")
