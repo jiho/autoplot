@@ -1,4 +1,4 @@
-#' Extract information from a Principal Component Analysis
+#' @title Extract information from a Principal Component Analysis
 #'
 #' Extract information from a Principal Component Analysis such as the scores on the principal components and some fit statistics into a data.frame.
 #'

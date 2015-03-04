@@ -6,7 +6,9 @@
 \alias{fortify.prcomp}
 \alias{fortify.rda}
 \alias{fortify_pca}
-\title{}
+\title{Extract information from a Principal Component Analysis
+
+Extract information from a Principal Component Analysis such as the scores on the principal components and some fit statistics into a data.frame.}
 \usage{
 \method{fortify}{prcomp}(model, data = NULL, type = "observations",
   PC = c(1, 2), scaling = "auto", ...)

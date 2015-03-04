@@ -1,4 +1,4 @@
-#' Automatic ggplot for a Principal Component Analysis
+#' @title Automatic ggplot for a Principal Component Analysis
 #'
 #' @param object an object resulting from a PCA
 #'
@@ -67,12 +67,12 @@
 #' autoplot(pca)
 #'
 #' }
-#'
-#' @name autoplot_pca
+#'@name autoplot_pca
 NULL
-# TODO actually describe the plots, layers, mappings, as recommended on https://github.com/hadley/ggplot2/wiki/autoplot
 
 autoplot_pca <- function(object, mapping=aes(), type=c("observations", "variables"),  data=NULL, PC=c(1, 2), scaling="auto", ...) {
+
+  # TODO actually describe the plots, layers, mappings, as recommended on https://github.com/hadley/ggplot2/wiki/autoplot
 
   # check arguments
   type <- match.type(type)

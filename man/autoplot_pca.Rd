@@ -6,7 +6,7 @@
 \alias{autoplot.prcomp}
 \alias{autoplot.rda}
 \alias{autoplot_pca}
-\title{}
+\title{Automatic ggplot for a Principal Component Analysis}
 \usage{
 \method{autoplot}{prcomp}(object, mapping = aes(), type = c("observations",
   "variables"), data = NULL, PC = c(1, 2), scaling = "auto", ...)
