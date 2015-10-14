@@ -28,7 +28,7 @@ Extract information from a Principal Component Analysis such as the scores on th
 \arguments{
 \item{model}{an object resulting from a PCA}
 
-\item{data}{the original dataset, to be concatenated to the output when extracting observations. Whhen \code{NULL}, the default, data will be extracted from the PCA object when it contains it (i.e. not for \code{\link{prcomp}})}
+\item{data}{the original dataset, to be concatenated to the output when extracting observations. When \code{NULL}, the default, data will be extracted from the PCA object when it contains it (i.e. not for \code{\link{prcomp}})}
 
 \item{type}{the elements to consider: either "observations", "individuals", "sites", "lines" (which are all synonyms) or "variables", "descriptors", "species", "columns" (which are, again, synonyms)}
 
