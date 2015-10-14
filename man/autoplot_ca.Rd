@@ -6,12 +6,15 @@
 \alias{autoplot_ca}
 \title{Automatic ggplot for a Correspondence Analysis}
 \usage{
-\method{autoplot}{correspondence}(ca, data = NULL, PC = c(1, 2),
+\method{autoplot}{correspondence}(object, data = NULL, PC = c(1, 2),
   mapping = aes(), ...)
 
-\method{autoplot}{CA}(ca, data = NULL, PC = c(1, 2), mapping = aes(), ...)
+\method{autoplot}{CA}(object, data = NULL, PC = c(1, 2), mapping = aes(),
+  ...)
 }
 \arguments{
+\item{object}{an object resulting from a CA}
+
 \item{data}{the original dataset, use to compute the contributions of rows and columns to the principal components. When \code{NULL}, the default, data will be extracted from the CA object when it contains it}
 
 \item{PC}{the principal components to extract; two is usual for plotting}
@@ -19,8 +22,6 @@
 \item{mapping}{a call to aes() specifying additional mappings between variables and plot aesthetics; by default, positions in x and y are mapped to the scores on the principal components and colour is mapped to the nature of the data (active or supplementary) when relevant. See \code{\link{fortify_ca}} for a list of the other mappable variables returned by the \code{fortify} methods}
 
 \item{...}{passed to the various geoms; can be used to \emph{set} further aesthetics}
-
-\item{object}{an object resulting from a CA}
 }
 \value{
 A ggplot2 object defining the plot

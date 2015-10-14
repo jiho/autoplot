@@ -8,16 +8,16 @@
 
 Extract information from a Correspondence Analysis such as the scores on the principal components and some fit statistics into a data.frame.}
 \usage{
-\method{fortify}{correspondence}(ca, data = NULL, PC = c(1, 2))
+\method{fortify}{correspondence}(model, data = NULL, PC = c(1, 2), ...)
 
-\method{fortify}{CA}(ca, data = NULL, PC = c(1, 2))
+\method{fortify}{CA}(model, data = NULL, PC = c(1, 2), ...)
 }
 \arguments{
+\item{model}{an object resulting from a CA}
+
 \item{data}{the original dataset, use to compute the contributions of rows and columns to the principal components. When \code{NULL}, the default, data will be extracted from the CA object when it contains it}
 
 \item{PC}{the principal components to extract; two is usual for plotting}
-
-\item{model}{an object resulting from a CA}
 
 \item{...}{pass-through argument}
 }

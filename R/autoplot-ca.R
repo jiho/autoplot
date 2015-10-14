@@ -19,26 +19,26 @@ NULL
 #' @method autoplot correspondence
 #' @rdname autoplot_ca
 #' @export
-autoplot.correspondence <- function(ca, data=NULL, PC=c(1,2), mapping=aes(), ...) {
-
+autoplot.correspondence <- function(object, data=NULL, PC=c(1,2), mapping=aes(), ...) {
+  
 	# Extract data
-	data = fortify.correspondence(ca, data=data, PC=PC)
+	data <- fortify.correspondence(object, data=data, PC=PC)
 	# NB: from now on, data is different from the data argument. Not very clean but useful
 	
 	# compute variance explained by each principal component
-	eig = ca$cor^2
-	explainedVar = eig / sum(eig)
+	eig <- object$cor^2
+	explainedVar <- eig / sum(eig)
 
 	# Prepare legends and labels
-	PCs = grep("PC", names(data), value=TRUE)
-	axesLabels = paste(PCs, " (", format(explainedVar, digits=3), "%)", sep="")
+	PCs <- grep("PC", names(data), value=TRUE)
+	axesLabels <- paste(PCs, " (", format(explainedVar, digits=3), "%)", sep="")
 
 	# compute full mapping from defaults + arguments
-	map = c(aes_string(x=PCs[1], y=PCs[2], colour=".type"), mapping)
-	class(map) = "uneval"
+	map <- c(aes_string(x=PCs[1], y=PCs[2], colour=".type"), mapping)
+	class(map) <- "uneval"
 
 	# plot
-	p = ggplot(data, mapping=map) +
+	p <- ggplot(data, mapping=map) +
 		# points
 		geom_point() +
 		# point labels
@@ -52,23 +52,23 @@ autoplot.correspondence <- function(ca, data=NULL, PC=c(1,2), mapping=aes(), ...
 #' @method autoplot CA
 #' @rdname autoplot_ca
 #' @export
-autoplot.CA <- function(ca, data=NULL, PC=c(1,2), mapping=aes(), ...) {
+autoplot.CA <- function(object, data=NULL, PC=c(1,2), mapping=aes(), ...) {
 
 	# Extract data
-	data = fortify.CA(ca, data=data, PC=PC)
+	data <- fortify.CA(object, data=data, PC=PC)
 	# compute variance explained by each principal component
-	explainedVar = ca$eig$`percentage of variance`[PC]
+	explainedVar <- object$eig$`percentage of variance`[PC]
 
 	# Prepare legends and labels
-	PCs = grep("PC", names(data), value=TRUE)
-	axesLabels = paste(PCs, " (", format(explainedVar, digits=3), "%)", sep="")
+	PCs <- grep("PC", names(data), value=TRUE)
+	axesLabels <- paste(PCs, " (", format(explainedVar, digits=3), "%)", sep="")
 
 	# compute full mapping from defaults + arguments
-	map = c(aes_string(x=PCs[1], y=PCs[2], colour=".type"), mapping)
-	class(map) = "uneval"
+	map <- c(aes_string(x=PCs[1], y=PCs[2], colour=".type"), mapping)
+	class(map) <- "uneval"
 
 	# plot
-	p = ggplot(data, mapping=map) +
+	p <- ggplot(data, mapping=map) +
 		# points
 		geom_point() +
 		# point labels

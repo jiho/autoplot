@@ -27,9 +27,9 @@ NULL
 #' @method fortify correspondence
 #' @rdname fortify_ca
 #' @export
-fortify.correspondence <- function(ca, data=NULL, PC=c(1,2)) {
+fortify.correspondence <- function(model, data=NULL, PC=c(1,2), ...) {
 	# checks
-	if (any(PC > ncol(ca$rscore))) {
+	if (any(PC > ncol(model$rscore))) {
 		stop("At least one of the principal components does not exist")
 	}
 	if (length(PC) < 1) {
@@ -43,16 +43,16 @@ fortify.correspondence <- function(ca, data=NULL, PC=c(1,2)) {
 	}
 
 	# eigenvalues (scaled to be homogeneous with other packages)
-	eig <- ca$cor^2
+	eig <- model$cor^2
 	# variance explained by each PC
 	explainedVar <- eig / sum(eig)
 
 	d <- data.frame()
 
 	for (dim in c("rscore", "cscore")) {
-		.id <- row.names(ca[[dim]])
+		.id <- row.names(model[[dim]])
 
-		scores <- as.data.frame(t(t(ca[[dim]]) * ca$cor))
+		scores <- as.data.frame(t(t(model[[dim]]) * model$cor))
 		names(scores) <- paste(".PC", 1:ncol(scores), sep="")
 
 		.cos2 <- scores^2 / rowSums(scores^2)
@@ -85,9 +85,9 @@ fortify.correspondence <- function(ca, data=NULL, PC=c(1,2)) {
 #' @method fortify CA
 #' @rdname fortify_ca
 #' @export
-fortify.CA <- function(ca, data=NULL, PC=c(1,2)) {
+fortify.CA <- function(model, data=NULL, PC=c(1,2), ...) {
 	# checks
-	if (any(PC > ncol(ca$row$coord))) {
+	if (any(PC > ncol(model$row$coord))) {
 		stop("At least one of the principal components does not exist")
 	}
 	if (length(PC) < 1) {
@@ -98,30 +98,30 @@ fortify.CA <- function(ca, data=NULL, PC=c(1,2)) {
 	}
 
 	# variance explained by each PC (scaled to 1)
-	explainedVar <- ca$eig$eigenvalue / sum(ca$eig$eigenvalue)
+	explainedVar <- model$eig$eigenvalue / sum(model$eig$eigenvalue)
 
 	d <- data.frame()
 
 	for (i in c("row", "row.sup", "col", "col.sup")) {
 
-		if (!is.null(ca[[i]])) {
+		if (!is.null(model[[i]])) {
 
 			# variable identifier
-			.id <- row.names(ca[[i]]$coord)
+			.id <- row.names(model[[i]]$coord)
 
 			# scores on the PC
-			scores <- as.data.frame(ca[[i]]$coord[,PC])
+			scores <- as.data.frame(model[[i]]$coord[,PC])
 			names(scores) <- paste(".PC", PC, sep="")
 
 			# square cosine : quality of the representation on the current space
-			.cos2=ca[[i]]$cos2[,PC]
+			.cos2 <- model[[i]]$cos2[,PC]
 			if (length(PC > 1)) {
 				.cos2 <- rowSums(.cos2)
 			}
 
 			# contribution to the current PCs (for active variable only)
-			if ("contrib" %in% names(ca[[i]])) {
-				.contrib=ca[[i]]$contrib[,PC]
+			if ("contrib" %in% names(model[[i]])) {
+				.contrib <- model[[i]]$contrib[,PC]
 				if (length(PC > 1)) {
 					.contrib <- apply(.contrib, 1, function(x,v) {sum(x*v)}, explainedVar[PC])
 				}
