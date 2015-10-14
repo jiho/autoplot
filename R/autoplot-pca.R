@@ -45,7 +45,7 @@
 #' autoplot(pca, type = "obs", colour="black")
 #'
 #' # additional mappings can be specified
-#' autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.kind))
+#' autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.type))
 #' # in particular, with FactoMineR, the data is present by default and can be mapped
 #' names(fortify(pca, type = "obs"))
 #' autoplot(pca, aes(alpha=.cos2, size=Murder), "obs")
@@ -157,9 +157,9 @@ autoplot_pca_vars <- function(data, mapping, ...) {
   # Construct default aesthetic mappings
   # get PC numbers
   PCs <- grep("PC", names(data), value=TRUE)
-  if (length(unique(data$.kind)) > 1) {
+  if (length(unique(data$.type)) > 1) {
     # map colour to variable type (active or supplementary)
-    mapping <- c(mapping, aes(colour=.kind))
+    mapping <- c(mapping, aes(colour=.type))
     class(mapping) <- "uneval"
   }
 
@@ -199,8 +199,8 @@ autoplot_pca_obs <- function(data, mapping, ...) {
   # map x/y position to PC
   mapping <- c(mapping, aes_string(x=PCs[1], y=PCs[2]))
   # map colour to variable type (active or supplementary) when necessary
-  if (length(unique(data$.kind)) > 1) {
-    mapping <- c(mapping, aes(colour=.kind))
+  if (length(unique(data$.type)) > 1) {
+    mapping <- c(mapping, aes(colour=.type))
   }
   class(mapping) <- "uneval"
 

@@ -14,7 +14,7 @@
 #'   \item{.PC#}{the scores of rows or columns on the extracted principal components}
 #'   \item{.cos2}{the squared cosine summed over all extracted PCs}
 #'   \item{.contrib}{the contribution to the selected PCs}
-#'   \item{.kind}{the nature of the data extracted : rows, columns and possibly their status (active or supplementary)}
+#'   \item{.type}{the nature of the data extracted : rows, columns and possibly their status (active or supplementary)}
 #'
 #' @author Jean-Olivier Irisson \email{irisson@@normalesup.org}
 #'
@@ -74,9 +74,9 @@ fortify.correspondence <- function(model, data=NULL, PC=c(1,2), ...) {
 			}
 		}
 		
-		.kind <- ifelse(dim == "rscore", "row", "col")
+		.type <- ifelse(dim == "rscore", "row", "col")
 		
-		d <- rbind(d, data.frame(.id, scores[,PC], .cos2, .contrib, .kind, stringsAsFactors=FALSE))
+		d <- rbind(d, data.frame(.id, scores[,PC], .cos2, .contrib, .type, stringsAsFactors=FALSE))
 	}
 	
 	return(d)
@@ -129,7 +129,7 @@ fortify.CA <- function(model, data=NULL, PC=c(1,2), ...) {
 				.contrib <- 0
 			}
 
-			cD <- data.frame(.id, scores, .cos2, .contrib, .kind=i, stringsAsFactors=FALSE)
+			cD <- data.frame(.id, scores, .cos2, .contrib, .type=i, stringsAsFactors=FALSE)
 
 		} else {
 

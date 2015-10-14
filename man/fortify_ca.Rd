@@ -27,7 +27,7 @@ A data.frame containing
   \item{.PC#}{the scores of rows or columns on the extracted principal components}
   \item{.cos2}{the squared cosine summed over all extracted PCs}
   \item{.contrib}{the contribution to the selected PCs}
-  \item{.kind}{the nature of the data extracted : rows, columns and possibly their status (active or supplementary)}
+  \item{.type}{the nature of the data extracted : rows, columns and possibly their status (active or supplementary)}
 }
 \description{
 

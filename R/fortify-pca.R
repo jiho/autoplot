@@ -14,7 +14,7 @@
 #'   \item{.PC#}{the scores of observations or variables on the extracted principal components}
 #'   \item{.cos2}{the squared cosine summed over all extracted PCs}
 #'   \item{.contrib}{the contribution to the selected PCs}
-#'   \item{.kind}{the nature of the data extracted : observations, variables and possibly their status (active or supplementary)}
+#'   \item{.type}{the nature of the data extracted : observations, variables and possibly their status (active or supplementary)}
 #'
 #' @author Jean-Olivier Irisson \email{irisson@@normalesup.org}
 #'
@@ -177,12 +177,12 @@ fortify_pca <- function(model, data=NULL, type="observations", PC=c(1,2), scalin
 
   # Add kind
   if ( ! is.null(kind) ) {
-    scores$.kind <- kind
+    scores$.type <- kind
   } else {
-    scores$.kind <- type
+    scores$.type <- type
   }
   # remove contributions of non active elements
-  .contrib[scores$.kind != type] <- NA
+  .contrib[scores$.type != type] <- NA
   
   # Compute identifier row identifier
   .id <- row.names(scores)

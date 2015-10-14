@@ -73,14 +73,14 @@ A data.frame containing the original data, when it is supplied or can be extract
   \item{.PC#}{the scores of observations or variables on the extracted principal components}
   \item{.cos2}{the squared cosine summed over all extracted PCs}
   \item{.contrib}{the contribution to the selected PCs}
-  \item{.kind}{the nature of the data extracted : observations, variables and possibly their status (active or supplementary)}
+  \item{.type}{the nature of the data extracted : observations, variables and possibly their status (active or supplementary)}
 
 A data.frame containing the original data, when it is supplied or can be extracted from the object, and the additional columns
   \item{.id}{the identifier of the observation (row name) or variable (column name)}
   \item{.PC#}{the scores of observations or variables on the extracted principal components}
   \item{.cos2}{the squared cosine summed over all extracted PCs}
   \item{.contrib}{the contribution to the selected PCs}
-  \item{.kind}{the nature of the data extracted : observations, variables and possibly their status (active or supplementary)}
+  \item{.type}{the nature of the data extracted : observations, variables and possibly their status (active or supplementary)}
 }
 \description{
 

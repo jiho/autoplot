@@ -75,7 +75,7 @@ autoplot(pca, type = "obs", mapping = aes(colour=.contrib))
 autoplot(pca, type = "obs", colour="black")
 
 # additional mappings can be specified
-autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.kind))
+autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.type))
 # in particular, with FactoMineR, the data is present by default and can be mapped
 names(fortify(pca, type = "obs"))
 autoplot(pca, aes(alpha=.cos2, size=Murder), "obs")
