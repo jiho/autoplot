@@ -3,14 +3,16 @@
 \alias{autoplot.list}
 \title{Automatic ggplot for a x, y, z list.}
 \usage{
-\method{autoplot}{list}(object, mapping = aes(), ...)
+\method{autoplot}{list}(object, data = NULL, mapping = aes(), ...)
 }
 \arguments{
-\item{...}{not used by this method}
-
-\item{model}{list with components x, y and z}
+\item{object}{list with components x, y and z}
 
 \item{data}{not used by this method}
+
+\item{mapping}{a call to aes() specifying additional mappings between variables and plot aesthetics; by default, positions in x and y are mapped to the x and y coordinates and fill is mapped to the values contained in the z component in the list}
+
+\item{...}{not used by this method}
 }
 \description{
 Similar to \code{\link[graphics]{image}}
