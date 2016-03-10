@@ -16,17 +16,16 @@ match.type <- function(type, ...) {
   return(type)
 }
 
-
-#' Extract eigenvalues from a Principal Component Analysis object
+#' Eigenvalues in a factorial analysis
+#' 
+#' Extract eigenvalues from a factorial analysis (principal component analysis, correspondence analysis, ) object in a standard way.
 #'
-#' @param x an object resulting from a PCA
+#' @param x an object resulting from a factorial analysis
 #'
 #' @param ... pass-through argument
 #'
 #' @return
 #' A numeric vector containing the eigenvalues.
-#'
-#' @author Jean-Olivier Irisson \email{irisson@@normalesup.org}
 #'
 #' @examples
 #' pca <- prcomp(USArrests, scale = TRUE)
@@ -38,26 +37,27 @@ eigenvalues <- function(x, ...) {
   UseMethod("eigenvalues")
 }
 
-#' @method eigenvalues prcomp
-#' @rdname eigenvalues
+#' @name eigenvalues
 #' @export
 eigenvalues.prcomp <- function(x, ...) { x$sdev^2 }
-#' @method eigenvalues PCA
-#' @rdname eigenvalues
+#' @name eigenvalues
 #' @export
 eigenvalues.PCA <- function(x, ...) { x$eig$eigenvalue }
-#' @method eigenvalues pcaRes
-#' @rdname eigenvalues
+#' @name eigenvalues
 #' @export
 eigenvalues.pcaRes <- function(x, ...) { as.numeric(x@sDev^2) }
-#' @method eigenvalues pca
-#' @rdname eigenvalues
+#' @name eigenvalues
 #' @export
 eigenvalues.pca <- function(x, ...) { x$eig }
-#' @method eigenvalues rda
-#' @rdname eigenvalues
+#' @name eigenvalues
 #' @export
 eigenvalues.rda <- function(x, ...) { as.numeric(x$CA$eig) }
+#' @name eigenvalues
+#' @export
+eigenvalues.correspondence <- function(x) { x$cor^2 }
+#' @name eigenvalues
+#' @export
+eigenvalues.CA <- function(x) { x$eig$eigenvalue }
 
 
 # Generic and methods for the extraction of raw, unscaled, variables scores from a Principal Component Analysis object
