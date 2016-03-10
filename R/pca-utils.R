@@ -16,49 +16,6 @@ match.type <- function(type, ...) {
   return(type)
 }
 
-#' Eigenvalues in a factorial analysis
-#' 
-#' Extract eigenvalues from a factorial analysis (principal component analysis, correspondence analysis, ) object in a standard way.
-#'
-#' @param x an object resulting from a factorial analysis
-#'
-#' @param ... pass-through argument
-#'
-#' @return
-#' A numeric vector containing the eigenvalues.
-#'
-#' @examples
-#' pca <- prcomp(USArrests, scale = TRUE)
-#' eigenvalues(pca)
-#'
-#' @export
-eigenvalues <- function(x, ...) {
-  # Generic for the extraction of eigenvalues from a Principal Component Analysis object
-  UseMethod("eigenvalues")
-}
-
-#' @name eigenvalues
-#' @export
-eigenvalues.prcomp <- function(x, ...) { x$sdev^2 }
-#' @name eigenvalues
-#' @export
-eigenvalues.PCA <- function(x, ...) { x$eig$eigenvalue }
-#' @name eigenvalues
-#' @export
-eigenvalues.pcaRes <- function(x, ...) { as.numeric(x@sDev^2) }
-#' @name eigenvalues
-#' @export
-eigenvalues.pca <- function(x, ...) { x$eig }
-#' @name eigenvalues
-#' @export
-eigenvalues.rda <- function(x, ...) { as.numeric(x$CA$eig) }
-#' @name eigenvalues
-#' @export
-eigenvalues.correspondence <- function(x) { x$cor^2 }
-#' @name eigenvalues
-#' @export
-eigenvalues.CA <- function(x) { x$eig$eigenvalue }
-
 
 # Generic and methods for the extraction of raw, unscaled, variables scores from a Principal Component Analysis object
 var.scores <- function(x, ...) {
