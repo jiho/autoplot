@@ -28,3 +28,4 @@ Suggests:
     FactoMineR,
     pcaMethods,
     testthat
+RoxygenNote: 5.0.1
