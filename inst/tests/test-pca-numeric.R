@@ -1,5 +1,7 @@
 context("Comparability of PCA functions")
 
+# TODO update checks with new score computation
+
 # create some data
 set.seed(123)
 d <- data.frame(a=runif(5), b=runif(5), c=runif(5))
@@ -14,8 +16,6 @@ suppressPackageStartupMessages(library("FactoMineR"))
 pcaF <- PCA(d, scale.unit=TRUE, graph=F)
 obsF <- fortify(pcaF, type="observations")
 varF <- fortify(pcaF, type="variables")
-
-# TODO add ade4
 
 # PCA with pcaMethods::pca
 suppressPackageStartupMessages(library("pcaMethods"))
