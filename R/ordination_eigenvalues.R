@@ -30,7 +30,10 @@
 #'   eigenvalues(CA(clr, graph=F))
 #' }
 #' if (require("MASS")) {
-#'   eigenvalues(corresp(clr, nf=4))
+#'   eigenvalues(corresp(clr, nf=3))
+#' }
+#' if (require("ca")) {
+#'   eigenvalues(ca(clr))
 #' }
 #'
 #' @export
@@ -61,3 +64,6 @@ eigenvalues.CA <- function(x) { x$eig$eigenvalue }
 #' @name eigenvalues
 #' @export
 eigenvalues.correspondence <- function(x) { x$cor^2 }
+#' @name eigenvalues
+#' @export
+eigenvalues.ca <- function(x) { x$sv^2 }

@@ -4,6 +4,7 @@
 \alias{eigenvalues}
 \alias{eigenvalues.CA}
 \alias{eigenvalues.PCA}
+\alias{eigenvalues.ca}
 \alias{eigenvalues.correspondence}
 \alias{eigenvalues.pca}
 \alias{eigenvalues.pcaRes}
@@ -26,6 +27,8 @@ eigenvalues(x)
 \method{eigenvalues}{CA}(x)
 
 \method{eigenvalues}{correspondence}(x)
+
+\method{eigenvalues}{ca}(x)
 }
 \arguments{
 \item{x}{an object returned by an ordination function.}
@@ -59,7 +62,10 @@ if (require("FactoMineR")) {
   eigenvalues(CA(clr, graph=F))
 }
 if (require("MASS")) {
-  eigenvalues(corresp(clr, nf=4))
+  eigenvalues(corresp(clr, nf=3))
+}
+if (require("ca")) {
+  eigenvalues(ca(clr))
 }
 
 }

@@ -2,7 +2,10 @@
 % Please edit documentation in R/ordination_scores.R
 \name{scores}
 \alias{scores}
+\alias{scores.CA}
 \alias{scores.PCA}
+\alias{scores.ca}
+\alias{scores.correspondence}
 \alias{scores.pca}
 \alias{scores.pcaRes}
 \alias{scores.prcomp}
@@ -20,6 +23,12 @@ scores(x, type = "rows", scaling = type, ...)
 \method{scores}{pca}(x, type = "rows", scaling = type, ...)
 
 \method{scores}{pcaRes}(x, type = "rows", scaling = type, ...)
+
+\method{scores}{CA}(x, type = "rows", scaling = type, ...)
+
+\method{scores}{correspondence}(x, type = "rows", scaling = type, ...)
+
+\method{scores}{ca}(x, type = "rows", scaling = type, ...)
 }
 \arguments{
 \item{x}{an object returned by an ordination function.}
@@ -73,6 +82,26 @@ if (require("pcaMethods")) {
   head(scores(pca(USArrests, scale="uv", nPcs=4)))
 }
 
+# Correspondence analysis
+clr <- HairEyeColor[,,1]
+if (require("FactoMineR")) {
+  CA.res <- CA(clr, graph=F)
+  scores(CA.res, type="row", scaling="none")
+  scores(CA.res, type="col", scaling="none")
+  # for a correspondence analysis, scaling="both" makes most sense
+  scores(CA.res, type="row", scaling="both")
+  scores(CA.res, type="col", scaling="both")
+}
+if (require("MASS")) {
+  corresp.res <- corresp(clr, nf=3)
+  scores(corresp.res, type="row", scaling="both")
+  scores(corresp.res, type="col", scaling="both")
+}
+if (require("ca")) {
+  ca.res <- ca(clr, nf=3)
+  scores(corresp.res, type="row", scaling="both")
+  scores(corresp.res, type="col", scaling="both")
+}
 
 }
 

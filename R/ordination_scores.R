@@ -48,6 +48,26 @@
 #'   head(scores(pca(USArrests, scale="uv", nPcs=4)))
 #' }
 #'
+#' # Correspondence analysis
+#' clr <- HairEyeColor[,,1]
+#' if (require("FactoMineR")) {
+#'   CA.res <- CA(clr, graph=F)
+#'   scores(CA.res, type="row", scaling="none")
+#'   scores(CA.res, type="col", scaling="none")
+#'   # for a correspondence analysis, scaling="both" makes most sense
+#'   scores(CA.res, type="row", scaling="both")
+#'   scores(CA.res, type="col", scaling="both")
+#' }
+#' if (require("MASS")) {
+#'   corresp.res <- corresp(clr, nf=3)
+#'   scores(corresp.res, type="row", scaling="both")
+#'   scores(corresp.res, type="col", scaling="both")
+#' }
+#' if (require("ca")) {
+#'   ca.res <- ca(clr, nf=3)
+#'   scores(corresp.res, type="row", scaling="both")
+#'   scores(corresp.res, type="col", scaling="both")
+#' }
 #'
 #' @export
 scores <- function(x, type="rows", scaling=type, ...) {
@@ -102,6 +122,15 @@ scores.pca <- scores_
 #' @name scores
 #' @export
 scores.pcaRes <- scores_
+#' @name scores
+#' @export
+scores.CA <- scores_
+#' @name scores
+#' @export
+scores.correspondence <- scores_
+#' @name scores
+#' @export
+scores.ca <- scores_
 
 
 ## Utility functions for scores extraction and scaling ----
@@ -157,6 +186,10 @@ nr.rda    <- function(x) { nrow(x$CA$u) }
 nr.pca    <- function(x) { nrow(x$li) }
 nr.pcaRes <- function(x) { nrow(x@scores) }
 
+nr.CA <- function(x) { nrow(x$row$coord) }
+nr.correspondence <- function(x) { nrow(x$rscore) }
+nr.ca <- function(x) { nrow(x$rowcoord) } # TODO handle supplementary
+
 
 
 # Extract scale 0 scores
@@ -166,25 +199,33 @@ col_scores <- function(x, ...) { UseMethod("col_scores") }
 row_scores <- function(x, ...) { UseMethod("row_scores") }
 
 # convert to scale 0
-row_unscale <- function(x, eig, nr) { t(t(x) / sqrt((nr - 1) * eig)) } 
-row_unscale_n <- function(x, eig, nr) { t(t(x) / sqrt(nr * eig)) }
+unscale <- function(x, eig) { t(t(x) / sqrt(eig)) } 
+unscale_n <- function(x, eig, nr) { t(t(x) / sqrt(nr * eig)) }
+unscale_n_1 <- function(x, eig, nr) { t(t(x) / sqrt((nr - 1) * eig)) } 
 
 # define methods
-row_scores.prcomp <- function(x, eig, nr) { row_unscale(x$x, eig, nr) }
-row_scores.PCA <- function(x, eig, nr) { row_unscale_n(x$ind$coord, eig, nr) } # TODO deal with supplementary
+row_scores.prcomp <- function(x, eig, nr) { unscale_n_1(x$x, eig, nr) }
+row_scores.PCA <- function(x, eig, nr) { unscale_n(x$ind$coord, eig, nr) } # TODO deal with supplementary
 row_scores.rda <- function(x, ...) { x$CA$u }
-row_scores.pca <- function(x, eig, nr) { row_unscale_n(x$li, eig, nr) }
-row_scores.pcaRes <- function(x, eig, nr) { row_unscale(x@scores, eig, nr) }
+row_scores.pca <- function(x, eig, nr) { unscale_n(x$li, eig, nr) }
+row_scores.pcaRes <- function(x, eig, nr) { unscale_n_1(x@scores, eig, nr) }
+
+row_scores.CA <- function(x, eig, ...) { unscale(x$row$coord, eig) }
+row_scores.correspondence <- function(x, ...) { x$rscore }
+row_scores.ca <- function(x, ...) { x$rowcoord }
 
 # convert to scale 0
-col_unscale <- function(x, eig) { t(t(x) / sqrt(eig)) } 
 
 # define methods
 col_scores.prcomp <- function(x, ...) { x$rotation }
-col_scores.PCA <- function(x, eig) { col_unscale(x$var$coord, eig) } # TODO deal with supplementary
+col_scores.PCA <- function(x, eig) { unscale(x$var$coord, eig) } # TODO deal with supplementary
 col_scores.rda <- function(x, ...) { x$CA$v }
 col_scores.pca <- function(x, ...) { x$c1 }
 col_scores.pcaRes <- function(x, ...) { x@loadings }
+
+col_scores.CA <- function(x, eig) { unscale(x$col$coord, eig) }
+col_scores.correspondence <- function(x, ...) { x$cscore }
+col_scores.ca <- function(x, ...) { x$colcoord }
 
 
 # Scale scores
