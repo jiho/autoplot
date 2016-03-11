@@ -25,11 +25,10 @@ varMsvd <- fortify(pcaMsvd, type="variables")
 
 
 test_that("eigenvalues are equal", {
-  # NB: those are computed inside the fortify methods but are not returned
-  #     here we only verify that the computations are accurate, but a change in the implementation is fortify won't affect the test
-  eigS    <- pcaS$sdev^2
-  eigF    <- pcaF$eig$eigenvalue
-  eigMsvd <- pcaMsvd@sDev^2
+  
+  eigS <- eigenvalues(pcaS)
+  eigF <- eigenvalues(pcaF)
+  eigM <- eigenvalues(pcaM)
 
   expect_equivalent(eigS, eigF)
   expect_equivalent(eigS, eigMsvd)
