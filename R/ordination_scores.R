@@ -199,18 +199,18 @@ col_scores <- function(x, ...) { UseMethod("col_scores") }
 row_scores <- function(x, ...) { UseMethod("row_scores") }
 
 # convert to scale 0
-unscale <- function(x, eig) { t(t(x) / sqrt(eig)) } 
-unscale_n <- function(x, eig, nr) { t(t(x) / sqrt(nr * eig)) }
-unscale_n_1 <- function(x, eig, nr) { t(t(x) / sqrt((nr - 1) * eig)) } 
+unscale_scores <- function(x, eig) { t(t(x) / sqrt(eig)) } 
+unscale_scores_n <- function(x, eig, nr) { t(t(x) / sqrt(nr * eig)) }
+unscale_scores_n_1 <- function(x, eig, nr) { t(t(x) / sqrt((nr - 1) * eig)) } 
 
 # define methods
-row_scores.prcomp <- function(x, eig, nr) { unscale_n_1(x$x, eig, nr) }
-row_scores.PCA <- function(x, eig, nr) { unscale_n(x$ind$coord, eig, nr) } # TODO deal with supplementary
+row_scores.prcomp <- function(x, eig, nr) { unscale_scores_n_1(x$x, eig, nr) }
+row_scores.PCA <- function(x, eig, nr) { unscale_scores_n(x$ind$coord, eig, nr) } # TODO deal with supplementary
 row_scores.rda <- function(x, ...) { x$CA$u }
-row_scores.pca <- function(x, eig, nr) { unscale_n(x$li, eig, nr) }
-row_scores.pcaRes <- function(x, eig, nr) { unscale_n_1(x@scores, eig, nr) }
+row_scores.pca <- function(x, eig, nr) { unscale_scores_n(x$li, eig, nr) }
+row_scores.pcaRes <- function(x, eig, nr) { unscale_scores_n_1(x@scores, eig, nr) }
 
-row_scores.CA <- function(x, eig, ...) { unscale(x$row$coord, eig) }
+row_scores.CA <- function(x, eig, ...) { unscale_scores(x$row$coord, eig) }
 row_scores.correspondence <- function(x, ...) { x$rscore }
 row_scores.ca <- function(x, ...) { x$rowcoord }
 
@@ -218,12 +218,12 @@ row_scores.ca <- function(x, ...) { x$rowcoord }
 
 # define methods
 col_scores.prcomp <- function(x, ...) { x$rotation }
-col_scores.PCA <- function(x, eig) { unscale(x$var$coord, eig) } # TODO deal with supplementary
+col_scores.PCA <- function(x, eig) { unscale_scores(x$var$coord, eig) } # TODO deal with supplementary
 col_scores.rda <- function(x, ...) { x$CA$v }
 col_scores.pca <- function(x, ...) { x$c1 }
 col_scores.pcaRes <- function(x, ...) { x@loadings }
 
-col_scores.CA <- function(x, eig) { unscale(x$col$coord, eig) }
+col_scores.CA <- function(x, eig) { unscale_scores(x$col$coord, eig) }
 col_scores.correspondence <- function(x, ...) { x$cscore }
 col_scores.ca <- function(x, ...) { x$colcoord }
 
