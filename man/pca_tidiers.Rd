@@ -16,9 +16,9 @@
 \usage{
 \method{tidy}{prcomp}(x, ...)
 
-\method{tidy}{PCA}(x, ...)
-
 \method{tidy}{rda}(x, ...)
+
+\method{tidy}{PCA}(x, ...)
 
 \method{tidy}{pca}(x, ...)
 
@@ -26,6 +26,9 @@
 
 \method{augment}{prcomp}(x, data = NULL, dimensions = c(1, 2),
   type = "row", scaling = type, ...)
+
+\method{augment}{rda}(x, data = NULL, dimensions = c(1, 2), type = "row",
+  scaling = type, ...)
 
 \method{augment}{PCA}(x, data = NULL, dimensions = c(1, 2), type = "row",
   scaling = type, ...)
@@ -35,14 +38,11 @@
 
 \method{augment}{pcaRes}(x, data = NULL, dimensions = c(1, 2),
   type = "row", scaling = type, ...)
-
-\method{augment}{rda}(x, data = NULL, dimensions = c(1, 2), type = "row",
-  scaling = type, ...)
 }
 \arguments{
 \item{x}{an object returned by a function performing Principal Component Analysis.}
 
-\item{...}{pass-through argument}
+\item{...}{pass-through argument.}
 
 \item{data}{the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all cases but \code{\link{prcomp}})}
 
@@ -54,21 +54,67 @@
 \describe{
   \item{"none" (or 0)}{for raw scores,}
   \item{"rows" (or 1, or a synonym of "rows")}{to scale row scores by the eigenvalues,}
-  \item{"column" (or 2, or a synonym of "column")}{to scale column scores by the eigenvalues,}
+  \item{"columns" (or 2, or a synonym of "columns")}{to scale column scores by the eigenvalues,}
   \item{"both" (or 3)}{to scale both row and column scores.}
 }
 By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores and scaling 2 for column scores).}
 }
 \value{
-A data.frame containing the original data, when it is supplied or can be extracted from the object, and the additional columns
+For \code{tidy}, a data.frame containing the variance (i.e. eigenvalue), the proportion of variance and the cumulative proportion of variance for each principal component.
+
+For \code{augment}, a data.frame containing the original data, when \code{type="rows"} and \code{data} is supplied or can be extracted from the object, and the additional columns:
 \describe{
-  \item{.label}{the identifier of the row or column.}
-  \item{.PC#}{the scores (coordinates) of the objects on the extracted principal components.}
-  \item{.cos2}{the squared cosine summed over all extracted PCs, which quantifies the quality of the representation of the object on the extracted PCs.}
-  \item{.contrib}{the contribution of each object to the selected PCs}
+  \item{.label:}{the identifier of the row or column, extracted from the row or column names in the original data.}
+  \item{.PC#:}{the scores (i.e., coordinates) of the data objects on the extracted principal components.}
+  \item{.cos2:}{the squared cosine, summed over extracted PCs, which quantifies the quality of the representation of each data point in the space of the extracted PCs. NB: for \code{cos2} to be meaningful, the PCA object must contain all possible principal components. In some packages, this is an option that needs to be explicitly specified.}
+  \item{.contrib:}{the contribution of each object to the selected PCs. NB: same comment as for \code{cos2} regarding the number of PCs in the original PCA object.}
+  \item{.type:}{the nature of the data extracted : \code{row} or \code{col}.}
 }
 }
 \description{
-Extract information from a Principal Component Analysis such as the scores on the principal components and some fit statistics.
+Extract information from a Principal Component Analysis: the scores (i.e. coordinates) on the principal components and some fit statistics.
+}
+\examples{
+pca <- prcomp(USArrests, scale = TRUE)
+
+tidy(pca)
+
+head(augment(pca, type="row"))
+head(augment(pca, type="col"))
+# or use your preferred synonym, possibly abbreviated
+head(augment(pca, type="obs"))
+head(augment(pca, type="var"))
+head(augment(pca, type="descriptors"))
+
+# data is not contained in the `prcomp` object but can be provided
+head(augment(pca, data=USArrests, type="row"))
+# select different principal components
+augment(pca, type="col", dim=c(1,3))
+
+\dontrun{
+pca <- FactoMineR::PCA(USArrests, graph=FALSE, ncp=4)
+head(augment(pca, type="individuals"))
+head(augment(pca, type="variables"))
+
+pca <- vegan::rda(USArrests, scale=TRUE)
+# can use vegan's naming convention
+head(augment(pca, type="sites"))
+head(augment(pca, type="species"))
+
+pca <- ade4::dudi.pca(USArrests, scannf=FALSE)
+head(augment(pca))
+head(augment(pca, type="variables"))
+
+pca <- pcaMethods::pca(USArrests, scale="uv")
+head(augment(pca))
+augment(pca, type="var")
+}
+
+}
+\seealso{
+Functions to perform PCA: \code{\link[stats]{prcomp}} in package \code{stats}, \code{\link[FactoMineR]{PCA}} in package \code{factoMineR}, \code{\link[vegan]{rda}} in package \code{vegan}, \code{\link[ade4]{dudi.pca}} in package \code{ade4}, \code{\link[pcaMethods]{pca}} in package \code{pcaMethods} (on bioconductor).
+
+Other PCA-related functions: \code{\link{autoplot_pca}},
+  \code{\link{eigenvalues}}, \code{\link{scores}}
 }
 

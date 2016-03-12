@@ -39,10 +39,18 @@ scores(x, type = "rows", scaling = type, ...)
 \describe{
   \item{"none" (or 0)}{for raw scores,}
   \item{"rows" (or 1, or a synonym of "rows")}{to scale row scores by the eigenvalues,}
-  \item{"column" (or 2, or a synonym of "column")}{to scale column scores by the eigenvalues,}
+  \item{"columns" (or 2, or a synonym of "columns")}{to scale column scores by the eigenvalues,}
   \item{"both" (or 3)}{to scale both row and column scores.}
 }
 By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores and scaling 2 for column scores).}
+}
+\value{
+A data.frame containing
+\describe{
+  \item{PC#:}{the scores (i.e., coordinates) of the data objects on the new dimensions.}
+  \item{label:}{the identifier of the row or column, extracted from the row or column names in the original data.}
+  \item{type:}{the nature of the data extracted : \code{row} or \code{col}.}
+}
 }
 \description{
 Extract scores from an ordination object
@@ -103,5 +111,15 @@ if (require("ca")) {
   scores(corresp.res, type="col", scaling="both")
 }
 
+}
+\seealso{
+Functions to perform PCA: \code{\link[stats]{prcomp}} in package \code{stats}, \code{\link[FactoMineR]{PCA}} in package \code{factoMineR}, \code{\link[vegan]{rda}} in package \code{vegan}, \code{\link[ade4]{dudi.pca}} in package \code{ade4}, \code{\link[pcaMethods]{pca}} in package \code{pcaMethods} (on bioconductor).
+
+Functions to perform CA: \code{\link[FactoMineR]{CA}} in package \code{factoMineR}, \code{\link[MASS]{corresp}} in package \code{MASS}, \code{\link[ca]{ca}} in package \code{ca}.
+
+Other CA-related functions: \code{\link{eigenvalues}}
+
+Other PCA-related functions: \code{\link{autoplot_pca}},
+  \code{\link{eigenvalues}}, \code{\link{pca_tidiers}}
 }
 

@@ -8,7 +8,7 @@
 #' \describe{
 #'   \item{"none" (or 0)}{for raw scores,}
 #'   \item{"rows" (or 1, or a synonym of "rows")}{to scale row scores by the eigenvalues,}
-#'   \item{"column" (or 2, or a synonym of "column")}{to scale column scores by the eigenvalues,}
+#'   \item{"columns" (or 2, or a synonym of "columns")}{to scale column scores by the eigenvalues,}
 #'   \item{"both" (or 3)}{to scale both row and column scores.}
 #' }
 #' By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores and scaling 2 for column scores).
@@ -23,7 +23,16 @@
 #' \deqn{\sqrt[4]{\frac{eig}{\sum{eig}}}}{sqrt(sqrt(eig/sum(eig)))}
 #' For details and justification, see \code{vignette("decision-vegan")}.
 #' 
-# TODO document return and seealso
+#' @return A data.frame containing
+#' \describe{
+#'   \item{PC#:}{the scores (i.e., coordinates) of the data objects on the new dimensions.}
+#'   \item{label:}{the identifier of the row or column, extracted from the row or column names in the original data.}
+#'   \item{type:}{the nature of the data extracted : \code{row} or \code{col}.}
+#' }
+#'
+#' @template pca_seealso
+#' @template ca_seealso
+#'
 #' @examples
 #' # Principal Component Analysis
 #' pca <- prcomp(USArrests, scale=TRUE)
@@ -76,7 +85,6 @@ scores <- function(x, type="rows", scaling=type, ...) {
 }
 
 scores_ <- function(x, type="rows", scaling=type, ...) {
-  # TODO add selection of axes here?
   # check arguments for the type of scores and scaling
   type <- match_type(type)
   scaling <- match_scaling(scaling, type)
@@ -104,6 +112,8 @@ scores_ <- function(x, type="rows", scaling=type, ...) {
   # get labels as a proper data.frame column
   scaled$label <- row.names(scaled)
   row.names(scaled) <- NULL
+  # set score type
+  scaled$type <- type
   
   return(scaled)
 }
@@ -123,6 +133,7 @@ scores.pca <- scores_
 #' @name scores
 #' @export
 scores.pcaRes <- scores_
+
 #' @name scores
 #' @export
 scores.CA <- scores_

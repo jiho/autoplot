@@ -24,6 +24,7 @@ Depends:
 Imports:
     grid,
     plyr,
+    dplyr,
     reshape2
 Suggests:
     FactoMineR,

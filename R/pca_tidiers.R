@@ -1,83 +1,82 @@
 #' Tidying methods for a Principal Component Analysis
 #'
-#' Extract information from a Principal Component Analysis such as the scores on the principal components and some fit statistics.
+#' Extract information from a Principal Component Analysis: the scores (i.e. coordinates) on the principal components and some fit statistics.
 #'
 #' @param x an object returned by a function performing Principal Component Analysis.
 #'
-#' @param dimensions vector giving the numbers of the principal components to extract. Typically two are extracted to create a plot. 
-#'
 #' @param data the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all cases but \code{\link{prcomp}})
+#'
+#' @param dimensions vector giving the numbers of the principal components to extract. Typically two are extracted to create a plot. 
 #'
 #' @inheritParams scores
 #'
-#'
-#' @param ... pass-through argument
+#' @param ... pass-through argument.
 #'
 #' @return
-#' A data.frame containing the original data, when it is supplied or can be extracted from the object, and the additional columns
+#' For \code{tidy}, a data.frame containing the variance (i.e. eigenvalue), the proportion of variance and the cumulative proportion of variance for each principal component.
+#' 
+#' For \code{augment}, a data.frame containing the original data, when \code{type="rows"} and \code{data} is supplied or can be extracted from the object, and the additional columns:
 #' \describe{
-#'   \item{.label}{the identifier of the row or column.}
-#'   \item{.PC#}{the scores (coordinates) of the objects on the extracted principal components.}
-#'   \item{.cos2}{the squared cosine summed over all extracted PCs, which quantifies the quality of the representation of the object on the extracted PCs.}
-#'   \item{.contrib}{the contribution of each object to the selected PCs}
-#   \item{.type}{the nature of the data extracted : observations, varia.bles and possibly their status (active or supplementary).}
+#'   \item{.label:}{the identifier of the row or column, extracted from the row or column names in the original data.}
+#'   \item{.PC#:}{the scores (i.e., coordinates) of the data objects on the extracted principal components.}
+#'   \item{.cos2:}{the squared cosine, summed over extracted PCs, which quantifies the quality of the representation of each data point in the space of the extracted PCs. NB: for \code{cos2} to be meaningful, the PCA object must contain all possible principal components. In some packages, this is an option that needs to be explicitly specified.}
+#'   \item{.contrib:}{the contribution of each object to the selected PCs. NB: same comment as for \code{cos2} regarding the number of PCs in the original PCA object.}
+#'   \item{.type:}{the nature of the data extracted : \code{row} or \code{col}.}
+#, and possibly their status (active or supplementary).}
 #' }
 #'
-# TODO review documentation
-# @seealso \code{\link{autoplot_pca}} to produce plots based on the output of \code{augment}.
-# @template pca_seealso
+#' @template pca_seealso
 #'
-# @examples
-# # PCA with stats::prcomp
-# pca <- prcomp(USArrests, scale = TRUE)
-# # extract scores of the observations
-# head(augment(pca))
-## and of the variables
-# augment(pca, type = "variables")
-# # data is not containe in the `prcomp` object but can be provided
-# head(augment(pca, data = USArrests, type = "observations"))
-# # select different principal components
-# augment(pca, type = "var", PC=c(1,3))
-#
-# \dontrun{
+#' @examples
+#' pca <- prcomp(USArrests, scale = TRUE)
+#'
+#' tidy(pca)
+#'
+#' head(augment(pca, type="row"))
+#' head(augment(pca, type="col"))
+#' # or use your preferred synonym, possibly abbreviated
+#' head(augment(pca, type="obs"))
+#' head(augment(pca, type="var"))
+#' head(augment(pca, type="descriptors"))
+#'
+#' # data is not contained in the `prcomp` object but can be provided
+#' head(augment(pca, data=USArrests, type="row"))
+#' # select different principal components
+#' augment(pca, type="col", dim=c(1,3))
+#'
+#' \dontrun{
+#' pca <- FactoMineR::PCA(USArrests, graph=FALSE, ncp=4)
+#' head(augment(pca, type="individuals"))
+#' head(augment(pca, type="variables"))
+#'
+#' pca <- vegan::rda(USArrests, scale=TRUE)
+#' # can use vegan's naming convention
+#' head(augment(pca, type="sites"))
+#' head(augment(pca, type="species"))
+#'
+#' pca <- ade4::dudi.pca(USArrests, scannf=FALSE)
+#' head(augment(pca))
+#' head(augment(pca, type="variables"))
+#'
+#' pca <- pcaMethods::pca(USArrests, scale="uv")
+#' head(augment(pca))
+#' augment(pca, type="var")
+#' }
+
+# Additional examples
 # # PCA with FactoMineR::PCA
 # library("FactoMineR")
 # # add a missing value
 # d <- USArrests
 # d[1,2] <- NA
 # # use supplementary observations and variables
-# pca <- PCA(d, scale = TRUE, graph = FALSE, ind.sup = 2, quanti.sup = 4)
+# pca <- FactoMineR::PCA(d, scale = TRUE, graph = FALSE, ind.sup = 2, quanti.sup = 4)
 # # the missing value is replaced by the column mean in the PCA object
-# # the supplementary observation is identified as such
-# head(augment(pca, data = d))
-# head(augment(pca))
-# # the supplementary variable is identified as such
-# augment(pca, type = "variables")
 #
-# # PCA with ad4::dudi.pca
-# library("ade4")
-# pca <- dudi.pca(USArrests, scannf=FALSE)
-# head(augment(pca))
-# head(augment(pca, type = "variables"))
-# 
-# # PCA with vegan::rda
-# library("vegan")
-# pca <- rda(USArrests, scale = TRUE)
-# # can use vegan's naming convention
-# head(augment(pca, type = "sites"))
-# head(augment(pca, type = "species"))
-#
-# # PCA with pcaMethods::pca, from bioconductor
-# library("pcaMethods")
-# pca <- pca(d, method = "nipals", scale = "uv", completeObs = TRUE, nPcs = 4)
+ # the supplementary observation is identified as such
 # # the missing value is imputed by iterative PCA
-# head(augment(pca))
-# augment(pca, type = "var")
-#
-# }
+
 #'
-#' @importFrom dplyr select full_join
-#' @importFrom broom tidy augment glance
 #' @name pca_tidiers
 NULL
 
@@ -98,10 +97,10 @@ tidy_pca <- function(x, ...) {
 tidy.prcomp <- tidy_pca
 #' @name pca_tidiers
 #' @export
-tidy.PCA <- tidy_pca
+tidy.rda <- tidy_pca
 #' @name pca_tidiers
 #' @export
-tidy.rda <- tidy_pca
+tidy.PCA <- tidy_pca
 #' @name pca_tidiers
 #' @export
 tidy.pca <- tidy_pca
@@ -136,12 +135,14 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
   
   # squared cosine: quality of the representation in the current space
   cos2 <- ( sco_num / sqrt(rowSums(sco_num^2)) )^2
+  # TODO review computation in particular w/r to scaling
 
   # contribution to each dimension
   contrib <- sco_num^2
+  # TODO review computation in particular w/r to scaling
 
   # reduce to the dimensions of interest
-  sco <- sco[,c(names(sco)[dimensions], "label")]
+  sco <- sco[,c("label", names(sco)[dimensions])]
   cos2 <- cos2[,dimensions]
   contrib <- contrib[,dimensions]
 
@@ -157,7 +158,6 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
   # contrib[scores$.type != type] <- NA
   
   # prepare result
-  sco <- select(sco, label, 1:ncol(sco))
   res <- data.frame(sco, cos2, contrib, stringsAsFactors=FALSE)
   names(res) <- paste0(".", names(res))
 
@@ -173,7 +173,7 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
     # if we fetched or already have something, join it with the extracted variables
     if (!is.null(data)) {
       # NB: we have to use join here and not cbind, in case there are supplementary observations
-      res <- full_join(data, res, by=".label")
+      res <- dplyr::full_join(data, res, by=".label")
     }
   }
 
@@ -187,21 +187,17 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
 #' @name pca_tidiers
 #' @export
 augment.prcomp <- augment_pca
-
-#' @name pca_tidiers
-#' @export
-augment.PCA <- augment_pca
-
-#' @name pca_tidiers
-#' @export
-augment.pca <- augment_pca
-
-#' @name pca_tidiers
-#' @export
-augment.pcaRes <- augment_pca
-
 #' @name pca_tidiers
 #' @export
 augment.rda <- augment_pca
+#' @name pca_tidiers
+#' @export
+augment.PCA <- augment_pca
+#' @name pca_tidiers
+#' @export
+augment.pca <- augment_pca
+#' @name pca_tidiers
+#' @export
+augment.pcaRes <- augment_pca
 
 

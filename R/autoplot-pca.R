@@ -4,8 +4,6 @@
 #'
 #' @param mapping a call to aes() specifying additional mappings between variables and plot aesthetics; by default, positions in x and y are mapped to the scores on the principal components and colour is mapped to the nature of the data (active or supplementary) when relevant. See \code{\link{fortify_pca}} for a list of the other mappable variables returned by the \code{fortify} methods
 #'
-#' @template pca_params
-#'
 #' @param ... passed to the various geoms; can be used to \emph{set} further aesthetics
 #'
 #' @return A ggplot2 object defining the plot

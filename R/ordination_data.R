@@ -6,7 +6,10 @@
 #
 # @return A data.frame containing the data.
 #
-# @ examples
+# @template pca_seealso
+# @template ca_seealso
+#
+# @examples
 # xS <- prcomp(USArrests, scale=TRUE)
 # xV <- vegan::rda(USArrests, scale=TRUE)
 # xF <- FactoMineR::PCA(USArrests, graph=F)
@@ -59,7 +62,7 @@ get_data <- function(x) {
   return(d)
 }
 
-# Remove centering and scaling done by function scale
+# Remove centering and scaling done by function scale()
 unscale <- function(x, center=NULL, scale=NULL) {
   if (is.null(center)) {
     center <- attr(x, "scaled:center")

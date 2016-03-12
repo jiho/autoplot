@@ -69,4 +69,14 @@ if (require("ca")) {
 }
 
 }
+\seealso{
+Functions to perform PCA: \code{\link[stats]{prcomp}} in package \code{stats}, \code{\link[FactoMineR]{PCA}} in package \code{factoMineR}, \code{\link[vegan]{rda}} in package \code{vegan}, \code{\link[ade4]{dudi.pca}} in package \code{ade4}, \code{\link[pcaMethods]{pca}} in package \code{pcaMethods} (on bioconductor).
+
+Functions to perform CA: \code{\link[FactoMineR]{CA}} in package \code{factoMineR}, \code{\link[MASS]{corresp}} in package \code{MASS}, \code{\link[ca]{ca}} in package \code{ca}.
+
+Other CA-related functions: \code{\link{scores}}
+
+Other PCA-related functions: \code{\link{autoplot_pca}},
+  \code{\link{pca_tidiers}}, \code{\link{scores}}
+}
 

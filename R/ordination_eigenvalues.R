@@ -4,8 +4,10 @@
 #'
 #' @param x an object returned by an ordination function.
 #'
-#' @return
-#' A numeric vector containing the eigenvalues.
+#' @return A numeric vector containing the eigenvalues.
+#'
+#' @template pca_seealso
+#' @template ca_seealso
 #'
 #' @examples
 #' # Principal Component Analysis
