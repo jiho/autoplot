@@ -49,7 +49,7 @@ Extract scores from an ordination object
 }
 \details{
 Scaling of scores follows the conventions of package \code{vegan}. In summary, except for scaling 0, scores are all multiplied by a constant:
-\deqn{c = \sqrt[4]{(n-1) \times \sum{eig}}}{c = sqrt(sqrt((n-1) * sum(eigenvalues)))}
+\deqn{c = \sqrt[4]{(n-1) \times \sum{eig}}}{c = sqrt(sqrt((n-1) * sum(eig)))}
 where \eqn{n} is the number of active rows in the ordination and \eqn{eig} are the eigenvalues (see function \code{\link{eigenvalues}}).
 In addition, for scaling 1 (resp. 2), row scores (resp. column scores) are multiplied by:
 \deqn{\sqrt{\frac{eig}{\sum{eig}}}}{sqrt(eig/sum(eig))}
