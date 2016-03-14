@@ -65,7 +65,7 @@ eigenvalues.pcaRes <- function(x) { as.numeric(x@sDev^2) }
 eigenvalues.CA <- function(x) { x$eig$eigenvalue }
 #' @name eigenvalues
 #' @export
-eigenvalues.correspondence <- function(x) { x$cor^2 }
+eigenvalues.correspondence <- function(x) { (x$cor[-length(x$cor)])^2 }
 #' @name eigenvalues
 #' @export
 eigenvalues.ca <- function(x) { x$sv^2 }
