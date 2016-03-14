@@ -19,8 +19,8 @@
 #' \describe{
 #'   \item{.label:}{the identifier of the row or column, extracted from the row or column names in the original data.}
 #'   \item{.PC#:}{the scores (i.e., coordinates) of data objects on the extracted principal components.}
-#'   \item{.cos2:}{the squared cosine, summed over extracted PCs, which quantifies the quality of the representation of each data point in the space of the extracted PCs. NB: for \code{cos2} to be meaningful, the PCA object must contain all possible principal components. In packages \code{FactoMineR}, \code{ade4}, and \code{pcaMethods}, the number of principal components to keep is an argument of the PCA function (and the default is not "all").}
-#'   \item{.contrib:}{the contribution of each object to the selected PCs. NB: same comment as for \code{cos2} regarding the number of PCs in the original PCA object.}
+#'   \item{.cos2:}{the squared cosine, summed over extracted PCs, which quantifies the quality of the representation of each data point in the space of the extracted PCs. NB: \code{cos2} can only be computed when all possible principal components are extracted in the PCA objects; when it is not the case, \code{cos2} is \code{NA}. In several packages, the number of principal components to keep is an argument of the PCA function (and the default is not "all").}
+#'   \item{.contrib:}{the contribution of each object to the selected PCs. NB: same comment as for \code{cos2} regarding the number of PCs kept in the PCA object.}
 #'   \item{.type:}{the nature of the data extracted : \code{row} or \code{col}.}
 #, and possibly their status (active or supplementary).}
 #' }
@@ -114,10 +114,8 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
   # check arguments
   type <- match_type(type)
 
-  # extract eigenvalues and variance explained
-  eig <- tidy(x)
   # and number of dimensions
-  n <- nrow(eig)
+  n <- npc(x)
   if (length(dimensions) < 1) {
     stop("You must choose at least one dimension.")
   }
@@ -127,32 +125,38 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
   # if (length(dimensions) > 2) {
   #   warning("Extracting information for more than two dimensions. The plot might be difficult to read.")
   # }
-  eig <- eig[dimensions,]
   
   # extract scores
   sco <- scores(x, type=type, scaling=scaling)
-  sco_num <- sco[,1:n]
   
-  # squared cosine: quality of the representation in the current space
-  cos2 <- ( sco_num / sqrt(rowSums(sco_num^2)) )^2
-  # TODO review computation in particular w/r to scaling
+  # if all potential PCs are kept, compute cos2 and contrib
+  if (n == nc(x)) {
+    sco_num <- sco[,1:n]
+  
+    # squared cosine: quality of the representation in the current space
+    cos2 <- ( sco_num / sqrt(rowSums(sco_num^2)) )^2
+    # TODO review computation in particular w/r to scaling
 
-  # contribution to each dimension
-  contrib <- sco_num^2
-  # TODO review computation in particular w/r to scaling
+    # contribution to each dimension
+    contrib <- sco_num^2
+    # TODO review computation in particular w/r to scaling
 
-  # reduce to the dimensions of interest
-  sco <- sco[,c("label", names(sco)[dimensions])]
-  cos2 <- cos2[,dimensions]
-  contrib <- contrib[,dimensions]
-
-  # collapse cos2 and contrib in the current space
-  if ( length(dimensions) > 1 ) {
-    # the squared cos are additive
-    cos2 <- rowSums(cos2)
-    # contributions are scaled by the proportion of variance explained by each PC so that the contribution displayed is the contribution to the total variance projectable in the current space
-    contrib <- apply(contrib, 1, function(x,v) {sum(x*v)}, v=eig$prop.variance)
+    # collapse cos2 and contrib in the current space
+    cos2 <- cos2[,dimensions]
+    contrib <- contrib[,dimensions]
+    if ( length(dimensions) > 1 ) {
+      # the squared cos are additive
+      cos2 <- rowSums(cos2)
+      # contributions are scaled by the proportion of variance explained by each PC so that the contribution displayed is the contribution to the total variance projectable in the current space
+      contrib <- apply(contrib, 1, function(x,v) {sum(x*v)}, v=eig$prop.variance)
+    }
+  } else {
+    cos2 <- NA
+    contrib <- NA
   }
+  
+  # reduce scores to the dimensions of interest
+  sco <- sco[,c("rownames", "type", names(sco)[dimensions])]
 
   # # remove contributions of non active elements
   # contrib[scores$.type != type] <- NA
@@ -176,10 +180,6 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
       res <- dplyr::full_join(data, res, by=".label")
     }
   }
-
-  # store eigenvalues, variance explained, etc. and  as attributes
-  attr(res, "eig") <- eig
-  attr(res, "axes.names") <- ordination_axes_titles(eig)
 
   return(res)
 }
