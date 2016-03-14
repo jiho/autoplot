@@ -89,25 +89,31 @@ head(augment(pca, type="descriptors"))
 # data is not contained in the `prcomp` object but can be provided
 head(augment(pca, data=USArrests, type="row"))
 # select different principal components
-augment(pca, type="col", dim=c(1,3))
+augment(pca, type="col", dim=c(2,3))
 
-\dontrun{
-pca <- FactoMineR::PCA(USArrests, graph=FALSE, ncp=4)
-head(augment(pca, type="individuals"))
-head(augment(pca, type="variables"))
+if (require("FactoMineR")) {
+  pca <- FactoMineR::PCA(USArrests, graph=FALSE, ncp=4)
+  head(augment(pca, type="individuals"))
+  head(augment(pca, type="variables"))
+}
 
-pca <- vegan::rda(USArrests, scale=TRUE)
-# can use vegan's naming convention
-head(augment(pca, type="sites"))
-head(augment(pca, type="species"))
+if (require("vegan")) {
+  pca <- vegan::rda(USArrests, scale=TRUE)
+  # can use vegan's naming convention
+  head(augment(pca, type="sites"))
+  head(augment(pca, type="species"))
+}
 
-pca <- ade4::dudi.pca(USArrests, scannf=FALSE)
-head(augment(pca))
-head(augment(pca, type="variables"))
+if (require("ade4")) {
+  pca <- ade4::dudi.pca(USArrests, scannf=FALSE)
+  head(augment(pca))
+  head(augment(pca, type="variables"))
+}
 
-pca <- pcaMethods::pca(USArrests, scale="uv")
-head(augment(pca))
-augment(pca, type="var")
+if (require("pcaMethods")) {
+  pca <- pcaMethods::pca(USArrests, scale="uv")
+  head(augment(pca))
+  augment(pca, type="var")
 }
 
 }
