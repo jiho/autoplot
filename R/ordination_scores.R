@@ -191,22 +191,6 @@ match_scaling <- function(scaling) {
 }
 
 
-# Get number of active observations (data rows)
-# generic
-nr <- function(x) { UseMethod("nr") }
-# define methods
-nr.prcomp <- function(x) { nrow(x$x) }
-nr.PCA    <- function(x) { nrow(x$ind$coord) }
-nr.rda    <- function(x) { nrow(x$CA$u) }
-nr.pca    <- function(x) { nrow(x$li) }
-nr.pcaRes <- function(x) { nrow(x@scores) }
-
-nr.CA <- function(x) { nrow(x$row$coord) }
-nr.correspondence <- function(x) { nrow(x$rscore) }
-nr.ca <- function(x) { nrow(x$rowcoord) } # TODO handle supplementary
-
-
-
 # Extract scale 0 scores
 
 # generics to dispatch to methods
