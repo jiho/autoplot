@@ -48,7 +48,7 @@ By default, scaling is adapted to the type of scores extracted (scaling 1 for ro
 A data.frame containing
 \describe{
   \item{PC#:}{the scores (i.e., coordinates) of the data objects on the new dimensions.}
-  \item{label:}{the identifier of the row or column, extracted from the row or column names in the original data.}
+  \item{rownames:}{the identifier of the row or column, extracted from the row or column names in the original data.}
   \item{type:}{the nature of the data extracted : \code{row} or \code{col}.}
 }
 }
@@ -75,7 +75,7 @@ head(scores(pca, type="columns", scaling=3))
 
 sc <- scores(pca)
 plot(sc$PC1, sc$PC2, asp=1)
-text(sc$PC1, sc$PC2, label=sc$label, adj=c(-0.1,0.5))
+text(sc$PC1, sc$PC2, label=sc$rownames, adj=c(-0.1,0.5))
 
 if (require("FactoMineR")) {
   head(scores(PCA(USArrests, graph=F)))

@@ -64,7 +64,7 @@ For \code{tidy}, a data.frame containing the variance (i.e. eigenvalue), the pro
 
 For \code{augment}, a data.frame containing the original data (when \code{type="rows"} and \code{data} is supplied or can be extracted from the object) and the additional columns:
 \describe{
-  \item{.label:}{the identifier of the row or column, extracted from the row or column names in the original data.}
+  \item{.rownames:}{the identifier of the row or column, extracted from the row or column names in the original data.}
   \item{.PC#:}{the scores (i.e., coordinates) of data objects on the extracted principal components.}
   \item{.cos2:}{the squared cosine, summed over extracted PCs, which quantifies the quality of the representation of each data point in the space of the extracted PCs. NB: \code{cos2} can only be computed when all possible principal components are extracted in the PCA objects; when it is not the case, \code{cos2} is \code{NA}. In several packages, the number of principal components to keep is an argument of the PCA function (and the default is not "all").}
   \item{.contrib:}{the contribution of each object to the selected PCs. NB: same comment as for \code{cos2} regarding the number of PCs kept in the PCA object.}

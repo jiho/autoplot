@@ -26,7 +26,7 @@
 #' @return A data.frame containing
 #' \describe{
 #'   \item{PC#:}{the scores (i.e., coordinates) of the data objects on the new dimensions.}
-#'   \item{label:}{the identifier of the row or column, extracted from the row or column names in the original data.}
+#'   \item{rownames:}{the identifier of the row or column, extracted from the row or column names in the original data.}
 #'   \item{type:}{the nature of the data extracted : \code{row} or \code{col}.}
 #' }
 #'
@@ -43,7 +43,7 @@
 #'
 #' sc <- scores(pca)
 #' plot(sc$PC1, sc$PC2, asp=1)
-#' text(sc$PC1, sc$PC2, label=sc$label, adj=c(-0.1,0.5))
+#' text(sc$PC1, sc$PC2, label=sc$rownames, adj=c(-0.1,0.5))
 #'
 #' if (require("FactoMineR")) {
 #'   head(scores(PCA(USArrests, graph=F)))
@@ -106,11 +106,10 @@ scores_ <- function(x, type="rows", scaling=type, ...) {
   # convert to a nicely formatted data.frame
   scaled <- as.data.frame(scaled)
   # homogenise column names
-  # get labels as a proper data.frame column
-  # TODO use "rownames", the convention for augment
-  scaled$label <- row.names(scaled)
   npc <- npc(x) # NB: PCs are always extracted in order, by all functions
   names(scaled)[1:npc] <- paste0("PC", 1:npc)
+  # get rownames as a proper data.frame column
+  scaled$rownames <- row.names(scaled)
   row.names(scaled) <- NULL
   # set score type
   scaled$type <- type
@@ -146,7 +145,6 @@ scores.ca <- scores_
 
 
 ## Utility functions for scores extraction and scaling ----
-
 
 # Determine the type of scores to extract from an ordination object
 # This defines synonyms to allow the vocabulary from different packages to co-exist
@@ -201,7 +199,7 @@ unscale_scores <- function(x, eig) { t(t(x) / sqrt(eig)) }
 unscale_scores_n <- function(x, eig, nr) { t(t(x) / sqrt(nr * eig)) }
 unscale_scores_n_1 <- function(x, eig, nr) { t(t(x) / sqrt((nr - 1) * eig)) } 
 
-# define methods
+# define methods for row_scores
 row_scores.prcomp <- function(x, eig, nr) { unscale_scores_n_1(x$x, eig, nr) }
 row_scores.PCA <- function(x, eig, nr) { unscale_scores_n(x$ind$coord, eig, nr) } # TODO deal with supplementary
 row_scores.rda <- function(x, ...) { x$CA$u }
@@ -212,9 +210,7 @@ row_scores.CA <- function(x, eig, ...) { unscale_scores(x$row$coord, eig) }
 row_scores.correspondence <- function(x, ...) { x$rscore }
 row_scores.ca <- function(x, ...) { x$rowcoord }
 
-# convert to scale 0
-
-# define methods
+# define methods for col_scores
 col_scores.prcomp <- function(x, ...) { x$rotation }
 col_scores.PCA <- function(x, eig) { unscale_scores(x$var$coord, eig) } # TODO deal with supplementary
 col_scores.rda <- function(x, ...) { x$CA$v }

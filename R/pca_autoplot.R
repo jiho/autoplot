@@ -196,13 +196,13 @@ geom_ordination_points <- function(data, mapping, n.max.labels, ...) {
   if (n <= (n.max.labels / 2)) {
     g <- c(
       g,
-      ggrepel::geom_text_repel(as.aes(mapping, aes_string(label=".label")), data=data, ..., size=3)
+      ggrepel::geom_text_repel(as.aes(mapping, aes_string(label=".rownames")), data=data, ..., size=3)
     )
     # TODO capture color and map it to the segment color (using alpha)
   } else if (n <= n.max.labels) {
     g <- c(
       g,
-      geom_text(as.aes(mapping, aes_string(label=".label")), data=data, ..., size=3, nudge_x=0.03, hjust=0)
+      geom_text(as.aes(mapping, aes_string(label=".rownames")), data=data, ..., size=3, nudge_x=0.03, hjust=0)
     )
   }
   
@@ -215,7 +215,7 @@ geom_ordination_vectors <- function(data,  mapping, ...) {
     # arrows describing the variables
     geom_segment(as.aes(aes_string(x="0", y="0", xend=mapping$x, yend=mapping$y), mapping), data=data, ..., lineend="round"),
     # add variable names
-    geom_text(as.aes(aes_string(x=mapping$x, y=mapping$y, label=".label", hjust=paste0("ifelse(", mapping$x ,">0, -0.05, 1.05)"), mapping)), data=data, ..., size=3, vjust=0.5)
+    geom_text(as.aes(aes_string(x=mapping$x, y=mapping$y, label=".rownames", hjust=paste0("ifelse(", mapping$x ,">0, -0.05, 1.05)"), mapping)), data=data, ..., size=3, vjust=0.5)
     # or use a "complex"" computation to place the labels intelligently at the tip of the arrows
     # geom_text(as.aes(aes_string(x=paste("1.04*", mapping$x, sep=""), y=paste("1.04*", mapping$y, sep=""), label=".label", hjust=paste("0.5-1*", mapping$x, sep=""), vjust=paste("0.5-1*", mapping$y, sep="")), mapping), data=data, ..., size=3)
   )

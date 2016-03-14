@@ -55,8 +55,8 @@ get_data <- function(x) {
   if ( ! is.null(d) ) {
     # convert to data.frame
     d <- as.data.frame(d)
-    # add labels
-    d$.label <- row.names(d)
+    # add rownames
+    d$.rownames <- row.names(d)
     row.names(d) <- NULL
   }
   return(d)
