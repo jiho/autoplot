@@ -25,9 +25,12 @@ Imports:
     grid,
     plyr,
     dplyr,
-    reshape2
+    reshape2,
+    ggrepel
 Suggests:
     FactoMineR,
+    vegan,
     pcaMethods,
+    ade4,
     testthat
 RoxygenNote: 5.0.1

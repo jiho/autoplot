@@ -28,6 +28,23 @@ choose_plots <- function(type, choices) {
   return(type)
 }
 
+
+# Concatenate aes() definitions
+as.aes <- function(...) {
+  x <- list(...)
+  # check those are aes definitions
+  classes <- sapply(x, class)
+  if (any(classes != "uneval")) {
+    stop("Aesthetic mappings should be provided through the function aes()\n e.g. mapping=aes(x=...)", call.=FALSE)
+  }
+  # concatenate
+  x <- unlist(x)
+  class(x) <- "uneval"
+  return(x)
+}
+
+
+
 #' Draw a several plots successively on current graphics device
 #'
 #' When plotting several plots on an interactive device, the user is given the chance to examine each successive plot and has to press enter to see the next one.

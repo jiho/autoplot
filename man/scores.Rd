@@ -42,7 +42,7 @@ scores(x, type = "rows", scaling = type, ...)
   \item{"columns" (or 2, or a synonym of "columns")}{to scale column scores by the eigenvalues,}
   \item{"both" (or 3)}{to scale both row and column scores.}
 }
-By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores and scaling 2 for column scores).}
+By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores, scaling 2 for column scores, and scaling 3 when scores are extracted for a biplot).}
 }
 \value{
 A data.frame containing

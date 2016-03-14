@@ -44,7 +44,7 @@
 
 \item{...}{pass-through argument.}
 
-\item{data}{the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all cases but \code{\link{prcomp}})}
+\item{data}{the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all cases but \code{\link{prcomp}}).}
 
 \item{dimensions}{vector giving the numbers of the principal components to extract. Typically two are extracted to create a plot.}
 
@@ -57,16 +57,16 @@
   \item{"columns" (or 2, or a synonym of "columns")}{to scale column scores by the eigenvalues,}
   \item{"both" (or 3)}{to scale both row and column scores.}
 }
-By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores and scaling 2 for column scores).}
+By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores, scaling 2 for column scores, and scaling 3 when scores are extracted for a biplot).}
 }
 \value{
-For \code{tidy}, a data.frame containing the variance (i.e. eigenvalue), the proportion of variance and the cumulative proportion of variance for each principal component.
+For \code{tidy}, a data.frame containing the variance (i.e. eigenvalue), the proportion of variance, and the cumulative proportion of variance associated to each principal component.
 
-For \code{augment}, a data.frame containing the original data, when \code{type="rows"} and \code{data} is supplied or can be extracted from the object, and the additional columns:
+For \code{augment}, a data.frame containing the original data (when \code{type="rows"} and \code{data} is supplied or can be extracted from the object) and the additional columns:
 \describe{
   \item{.label:}{the identifier of the row or column, extracted from the row or column names in the original data.}
-  \item{.PC#:}{the scores (i.e., coordinates) of the data objects on the extracted principal components.}
-  \item{.cos2:}{the squared cosine, summed over extracted PCs, which quantifies the quality of the representation of each data point in the space of the extracted PCs. NB: for \code{cos2} to be meaningful, the PCA object must contain all possible principal components. In some packages, this is an option that needs to be explicitly specified.}
+  \item{.PC#:}{the scores (i.e., coordinates) of data objects on the extracted principal components.}
+  \item{.cos2:}{the squared cosine, summed over extracted PCs, which quantifies the quality of the representation of each data point in the space of the extracted PCs. NB: for \code{cos2} to be meaningful, the PCA object must contain all possible principal components. In packages \code{FactoMineR}, \code{ade4}, and \code{pcaMethods}, the number of principal components to keep is an argument of the PCA function (and the default is not "all").}
   \item{.contrib:}{the contribution of each object to the selected PCs. NB: same comment as for \code{cos2} regarding the number of PCs in the original PCA object.}
   \item{.type:}{the nature of the data extracted : \code{row} or \code{col}.}
 }

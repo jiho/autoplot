@@ -11,7 +11,7 @@
 #'   \item{"columns" (or 2, or a synonym of "columns")}{to scale column scores by the eigenvalues,}
 #'   \item{"both" (or 3)}{to scale both row and column scores.}
 #' }
-#' By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores and scaling 2 for column scores).
+#' By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores, scaling 2 for column scores, and scaling 3 when scores are extracted for a biplot).
 #' 
 #' @details
 #' Scaling of scores follows the conventions of package \code{vegan}. In summary, except for scaling 0, scores are all multiplied by a constant:
@@ -87,7 +87,7 @@ scores <- function(x, type="rows", scaling=type, ...) {
 scores_ <- function(x, type="rows", scaling=type, ...) {
   # check arguments for the type of scores and scaling
   type <- match_type(type)
-  scaling <- match_scaling(scaling, type)
+  scaling <- match_scaling(scaling)
   
   # compute eigenvalues and number of active rows to:
   # - convert scores computed by the various packages to a common "scale 0"
@@ -110,6 +110,7 @@ scores_ <- function(x, type="rows", scaling=type, ...) {
   nc <- length(eig)
   names(scaled)[1:nc] <- paste0("PC", 1:nc)
   # get labels as a proper data.frame column
+  # TODO use "rownames", the convention for augment
   scaled$label <- row.names(scaled)
   row.names(scaled) <- NULL
   # set score type
@@ -157,6 +158,7 @@ match_type <- function(type, ...) {
 
   # allow abbreviation
   type <- match.arg(type, c(row_types, col_types, ...), several.ok=FALSE)
+  # TODO consider allowing several.ok=TRUE to be able to match several elements of a vector
 
   # reduce synonyms
   type[type %in% row_types] <- "row"
@@ -167,7 +169,7 @@ match_type <- function(type, ...) {
 
 # Determine the type scaling for scores extracted from an ordination object
 # This uses the same synonyms
-match_scaling <- function(scaling, type) {
+match_scaling <- function(scaling) {
   # otherwise select a type of scaling
   if (is.numeric(scaling)) {
     # scaling can be a number, in a way compatible with most of the code out there (vegan in particular)
@@ -178,8 +180,9 @@ match_scaling <- function(scaling, type) {
 
   } else if (is.character(scaling)) {
     # or a character string, specifying in which "direction" to scale
-    scaling <- match_type(scaling, c("none", "both"))
-  
+    scaling <- match_type(scaling, c("none", "both", "biplot"))
+    if (scaling == "biplot") { scaling <- "both" }
+
   } else {
     stop("Scaling should be a number between 0 and 3 or a character string")
   }
