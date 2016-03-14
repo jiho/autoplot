@@ -40,7 +40,7 @@ caMadv <- MASS::corresp(d[,-1], nf=2)
 caC <- ca::ca(d[,-1], nd=6)
 caCadv <- ca::ca(d[,-1], nd=2, suprow=2, supcol=1)
 
-test_that("eigenvalues are equal", {
+test_that("eigenvalues are equal among packages", {
   # use stats as reference
   eig_pcaS <- eigenvalues(pcaS)
   expect_equivalent(eig_pcaS, eigenvalues(pcaF))
@@ -125,9 +125,32 @@ test_that("number of dimensions kept is correctly computed", {
   expect_equal(2, npc(caCadv))   # idem
 })
 
-
-
-
+test_that("scores are equal among packages", {
+  abs_scores <- function(x, ...) {
+    sco <- scores(x, ...)
+    abs(sco[sapply(sco, is.numeric)])
+  }
+  
+  # use stats as reference
+  scores_pcaS <- abs_scores(pcaS, type="row")
+  expect_equivalent(scores_pcaS, abs_scores(pcaF, type="row"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaV, type="row"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaA, type="row"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaM, type="row"))
+  scores_pcaS <- abs_scores(pcaS, type="col")
+  expect_equivalent(scores_pcaS, abs_scores(pcaF, type="col"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaV, type="col"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaA, type="col"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaM, type="col"))
+  
+  # use FactoMineR as reference
+  scores_caF <- abs_scores(caF, type="row")
+  # expect_equivalent(scores_caF, abs_scores(caM, type="row"))
+  expect_equivalent(scores_caF, abs_scores(caC, type="row"))
+  scores_caF <- abs_scores(caF, type="col")
+  # expect_equivalent(scores_caF, abs_scores(caM, type="col"))
+  expect_equivalent(scores_caF, abs_scores(caC, type="col"))
+})
 
 # # PCA
 # pcaS <- stats::prcomp(d, scale=TRUE)
