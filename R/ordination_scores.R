@@ -89,10 +89,9 @@ scores_ <- function(x, type="rows", scaling=type, ...) {
   type <- match_type(type)
   scaling <- match_scaling(scaling)
   
-  # compute eigenvalues and number of active rows to:
-  # - convert scores computed by the various packages to a common "scale 0"
-  # - scale scores afterwards
+  # get eigenvalues to convert scores computed by the various packages to a common "scale 0"
   eig <- eigenvalues(x)
+  # get number of rows to scale scores to a scaling != 0
   nr <- nr(x)
   
   # get and scale scores
@@ -107,11 +106,11 @@ scores_ <- function(x, type="rows", scaling=type, ...) {
   # convert to a nicely formatted data.frame
   scaled <- as.data.frame(scaled)
   # homogenise column names
-  nc <- length(eig)
-  names(scaled)[1:nc] <- paste0("PC", 1:nc)
   # get labels as a proper data.frame column
   # TODO use "rownames", the convention for augment
   scaled$label <- row.names(scaled)
+  npc <- npc(x) # NB: PCs are always extracted in order, by all functions
+  names(scaled)[1:npc] <- paste0("PC", 1:npc)
   row.names(scaled) <- NULL
   # set score type
   scaled$type <- type
