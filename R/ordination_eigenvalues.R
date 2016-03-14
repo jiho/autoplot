@@ -65,7 +65,16 @@ eigenvalues.pcaRes <- function(x) { as.numeric(x@sDev^2) }
 eigenvalues.CA <- function(x) { x$eig$eigenvalue }
 #' @name eigenvalues
 #' @export
-eigenvalues.correspondence <- function(x) { (x$cor[-length(x$cor)])^2 }
+eigenvalues.correspondence <- function(x) {
+  eig <- x$cor^2
+  # MASS allows to extract the last dimension which is meaningless (eigenvalue ~ 0)
+  # remove it here if it is extracted
+  n <- length(eig)
+  if (eig[n]< 10^-10) {
+    eig <- eig[-n]
+  }
+  return(eig)
+}
 #' @name eigenvalues
 #' @export
 eigenvalues.ca <- function(x) { x$sv^2 }
