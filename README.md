@@ -1,14 +1,13 @@
 # autoplot
 
-[ggplot2](http://ggplot2.org/) is a versatile plotting package which allows to produce almost any kind of plot from data stored as a data.frame, by combining unit elements. However, it requires the user to design the plot entirely, from scratch. Many R functions for statistical analyses (linear models, factorial analyses, etc.) output objects of a given class and allow to easily plot classic diagnostics using plot(), by defining a specialized method for this generic function. This package aims at reproducing this functionality in ggplot2 while benefiting from its improved versatility. It provides two sets of methods : (i) the fortify() methods extract data from the original object and format it as a data.frame; (ii) the autoplot() methods use these data.frames and leverage ggplot2 to produce diagnostic plots.
+[ggplot2](http://ggplot2.org/) is a versatile plotting package which allows to produce almost any kind of plot from data stored as a data.frame, by combining unit elements. However, it requires the user to design the plot entirely, from scratch. Many R functions for statistical analyses (linear models, mutlivariate analyses, etc.) output objects of a given class and allow to easily plot classic diagnostics using `plot()`, by defining a specialized method for this generic function. This package aims at reproducing this functionality in ggplot2 while benefiting from its improved versatility. It provides two sets of methods : (i) the `augment()` methods extract data from the original object and format it as a data.frame (see package [broom](https://github.com/dgrtwo/broom)); (ii) the `autoplot()` methods use these data.frames and leverage ggplot2 to produce diagnostic plots.
 
 ## Installation
 
 The package is under development and is not on CRAN yet. To install it, the simplest method is therefore
 
     # install.packages("devtools")
-    library("devtools")
-    install_github("autoplot", "jiho")
+    devtools::install_github("jiho/autoplot")
 
 ## Development
 
