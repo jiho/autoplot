@@ -86,12 +86,12 @@ autoplot(pca, data=USArrests, mapping=aes(alpha=.cos2, color=Murder))
 autoplot(pca, mapping=aes(alpha=.cos2), color="darkblue", size=3)
 
 if (require("FactoMineR")) {
-  pca <- PCA(USArrests, graph=FALSE)
+  pca <- FactoMineR::PCA(USArrests, graph=FALSE)
   autoplot(pca)
   autoplot(pca, type="variables")
   # with FactoMineR, the data is present by default and can be mapped
   names(augment(pca))
-autoplot(pca, mapping=aes(alpha=.cos2, color=Murder))
+  autoplot(pca, mapping=aes(alpha=.cos2, color=Murder))
 }
 
 if (require("vegan")) {
@@ -108,7 +108,7 @@ if (require("ade4")) {
 }
 
 if (require("pcaMethods")) {
-  pca <- pca(USArrests, scale="uv", nPcs=4)
+  pca <- pcaMethods::pca(USArrests, scale="uv", nPcs=4)
   biplot(pca)
   autoplot(pca, type="biplot")
 }

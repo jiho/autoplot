@@ -49,12 +49,12 @@
 # TODO use supp variables
 # #'   # use supplementary observations and variables
 # #'   pca <- PCA(USArrests, scale = TRUE, graph=FALSE, ind.sup = 2, quanti.sup = 4)
-#'   pca <- PCA(USArrests, graph=FALSE)
+#'   pca <- FactoMineR::PCA(USArrests, graph=FALSE)
 #'   autoplot(pca)
 #'   autoplot(pca, type="variables")
 #'   # with FactoMineR, the data is present by default and can be mapped
 #'   names(augment(pca))
-#' autoplot(pca, mapping=aes(alpha=.cos2, color=Murder))
+#'   autoplot(pca, mapping=aes(alpha=.cos2, color=Murder))
 # #'   # colour is mapped by default
 # #'   
 # #'   # but the mapping can be overridden by mapping another variable
@@ -80,7 +80,7 @@
 #' }
 #'
 #' if (require("pcaMethods")) {
-#'   pca <- pca(USArrests, scale="uv", nPcs=4)
+#'   pca <- pcaMethods::pca(USArrests, scale="uv", nPcs=4)
 #'   biplot(pca)
 #'   autoplot(pca, type="biplot")
 #' }
