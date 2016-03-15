@@ -6,7 +6,7 @@
 #'
 #' @param mapping a call to aes() specifying additional mappings between variables and plot aesthetics. By default, positions \code{x} and \code{y} are mapped to the scores on the principal components.
 #'
-#' @param type the plot to produce: either plot "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms), or plot "columns", "variables", "descriptors", "species" (which are, again, synonyms), or produce a "biplot". All can be abbreviated. By default, observations are plotted.
+#' @param which the plot to produce: either plot "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms), or plot "columns", "variables", "descriptors", "species" (which are, again, synonyms), or produce a "biplot". All can be abbreviated. By default, observations are plotted.
 #'
 #' @inheritParams pca_tidiers
 #' @inheritParams scores
@@ -22,6 +22,7 @@
 #'   \item{\code{\link[ggplot2]{geom_text}} or \code{\link[ggrepel]{geom_text_repel}}:}{for observations labels,}
 #'   \item{\code{\link[ggplot2]{geom_segment}}:}{for variables vectors.}
 #' }
+# TODO Add info about biplot vs rest, scaling considerations etc.
 #' 
 #' @return A ggplot2 object defining the plot.
 #'
@@ -30,10 +31,10 @@
 #' @examples
 #' pca <- prcomp(USArrests, scale=TRUE)
 #' autoplot(pca)
-#' autoplot(pca, type="variables")
-#' autoplot(pca, type="biplot") # defaults to scaling=3
-#' autoplot(pca, type="biplot", scaling=1)
-#' autoplot(pca, type="biplot", scaling=2, n.max.labels=0)
+#' autoplot(pca, which="variables")
+#' autoplot(pca, which="biplot") # defaults to scaling=3
+#' autoplot(pca, which="biplot", scaling=1)
+#' autoplot(pca, which="biplot", scaling=2, n.max.labels=0)
 #'
 #' # add further aesthetic mappings
 #' names(augment(pca, data=USArrests))
@@ -51,50 +52,49 @@
 # #'   pca <- PCA(USArrests, scale = TRUE, graph=FALSE, ind.sup = 2, quanti.sup = 4)
 #'   pca <- FactoMineR::PCA(USArrests, graph=FALSE)
 #'   autoplot(pca)
-#'   autoplot(pca, type="variables")
+#'   autoplot(pca, which="variables")
 #'   # with FactoMineR, the data is present by default and can be mapped
 #'   names(augment(pca))
 #'   autoplot(pca, mapping=aes(alpha=.cos2, color=Murder))
 # #'   # colour is mapped by default
 # #'   
 # #'   # but the mapping can be overridden by mapping another variable
-# #'   autoplot(pca, type = "obs", mapping = aes(colour=.contrib))
+# #'   autoplot(pca, which = "obs", mapping = aes(colour=.contrib))
 # #'   # or setting the corresponding aesthetic
-# #'   autoplot(pca, type = "obs", colour="black")
+# #'   autoplot(pca, which = "obs", colour="black")
 # #'   
 # #'   # additional mappings can be specified
-# #'   autoplot(pca, type = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.type))
+# #'   autoplot(pca, which = "obs", mapping = aes(colour=.contrib, alpha=.cos2, shape=.type))
 #' }
 #'
 #' if (require("vegan")) {
 #'   pca <- vegan::rda(USArrests, scale=TRUE)
 #'   plot(pca)
-#'   autoplot(pca, type="biplot", scaling=2)
+#'   autoplot(pca, which="biplot", scaling=2)
 #'   autoplot(pca)
 #' }
 #'
 #' if (require("ade4")) {
 #'   pca <- ade4::dudi.pca(USArrests, nf=4, scannf=FALSE)
 #'   biplot(pca)
-#'   autoplot(pca, type="biplot", scaling=1)
+#'   autoplot(pca, which="biplot", scaling=1)
 #' }
 #'
 #' if (require("pcaMethods")) {
 #'   pca <- pcaMethods::pca(USArrests, scale="uv", nPcs=4)
 #'   biplot(pca)
-#'   autoplot(pca, type="biplot")
+#'   autoplot(pca, which="biplot")
 #' }
 #'
 #'@name autoplot_pca
 NULL
 
-autoplot_pca <- function(object, mapping=aes(), data=NULL, dimensions=c(1,2), type="rows", scaling=type, n.max.labels=100, ...) {
+autoplot_pca <- function(object, mapping=aes(), data=NULL, dimensions=c(1,2), which="rows", scaling=which, n.max.labels=100, ...) {
 
-  # TODO use which instead of type, see plot.lm
   # TODO actually describe the plots, layers, mappings, as recommended on https://github.com/hadley/ggplot2/wiki/autoplot
 
   # check arguments
-  type <- match_type(type, c("biplot"))
+  which <- match_type(which, c("biplot"))
   scaling <- match_scaling(scaling)
 
   dimensions <- na.omit(dimensions)
@@ -111,17 +111,17 @@ autoplot_pca <- function(object, mapping=aes(), data=NULL, dimensions=c(1,2), ty
   
   
   # prepare the appropriate plots
-  if (type == "row") {
+  if (which == "row") {
     # get data
-    d <- augment(x=object, data=data, type="row", dimensions=dimensions, scaling=1)
+    d <- augment(x=object, data=data, which="row", dimensions=dimensions, scaling=1)
 
     # build plot
     mapping <- ordination_mapping(data=d, mapping=mapping)
     p <- p + geom_ordination_points(data=d, mapping=mapping, n.max.labels=n.max.labels, ...)
   }
 
-  if (type == "col") {
-    d <- augment(x=object, data=data, type="col", dimensions=dimensions, scaling=0)
+  if (which == "col") {
+    d <- augment(x=object, data=data, which="col", dimensions=dimensions, scaling=0)
 
     # add the unit circle (and make it look similar to grid lines)
     # NB: getting the theme element works at the time the plot is created, so it will work for constructs such as
@@ -141,9 +141,9 @@ autoplot_pca <- function(object, mapping=aes(), data=NULL, dimensions=c(1,2), ty
     
   }
 
-  if (type == "biplot") {
-    dr <- augment(x=object, data=data, type="row", dimensions=dimensions, scaling=scaling)
-    dc <- augment(x=object, data=data, type="col", dimensions=dimensions, scaling=scaling)
+  if (which == "biplot") {
+    dr <- augment(x=object, data=data, which="row", dimensions=dimensions, scaling=scaling)
+    dc <- augment(x=object, data=data, which="col", dimensions=dimensions, scaling=scaling)
     # build plot
     mapping <- ordination_mapping(data=dr, mapping=mapping)
     p <- p +

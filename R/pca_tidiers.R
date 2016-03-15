@@ -15,7 +15,7 @@
 #' @return
 #' For \code{tidy}, a data.frame containing the variance (i.e. eigenvalue), the proportion of variance, and the cumulative proportion of variance associated to each principal component.
 #' 
-#' For \code{augment}, a data.frame containing the original data (when \code{type="rows"} and \code{data} is supplied or can be extracted from the object) and the additional columns:
+#' For \code{augment}, a data.frame containing the original data (when \code{which="rows"} and \code{data} is supplied or can be extracted from the object) and the additional columns:
 #' \describe{
 #'   \item{.rownames:}{the identifier of the row or column, extracted from the row or column names in the original data.}
 #'   \item{.PC#:}{the scores (i.e., coordinates) of data objects on the extracted principal components.}
@@ -32,41 +32,41 @@
 #'
 #' tidy(pca)
 #'
-#' head(augment(pca, type="row"))
-#' head(augment(pca, type="col"))
+#' head(augment(pca, which="row"))
+#' head(augment(pca, which="col"))
 #' # or use your preferred synonym, possibly abbreviated
-#' head(augment(pca, type="obs"))
-#' head(augment(pca, type="var"))
-#' head(augment(pca, type="descriptors"))
+#' head(augment(pca, which="obs"))
+#' head(augment(pca, which="var"))
+#' head(augment(pca, which="descriptors"))
 #'
 #' # data is not contained in the `prcomp` object but can be provided
-#' head(augment(pca, data=USArrests, type="row"))
+#' head(augment(pca, data=USArrests, which="row"))
 #' # select different principal components
-#' augment(pca, type="col", dim=c(2,3))
+#' augment(pca, which="col", dim=c(2,3))
 #'
 #' if (require("FactoMineR")) {
 #'   pca <- FactoMineR::PCA(USArrests, graph=FALSE, ncp=4)
-#'   head(augment(pca, type="individuals"))
-#'   head(augment(pca, type="variables"))
+#'   head(augment(pca, which="individuals"))
+#'   head(augment(pca, which="variables"))
 #' }
 #'
 #' if (require("vegan")) {
 #'   pca <- vegan::rda(USArrests, scale=TRUE)
 #'   # can use vegan's naming convention
-#'   head(augment(pca, type="sites"))
-#'   head(augment(pca, type="species"))
+#'   head(augment(pca, which="sites"))
+#'   head(augment(pca, which="species"))
 #' }
 #'
 #' if (require("ade4")) {
 #'   pca <- ade4::dudi.pca(USArrests, scannf=FALSE)
 #'   head(augment(pca))
-#'   head(augment(pca, type="variables"))
+#'   head(augment(pca, which="variables"))
 #' }
 #'
 #' if (require("pcaMethods")) {
 #'   pca <- pcaMethods::pca(USArrests, scale="uv")
 #'   head(augment(pca))
-#'   augment(pca, type="var")
+#'   augment(pca, which="var")
 #' }
 
 # Additional examples
@@ -115,10 +115,10 @@ tidy.pca <- tidy_pca
 tidy.pcaRes <- tidy_pca
 
 
-augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=type, ...) {
+augment_pca <- function(x, data=NULL, dimensions=c(1,2), which="row", scaling=which, ...) {
 
   # check arguments
-  type <- match_type(type)
+  which <- match_type(which)
 
   # and number of dimensions
   n <- npc(x)
@@ -137,7 +137,7 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
   eig <- tidy(x)
   
   # extract scores
-  sco <- scores(x, type=type, scaling=scaling)
+  sco <- scores(x, which=which, scaling=scaling)
   
   # if all potential PCs are kept, compute cos2 and contrib
   if (n == nc(x)) {
@@ -177,7 +177,7 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
   names(res) <- paste0(".", names(res))
 
   # add original data, only if we are extracting observations
-  if (type == "row") {
+  if (which == "row") {
     if ( is.null(data) ) {
       # fetch data from the object if necessary
       data <- get_data(x)

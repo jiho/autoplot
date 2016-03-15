@@ -10,23 +10,23 @@
 \title{Automatic ggplot for a Principal Component Analysis}
 \usage{
 \method{autoplot}{prcomp}(object, mapping = aes(), data = NULL,
-  dimensions = c(1, 2), type = "rows", scaling = type,
+  dimensions = c(1, 2), which = "rows", scaling = which,
   n.max.labels = 100, ...)
 
 \method{autoplot}{PCA}(object, mapping = aes(), data = NULL,
-  dimensions = c(1, 2), type = "rows", scaling = type,
+  dimensions = c(1, 2), which = "rows", scaling = which,
   n.max.labels = 100, ...)
 
 \method{autoplot}{rda}(object, mapping = aes(), data = NULL,
-  dimensions = c(1, 2), type = "rows", scaling = type,
+  dimensions = c(1, 2), which = "rows", scaling = which,
   n.max.labels = 100, ...)
 
 \method{autoplot}{pca}(object, mapping = aes(), data = NULL,
-  dimensions = c(1, 2), type = "rows", scaling = type,
+  dimensions = c(1, 2), which = "rows", scaling = which,
   n.max.labels = 100, ...)
 
 \method{autoplot}{pcaRes}(object, mapping = aes(), data = NULL,
-  dimensions = c(1, 2), type = "rows", scaling = type,
+  dimensions = c(1, 2), which = "rows", scaling = which,
   n.max.labels = 100, ...)
 }
 \arguments{
@@ -38,7 +38,7 @@
 
 \item{dimensions}{vector giving the numbers of the principal components to extract. Typically two are extracted to create a plot.}
 
-\item{type}{the plot to produce: either plot "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms), or plot "columns", "variables", "descriptors", "species" (which are, again, synonyms), or produce a "biplot". All can be abbreviated. By default, observations are plotted.}
+\item{which}{the plot to produce: either plot "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms), or plot "columns", "variables", "descriptors", "species" (which are, again, synonyms), or produce a "biplot". All can be abbreviated. By default, observations are plotted.}
 
 \item{scaling}{scaling for the scores. Can be
 \describe{
@@ -70,10 +70,10 @@ The object is passed to the appropriate \code{augment} method, defined in \code{
 \examples{
 pca <- prcomp(USArrests, scale=TRUE)
 autoplot(pca)
-autoplot(pca, type="variables")
-autoplot(pca, type="biplot") # defaults to scaling=3
-autoplot(pca, type="biplot", scaling=1)
-autoplot(pca, type="biplot", scaling=2, n.max.labels=0)
+autoplot(pca, which="variables")
+autoplot(pca, which="biplot") # defaults to scaling=3
+autoplot(pca, which="biplot", scaling=1)
+autoplot(pca, which="biplot", scaling=2, n.max.labels=0)
 
 # add further aesthetic mappings
 names(augment(pca, data=USArrests))
@@ -88,7 +88,7 @@ autoplot(pca, mapping=aes(alpha=.cos2), color="darkblue", size=3)
 if (require("FactoMineR")) {
   pca <- FactoMineR::PCA(USArrests, graph=FALSE)
   autoplot(pca)
-  autoplot(pca, type="variables")
+  autoplot(pca, which="variables")
   # with FactoMineR, the data is present by default and can be mapped
   names(augment(pca))
   autoplot(pca, mapping=aes(alpha=.cos2, color=Murder))
@@ -97,20 +97,20 @@ if (require("FactoMineR")) {
 if (require("vegan")) {
   pca <- vegan::rda(USArrests, scale=TRUE)
   plot(pca)
-  autoplot(pca, type="biplot", scaling=2)
+  autoplot(pca, which="biplot", scaling=2)
   autoplot(pca)
 }
 
 if (require("ade4")) {
   pca <- ade4::dudi.pca(USArrests, nf=4, scannf=FALSE)
   biplot(pca)
-  autoplot(pca, type="biplot", scaling=1)
+  autoplot(pca, which="biplot", scaling=1)
 }
 
 if (require("pcaMethods")) {
   pca <- pcaMethods::pca(USArrests, scale="uv", nPcs=4)
   biplot(pca)
-  autoplot(pca, type="biplot")
+  autoplot(pca, which="biplot")
 }
 
 }

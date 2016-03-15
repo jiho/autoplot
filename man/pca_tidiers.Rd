@@ -25,19 +25,19 @@
 \method{tidy}{pcaRes}(x, ...)
 
 \method{augment}{prcomp}(x, data = NULL, dimensions = c(1, 2),
-  type = "row", scaling = type, ...)
+  which = "row", scaling = which, ...)
 
-\method{augment}{rda}(x, data = NULL, dimensions = c(1, 2), type = "row",
-  scaling = type, ...)
+\method{augment}{rda}(x, data = NULL, dimensions = c(1, 2), which = "row",
+  scaling = which, ...)
 
-\method{augment}{PCA}(x, data = NULL, dimensions = c(1, 2), type = "row",
-  scaling = type, ...)
+\method{augment}{PCA}(x, data = NULL, dimensions = c(1, 2), which = "row",
+  scaling = which, ...)
 
-\method{augment}{pca}(x, data = NULL, dimensions = c(1, 2), type = "row",
-  scaling = type, ...)
+\method{augment}{pca}(x, data = NULL, dimensions = c(1, 2), which = "row",
+  scaling = which, ...)
 
 \method{augment}{pcaRes}(x, data = NULL, dimensions = c(1, 2),
-  type = "row", scaling = type, ...)
+  which = "row", scaling = which, ...)
 }
 \arguments{
 \item{x}{an object returned by a function performing Principal Component Analysis.}
@@ -48,7 +48,7 @@
 
 \item{dimensions}{vector giving the numbers of the principal components to extract. Typically two are extracted to create a plot.}
 
-\item{type}{the scores (i.e. coordinates in the new space) to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, scores of rows are returned.}
+\item{which}{the scores (i.e. coordinates in the new space) to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, scores of rows are returned.}
 
 \item{scaling}{scaling for the scores. Can be
 \describe{
@@ -62,7 +62,7 @@ By default, scaling is adapted to the type of scores extracted (scaling 1 for ro
 \value{
 For \code{tidy}, a data.frame containing the variance (i.e. eigenvalue), the proportion of variance, and the cumulative proportion of variance associated to each principal component.
 
-For \code{augment}, a data.frame containing the original data (when \code{type="rows"} and \code{data} is supplied or can be extracted from the object) and the additional columns:
+For \code{augment}, a data.frame containing the original data (when \code{which="rows"} and \code{data} is supplied or can be extracted from the object) and the additional columns:
 \describe{
   \item{.rownames:}{the identifier of the row or column, extracted from the row or column names in the original data.}
   \item{.PC#:}{the scores (i.e., coordinates) of data objects on the extracted principal components.}
@@ -79,41 +79,41 @@ pca <- prcomp(USArrests, scale = TRUE)
 
 tidy(pca)
 
-head(augment(pca, type="row"))
-head(augment(pca, type="col"))
+head(augment(pca, which="row"))
+head(augment(pca, which="col"))
 # or use your preferred synonym, possibly abbreviated
-head(augment(pca, type="obs"))
-head(augment(pca, type="var"))
-head(augment(pca, type="descriptors"))
+head(augment(pca, which="obs"))
+head(augment(pca, which="var"))
+head(augment(pca, which="descriptors"))
 
 # data is not contained in the `prcomp` object but can be provided
-head(augment(pca, data=USArrests, type="row"))
+head(augment(pca, data=USArrests, which="row"))
 # select different principal components
-augment(pca, type="col", dim=c(2,3))
+augment(pca, which="col", dim=c(2,3))
 
 if (require("FactoMineR")) {
   pca <- FactoMineR::PCA(USArrests, graph=FALSE, ncp=4)
-  head(augment(pca, type="individuals"))
-  head(augment(pca, type="variables"))
+  head(augment(pca, which="individuals"))
+  head(augment(pca, which="variables"))
 }
 
 if (require("vegan")) {
   pca <- vegan::rda(USArrests, scale=TRUE)
   # can use vegan's naming convention
-  head(augment(pca, type="sites"))
-  head(augment(pca, type="species"))
+  head(augment(pca, which="sites"))
+  head(augment(pca, which="species"))
 }
 
 if (require("ade4")) {
   pca <- ade4::dudi.pca(USArrests, scannf=FALSE)
   head(augment(pca))
-  head(augment(pca, type="variables"))
+  head(augment(pca, which="variables"))
 }
 
 if (require("pcaMethods")) {
   pca <- pcaMethods::pca(USArrests, scale="uv")
   head(augment(pca))
-  augment(pca, type="var")
+  augment(pca, which="var")
 }
 
 }

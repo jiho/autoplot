@@ -12,28 +12,28 @@
 \alias{scores.rda}
 \title{Extract scores from an ordination object}
 \usage{
-scores(x, type = "rows", scaling = type, ...)
+scores(x, which = "rows", scaling = which, ...)
 
-\method{scores}{prcomp}(x, type = "rows", scaling = type, ...)
+\method{scores}{prcomp}(x, which = "rows", scaling = which, ...)
 
-\method{scores}{PCA}(x, type = "rows", scaling = type, ...)
+\method{scores}{PCA}(x, which = "rows", scaling = which, ...)
 
-\method{scores}{rda}(x, type = "rows", scaling = type, ...)
+\method{scores}{rda}(x, which = "rows", scaling = which, ...)
 
-\method{scores}{pca}(x, type = "rows", scaling = type, ...)
+\method{scores}{pca}(x, which = "rows", scaling = which, ...)
 
-\method{scores}{pcaRes}(x, type = "rows", scaling = type, ...)
+\method{scores}{pcaRes}(x, which = "rows", scaling = which, ...)
 
-\method{scores}{CA}(x, type = "rows", scaling = type, ...)
+\method{scores}{CA}(x, which = "rows", scaling = which, ...)
 
-\method{scores}{correspondence}(x, type = "rows", scaling = type, ...)
+\method{scores}{correspondence}(x, which = "rows", scaling = which, ...)
 
-\method{scores}{ca}(x, type = "rows", scaling = type, ...)
+\method{scores}{ca}(x, which = "rows", scaling = which, ...)
 }
 \arguments{
 \item{x}{an object returned by an ordination function.}
 
-\item{type}{the scores (i.e. coordinates in the new space) to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, scores of rows are returned.}
+\item{which}{the scores (i.e. coordinates in the new space) to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, scores of rows are returned.}
 
 \item{scaling}{scaling for the scores. Can be
 \describe{
@@ -69,9 +69,9 @@ For details and justification, see \code{vignette("decision-vegan")}.
 # Principal Component Analysis
 pca <- prcomp(USArrests, scale=TRUE)
 head(scores(pca))
-head(scores(pca, type="columns"))
-head(scores(pca, type="columns", scaling=0))
-head(scores(pca, type="columns", scaling=3))
+head(scores(pca, which="columns"))
+head(scores(pca, which="columns", scaling=0))
+head(scores(pca, which="columns", scaling=3))
 
 sc <- scores(pca)
 plot(sc$PC1, sc$PC2, asp=1)
@@ -94,21 +94,21 @@ if (require("pcaMethods")) {
 clr <- HairEyeColor[,,1]
 if (require("FactoMineR")) {
   CA.res <- CA(clr, graph=F)
-  scores(CA.res, type="row", scaling="none")
-  scores(CA.res, type="col", scaling="none")
+  scores(CA.res, which="row", scaling="none")
+  scores(CA.res, which="col", scaling="none")
   # for a correspondence analysis, scaling="both" makes most sense
-  scores(CA.res, type="row", scaling="both")
-  scores(CA.res, type="col", scaling="both")
+  scores(CA.res, which="row", scaling="both")
+  scores(CA.res, which="col", scaling="both")
 }
 if (require("MASS")) {
   corresp.res <- corresp(clr, nf=3)
-  scores(corresp.res, type="row", scaling="both")
-  scores(corresp.res, type="col", scaling="both")
+  scores(corresp.res, which="row", scaling="both")
+  scores(corresp.res, which="col", scaling="both")
 }
 if (require("ca")) {
   ca.res <- ca(clr, nf=3)
-  scores(corresp.res, type="row", scaling="both")
-  scores(corresp.res, type="col", scaling="both")
+  scores(corresp.res, which="row", scaling="both")
+  scores(corresp.res, which="col", scaling="both")
 }
 
 }

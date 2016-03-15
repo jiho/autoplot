@@ -2,7 +2,7 @@
 #'
 #' @inheritParams eigenvalues
 #'
-#' @param type the scores (i.e. coordinates in the new space) to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, scores of rows are returned.
+#' @param which the scores (i.e. coordinates in the new space) to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, scores of rows are returned.
 #'
 #' @param scaling scaling for the scores. Can be
 #' \describe{
@@ -37,9 +37,9 @@
 #' # Principal Component Analysis
 #' pca <- prcomp(USArrests, scale=TRUE)
 #' head(scores(pca))
-#' head(scores(pca, type="columns"))
-#' head(scores(pca, type="columns", scaling=0))
-#' head(scores(pca, type="columns", scaling=3))
+#' head(scores(pca, which="columns"))
+#' head(scores(pca, which="columns", scaling=0))
+#' head(scores(pca, which="columns", scaling=3))
 #'
 #' sc <- scores(pca)
 #' plot(sc$PC1, sc$PC2, asp=1)
@@ -62,31 +62,31 @@
 #' clr <- HairEyeColor[,,1]
 #' if (require("FactoMineR")) {
 #'   CA.res <- CA(clr, graph=F)
-#'   scores(CA.res, type="row", scaling="none")
-#'   scores(CA.res, type="col", scaling="none")
+#'   scores(CA.res, which="row", scaling="none")
+#'   scores(CA.res, which="col", scaling="none")
 #'   # for a correspondence analysis, scaling="both" makes most sense
-#'   scores(CA.res, type="row", scaling="both")
-#'   scores(CA.res, type="col", scaling="both")
+#'   scores(CA.res, which="row", scaling="both")
+#'   scores(CA.res, which="col", scaling="both")
 #' }
 #' if (require("MASS")) {
 #'   corresp.res <- corresp(clr, nf=3)
-#'   scores(corresp.res, type="row", scaling="both")
-#'   scores(corresp.res, type="col", scaling="both")
+#'   scores(corresp.res, which="row", scaling="both")
+#'   scores(corresp.res, which="col", scaling="both")
 #' }
 #' if (require("ca")) {
 #'   ca.res <- ca(clr, nf=3)
-#'   scores(corresp.res, type="row", scaling="both")
-#'   scores(corresp.res, type="col", scaling="both")
+#'   scores(corresp.res, which="row", scaling="both")
+#'   scores(corresp.res, which="col", scaling="both")
 #' }
 #'
 #' @export
-scores <- function(x, type="rows", scaling=type, ...) {
+scores <- function(x, which="rows", scaling=which, ...) {
   UseMethod("scores")
 }
 
-scores_ <- function(x, type="rows", scaling=type, ...) {
+scores_ <- function(x, which="rows", scaling=which, ...) {
   # check arguments for the type of scores and scaling
-  type <- match_type(type)
+  which <- match_type(which)
   scaling <- match_scaling(scaling)
   
   # get eigenvalues to convert scores computed by the various packages to a common "scale 0"
@@ -95,10 +95,10 @@ scores_ <- function(x, type="rows", scaling=type, ...) {
   nr <- nr(x)
   
   # get and scale scores
-  if (type == "row") {
+  if (which == "row") {
     scores <- row_scores(x, eig, nr)
     scaled <- scale_row_scores(scores, eig, nr, scaling)
-  } else if (type == "col") {
+  } else if (which == "col") {
     scores <- col_scores(x, eig)
     scaled <- scale_col_scores(scores, eig, nr, scaling)
   }
@@ -112,7 +112,7 @@ scores_ <- function(x, type="rows", scaling=type, ...) {
   scaled$rownames <- row.names(scaled)
   row.names(scaled) <- NULL
   # set score type
-  scaled$type <- type
+  scaled$type <- which
   
   return(scaled)
 }
@@ -186,6 +186,7 @@ match_scaling <- function(scaling) {
   
   return(scaling)
 }
+# TODO generalise to matches in a list cf choose plot
 
 
 # Extract scale 0 scores
