@@ -132,6 +132,10 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
   #   warning("Extracting information for more than two dimensions. The plot might be difficult to read.")
   # }
   
+  # compute eigenvalues
+  # (used for scaling contribution and for archiving as attribute)
+  eig <- tidy(x)
+  
   # extract scores
   sco <- scores(x, type=type, scaling=scaling)
   
@@ -163,6 +167,7 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
   
   # reduce scores to the dimensions of interest
   sco <- sco[,c("rownames", "type", names(sco)[dimensions])]
+  eig <- eig[dimensions,]
 
   # # remove contributions of non active elements
   # contrib[scores$.type != type] <- NA
@@ -186,7 +191,11 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), type="row", scaling=typ
       res <- dplyr::full_join(data, res, by=".rownames")
     }
   }
-
+  
+  # store eigenvalues, variance explained, etc. and  as attributes
+  attr(res, "eig") <- eig
+  attr(res, "axes.names") <- ordination_axes_titles(eig)
+  
   return(res)
 }
 
