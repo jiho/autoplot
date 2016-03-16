@@ -132,24 +132,24 @@ test_that("scores are equal among packages", {
   }
   
   # use stats as reference
-  scores_pcaS <- abs_scores(pcaS, type="row")
-  expect_equivalent(scores_pcaS, abs_scores(pcaF, type="row"))
-  expect_equivalent(scores_pcaS, abs_scores(pcaV, type="row"))
-  expect_equivalent(scores_pcaS, abs_scores(pcaA, type="row"))
-  expect_equivalent(scores_pcaS, abs_scores(pcaM, type="row"))
-  scores_pcaS <- abs_scores(pcaS, type="col")
-  expect_equivalent(scores_pcaS, abs_scores(pcaF, type="col"))
-  expect_equivalent(scores_pcaS, abs_scores(pcaV, type="col"))
-  expect_equivalent(scores_pcaS, abs_scores(pcaA, type="col"))
-  expect_equivalent(scores_pcaS, abs_scores(pcaM, type="col"))
+  scores_pcaS <- abs_scores(pcaS, which="row")
+  expect_equivalent(scores_pcaS, abs_scores(pcaF, which="row"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaV, which="row"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaA, which="row"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaM, which="row"))
+  scores_pcaS <- abs_scores(pcaS, which="col")
+  expect_equivalent(scores_pcaS, abs_scores(pcaF, which="col"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaV, which="col"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaA, which="col"))
+  expect_equivalent(scores_pcaS, abs_scores(pcaM, which="col"))
   
   # use FactoMineR as reference
-  scores_caF <- abs_scores(caF, type="row")
-  # expect_equivalent(scores_caF, abs_scores(caM, type="row"))
-  expect_equivalent(scores_caF, abs_scores(caC, type="row"))
-  scores_caF <- abs_scores(caF, type="col")
-  # expect_equivalent(scores_caF, abs_scores(caM, type="col"))
-  expect_equivalent(scores_caF, abs_scores(caC, type="col"))
+  scores_caF <- abs_scores(caF, which="row")
+  expect_equivalent(scores_caF, abs_scores(caM, which="row"))
+  expect_equivalent(scores_caF, abs_scores(caC, which="row"))
+  scores_caF <- abs_scores(caF, which="col")
+  expect_equivalent(scores_caF, abs_scores(caM, which="col"))
+  expect_equivalent(scores_caF, abs_scores(caC, which="col"))
 })
 
 # # PCA
