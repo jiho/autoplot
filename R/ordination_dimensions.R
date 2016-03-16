@@ -40,5 +40,14 @@ npc.pca    <- function(x) { x$nf }
 npc.pcaRes <- function(x) { x@nPcs }
 
 npc.CA <- function(x) { x$call$ncp }
-npc.correspondence <- function(x) { length(x$cor) }
-npc.ca <- function(x) { length(x$sv) }
+npc.correspondence <- function(x) {
+  # MASS allows to extract the last dimension which is meaningless (eigenvalue ~ 0)
+  # It would be dimension nc(x)+1 so discard it if needed
+  # If fewer PCs are kept (length(x$cor) < nc(x)) then use that
+  min(length(x$cor), nc(x))
+}
+npc.ca <- function(x) {
+  # x$nd can get to ncol while the number of relevant dimensions is ncol - 1
+  # in that case length(x$sv) will be ncol - 1
+  min(x$nd, length(x$sv))
+}

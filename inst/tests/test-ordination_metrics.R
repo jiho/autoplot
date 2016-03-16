@@ -112,8 +112,8 @@ test_that("number of dimensions kept is correctly computed", {
   expect_equal(n-1, npc(pcaM))   # idem
                                  
   expect_equal(n-2, npc(caF))    # 1 non-numeric column, 1-meaningless dim for CA
-  expect_equal(n-1, npc(caM))    # 1 non-numeric column (+MASS keeps all dims)
-  expect_equal(n-2, npc(caC))    # 1 non-numeric column, 1-meaningless dim for CA
+  expect_equal(n-2, npc(caM))    # idem (NB: we explicitly exclude it for MASS)
+  expect_equal(n-2, npc(caC))    # idem
 
   # advanced cases
   expect_equal(2, npc(pcaFadv))  # only 2 kept
