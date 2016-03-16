@@ -68,11 +68,8 @@ eigenvalues.CA <- function(x) { x$eig$eigenvalue }
 eigenvalues.correspondence <- function(x) {
   eig <- x$cor^2
   # MASS allows to extract the last dimension which is meaningless (eigenvalue ~ 0)
-  # remove it here if it is extracted
-  n <- length(eig)
-  if (eig[n]< 10^-10) {
-    eig <- eig[-n]
-  }
+  # discard it if needed
+  eig <- eig[1:npc(x)]
   return(eig)
 }
 #' @name eigenvalues
