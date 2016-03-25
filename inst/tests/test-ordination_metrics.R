@@ -168,6 +168,20 @@ test_that("scaling matches FactoMineR", {
 })
 
 
+test_that("cos2 matches FactoMineR", {
+  rows <- pcaF$ind$cos2
+  for (pca_obj in list(pcaS, pcaF, pcaV, pcaA, pcaM)) {
+    for (i in 1:6) {
+      expect_equivalent(rows[,i], augment(pca_obj, which="row", dim=i)$.cos2)
+    }
+  }
+  cols <- pcaF$var$cos2
+  for (pca_obj in list(pcaS, pcaF, pcaV, pcaA, pcaM)) {
+    for (i in 1:6) {
+      expect_equivalent(cols[,i], augment(pca_obj, which="col", dim=i)$.cos2)
+    }
+  }
+})
 # # PCA
 # pcaS <- stats::prcomp(d, scale=TRUE)
 # pcaF <- FactoMinR::PCA(d, graph=FALSE, ncp=2)

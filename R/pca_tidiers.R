@@ -153,13 +153,12 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), which="row", scaling=wh
   # extract scores
   sco <- scores(x, which=which, scaling=scaling)
   
-  # if all potential PCs are kept, compute cos2 and contrib
-  if (n == nc(x)) {
+  # if all potential PCs are kept and scaling is appropriate for the type of scores, compute cos2 and contrib
+  if (n == nc(x) & which == scaling) {
     sco_num <- sco[,1:n]
   
     # squared cosine: quality of the representation in the current space
     cos2 <- ( sco_num / sqrt(rowSums(sco_num^2)) )^2
-    # TODO review computation in particular w/r to scaling
 
     # contribution to each dimension
     contrib <- sco_num^2
