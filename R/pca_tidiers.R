@@ -1,16 +1,35 @@
 #' Tidying methods for a Principal Component Analysis
 #'
-#' Extract information from a Principal Component Analysis: the scores (i.e. coordinates) on the principal components and some fit statistics.
+#' Extract diagnostics, coordinates on the principal components (i.e. rows scores and columns loadings) and some fit statistics from a Principal Component Analysis.
 #'
 #' @param x an object returned by a function performing Principal Component Analysis.
 #'
-#' @param data the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all cases but \code{\link{prcomp}}).
+#' @param data the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all functions but \code{\link[stats]{prcomp}}).
 #'
-#' @param dimensions vector giving the numbers of the principal components to extract. Typically two are extracted to create a plot. 
+#' @param dimensions vector giving the indexes of the principal components to extract. Typically two are extracted to create a plot. 
 #'
-#' @inheritParams scores
+#' @param which the type of coordinates in the new space to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, coordinates of rows are returned. Row coordinates are commonly called 'scores' and column coordinates usually called 'loadings'.
 #'
-#' @param ... pass-through argument.
+#' @param scaling scaling for the scores. Can be
+#' \describe{
+#'   \item{"none" (or 0)}{for raw scores,}
+#'   \item{"rows" (or 1, or a synonym of "rows")}{to scale row scores by the eigenvalues,}
+#'   \item{"columns" (or 2, or a synonym of "columns")}{to scale column scores by the eigenvalues,}
+#'   \item{"both" (or 3)}{to scale both row and column scores.}
+#' }
+#' By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores, scaling 2 for column scores, and scaling 3 when scores are extracted for a biplot).
+#' 
+#' @details
+#' Scaling of scores follows the conventions of package \code{vegan}. In summary, except for scaling 0, scores are all multiplied by a constant:
+#'   \deqn{c = \sqrt[4]{(n-1) \times \sum{eig}}}{c = sqrt(sqrt((n-1) * sum(eig)))}
+#' where \eqn{n} is the number of active rows in the ordination and \eqn{eig} are the eigenvalues.
+#' In addition, for scaling 1 (resp. 2), row scores (resp. column scores) are multiplied by:
+#'   \deqn{\sqrt{\frac{eig}{\sum{eig}}}}{sqrt(eig/sum(eig))}
+#' For scaling 3, both row and column scores are multiplied by:
+#'   \deqn{\sqrt[4]{\frac{eig}{\sum{eig}}}}{sqrt(sqrt(eig/sum(eig)))}
+#' For details and justification, see \code{vignette("decision-vegan")}.
+#' 
+#' @template param_..._ignored
 #'
 #' @return
 #' For \code{tidy}, a data.frame containing the variance (i.e. eigenvalue), the proportion of variance, and the cumulative proportion of variance associated to each principal component.
@@ -18,7 +37,7 @@
 #' For \code{augment}, a data.frame containing the original data (when \code{which="rows"} and \code{data} is supplied or can be extracted from the object) and the additional columns:
 #' \describe{
 #'   \item{.rownames:}{the identifier of the row or column, extracted from the row or column names in the original data.}
-#'   \item{.PC#:}{the scores (i.e., coordinates) of data objects on the extracted principal components.}
+#'   \item{.PC#:}{the coordinates of data objects on the extracted principal components.}
 #'   \item{.cos2:}{the squared cosine, summed over extracted PCs, which quantifies the quality of the representation of each data point in the space of the extracted PCs. NB: \code{cos2} can only be computed when all possible principal components are extracted in the PCA objects; when it is not the case, \code{cos2} is \code{NA}. In several packages, the number of principal components to keep is an argument of the PCA function (and the default is not "all").}
 #'   \item{.contrib:}{the contribution of each object to the selected PCs. NB: same comment as for \code{cos2} regarding the number of PCs kept in the PCA object.}
 #'   \item{.type:}{the nature of the data extracted : \code{row} or \code{col}.}
@@ -84,35 +103,33 @@
 
 #'
 #' @name pca_tidiers
+#' @import broom
 NULL
 
-tidy_pca <- function(x, ...) {
-  eig <- eigenvalues(x)
-  prop.variance <- eig/sum(eig)
-  cum.prop.variance <- cumsum(prop.variance)
-  data.frame(
-    term=paste0("PC", 1:length(eig)),
-    variance=eig,
-    prop.variance,
-    cum.prop.variance
-  )
-}
+#' @include ordination_tidy.R
+#' @include ordination_data.R
+#' @include ordination_scores.R
 
 #' @name pca_tidiers
 #' @export
-tidy.prcomp <- tidy_pca
+#' @usage tidy(x, ...)
+tidy.prcomp <- tidy_ordination
 #' @name pca_tidiers
 #' @export
-tidy.rda <- tidy_pca
+#' @usage NULL
+tidy.rda <- tidy_ordination
 #' @name pca_tidiers
 #' @export
-tidy.PCA <- tidy_pca
+#' @usage NULL
+tidy.PCA <- tidy_ordination
 #' @name pca_tidiers
 #' @export
-tidy.pca <- tidy_pca
+#' @usage NULL
+tidy.pca <- tidy_ordination
 #' @name pca_tidiers
 #' @export
-tidy.pcaRes <- tidy_pca
+#' @usage NULL
+tidy.pcaRes <- tidy_ordination
 
 
 augment_pca <- function(x, data=NULL, dimensions=c(1,2), which="row", scaling=which, ...) {
@@ -201,18 +218,23 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), which="row", scaling=wh
 
 #' @name pca_tidiers
 #' @export
+#' @usage augment(x, data=NULL, dimensions=c(1,2), which="row", scaling=which, ...)
 augment.prcomp <- augment_pca
 #' @name pca_tidiers
 #' @export
+#' @usage NULL
 augment.rda <- augment_pca
 #' @name pca_tidiers
 #' @export
+#' @usage NULL
 augment.PCA <- augment_pca
 #' @name pca_tidiers
 #' @export
+#' @usage NULL
 augment.pca <- augment_pca
 #' @name pca_tidiers
 #' @export
+#' @usage NULL
 augment.pcaRes <- augment_pca
 
 

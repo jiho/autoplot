@@ -34,9 +34,9 @@
 
 \item{mapping}{a call to aes() specifying additional mappings between variables and plot aesthetics. By default, positions \code{x} and \code{y} are mapped to the scores on the principal components.}
 
-\item{data}{the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all cases but \code{\link{prcomp}}).}
+\item{data}{the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all functions but \code{\link[stats]{prcomp}}).}
 
-\item{dimensions}{vector giving the numbers of the principal components to extract. Typically two are extracted to create a plot.}
+\item{dimensions}{vector giving the indexes of the principal components to extract. Typically two are extracted to create a plot.}
 
 \item{which}{the plot to produce: either plot "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms), or plot "columns", "variables", "descriptors", "species" (which are, again, synonyms), or produce a "biplot". All can be abbreviated. By default, observations are plotted.}
 
@@ -117,7 +117,7 @@ if (require("pcaMethods")) {
 \seealso{
 Functions to perform PCA: \code{\link[stats]{prcomp}} in package \code{stats}, \code{\link[FactoMineR]{PCA}} in package \code{factoMineR}, \code{\link[vegan]{rda}} in package \code{vegan}, \code{\link[ade4]{dudi.pca}} in package \code{ade4}, \code{\link[pcaMethods]{pca}} in package \code{pcaMethods} (on bioconductor).
 
-Other PCA-related functions: \code{\link{eigenvalues}},
-  \code{\link{pca_tidiers}}, \code{\link{scores}}
+Other PCA.related.functions: \code{\link{ca_tidiers}},
+  \code{\link{pca_tidiers}}
 }
 

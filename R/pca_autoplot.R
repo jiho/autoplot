@@ -9,7 +9,6 @@
 #' @param which the plot to produce: either plot "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms), or plot "columns", "variables", "descriptors", "species" (which are, again, synonyms), or produce a "biplot". All can be abbreviated. By default, observations are plotted.
 #'
 #' @inheritParams pca_tidiers
-#' @inheritParams scores
 #'
 #' @param n.max.labels maximum number of observation labels to plot. Let \code{n} be the number of data rows. For \code{0 < n < n.max.labels/2}, labels are plotted and shifted to avoid over-plotting. For \code{n.max.labels/2 < n < n.max.labels}, labels are plotted but not disambiguated. For \code{n.max.labels < n} labels are not plotted.
 #'
@@ -87,6 +86,7 @@
 #' }
 #'
 #'@name autoplot_pca
+#' @import ggplot2
 NULL
 
 autoplot_pca <- function(object, mapping=aes(), data=NULL, dimensions=c(1,2), which="rows", scaling=which, n.max.labels=100, ...) {
@@ -122,6 +122,7 @@ autoplot_pca <- function(object, mapping=aes(), data=NULL, dimensions=c(1,2), wh
 
   if (which == "col") {
     d <- augment(x=object, data=data, which="col", dimensions=dimensions, scaling=0)
+    # TODO should be scaling 2 but the unit circule should then be scaled
 
     # add the unit circle (and make it look similar to grid lines)
     # NB: getting the theme element works at the time the plot is created, so it will work for constructs such as
@@ -171,7 +172,7 @@ ordination_mapping <- function(data, mapping, ...) {
   # get PC numbers
   PCs <- grep(".PC", names(data), value=TRUE)
   # map x/y position to PC and add other mappings
-  mapping <- as.aes(mapping, aes_string(x=PCs[1], y=PCs[2]))
+  mapping <- aes_c(mapping, aes_string(x=PCs[1], y=PCs[2]))
   # TODO deal with supplementary variables
   # map colour to variable type (active or supplementary) when necessary
   # if (length(unique(data$.type)) > 1) {
@@ -196,13 +197,13 @@ geom_ordination_points <- function(data, mapping, n.max.labels, ...) {
   if (n <= (n.max.labels / 2)) {
     g <- c(
       g,
-      ggrepel::geom_text_repel(as.aes(mapping, aes_string(label=".rownames")), data=data, ..., size=3)
+      ggrepel::geom_text_repel(aes_c(mapping, aes_string(label=".rownames")), data=data, ..., size=3)
     )
     # TODO capture color and map it to the segment color (using alpha)
   } else if (n <= n.max.labels) {
     g <- c(
       g,
-      geom_text(as.aes(mapping, aes_string(label=".rownames")), data=data, ..., size=3, nudge_x=0.03, hjust=0)
+      geom_text(aes_c(mapping, aes_string(label=".rownames")), data=data, ..., size=3, nudge_x=0.03, hjust=0)
     )
   }
   
@@ -213,11 +214,11 @@ geom_ordination_points <- function(data, mapping, n.max.labels, ...) {
 geom_ordination_vectors <- function(data,  mapping, ...) {
   g <- list(
     # arrows describing the variables
-    geom_segment(as.aes(aes_string(x="0", y="0", xend=mapping$x, yend=mapping$y), mapping), data=data, ..., lineend="round"),
+    geom_segment(aes_c(aes_string(x="0", y="0", xend=mapping$x, yend=mapping$y), mapping), data=data, ..., lineend="round"),
     # add variable names
-    geom_text(as.aes(aes_string(x=mapping$x, y=mapping$y, label=".rownames", hjust=paste0("ifelse(", mapping$x ,">0, -0.05, 1.05)"), mapping)), data=data, ..., size=3, vjust=0.5)
+    geom_text(aes_c(aes_string(x=mapping$x, y=mapping$y, label=".rownames", hjust=paste0("ifelse(", mapping$x ,">0, -0.05, 1.05)"), mapping)), data=data, ..., size=3, vjust=0.5)
     # or use a "complex"" computation to place the labels intelligently at the tip of the arrows
-    # geom_text(as.aes(aes_string(x=paste("1.04*", mapping$x, sep=""), y=paste("1.04*", mapping$y, sep=""), label=".label", hjust=paste("0.5-1*", mapping$x, sep=""), vjust=paste("0.5-1*", mapping$y, sep="")), mapping), data=data, ..., size=3)
+    # geom_text(aes_c(aes_string(x=paste("1.04*", mapping$x, sep=""), y=paste("1.04*", mapping$y, sep=""), label=".label", hjust=paste("0.5-1*", mapping$x, sep=""), vjust=paste("0.5-1*", mapping$y, sep="")), mapping), data=data, ..., size=3)
   )
   return(g)
 }

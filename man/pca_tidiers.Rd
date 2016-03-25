@@ -14,41 +14,20 @@
 \alias{tidy.rda}
 \title{Tidying methods for a Principal Component Analysis}
 \usage{
-\method{tidy}{prcomp}(x, ...)
+tidy(x, ...)
 
-\method{tidy}{rda}(x, ...)
-
-\method{tidy}{PCA}(x, ...)
-
-\method{tidy}{pca}(x, ...)
-
-\method{tidy}{pcaRes}(x, ...)
-
-\method{augment}{prcomp}(x, data = NULL, dimensions = c(1, 2),
-  which = "row", scaling = which, ...)
-
-\method{augment}{rda}(x, data = NULL, dimensions = c(1, 2), which = "row",
-  scaling = which, ...)
-
-\method{augment}{PCA}(x, data = NULL, dimensions = c(1, 2), which = "row",
-  scaling = which, ...)
-
-\method{augment}{pca}(x, data = NULL, dimensions = c(1, 2), which = "row",
-  scaling = which, ...)
-
-\method{augment}{pcaRes}(x, data = NULL, dimensions = c(1, 2),
-  which = "row", scaling = which, ...)
+augment(x, data=NULL, dimensions=c(1,2), which="row", scaling=which, ...)
 }
 \arguments{
 \item{x}{an object returned by a function performing Principal Component Analysis.}
 
-\item{...}{pass-through argument.}
+\item{...}{ignored.}
 
-\item{data}{the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all cases but \code{\link{prcomp}}).}
+\item{data}{the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all functions but \code{\link[stats]{prcomp}}).}
 
-\item{dimensions}{vector giving the numbers of the principal components to extract. Typically two are extracted to create a plot.}
+\item{dimensions}{vector giving the indexes of the principal components to extract. Typically two are extracted to create a plot.}
 
-\item{which}{the scores (i.e. coordinates in the new space) to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, scores of rows are returned.}
+\item{which}{the type of coordinates in the new space to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, coordinates of rows are returned. Row coordinates are commonly called 'scores' and column coordinates usually called 'loadings'.}
 
 \item{scaling}{scaling for the scores. Can be
 \describe{
@@ -65,14 +44,24 @@ For \code{tidy}, a data.frame containing the variance (i.e. eigenvalue), the pro
 For \code{augment}, a data.frame containing the original data (when \code{which="rows"} and \code{data} is supplied or can be extracted from the object) and the additional columns:
 \describe{
   \item{.rownames:}{the identifier of the row or column, extracted from the row or column names in the original data.}
-  \item{.PC#:}{the scores (i.e., coordinates) of data objects on the extracted principal components.}
+  \item{.PC#:}{the coordinates of data objects on the extracted principal components.}
   \item{.cos2:}{the squared cosine, summed over extracted PCs, which quantifies the quality of the representation of each data point in the space of the extracted PCs. NB: \code{cos2} can only be computed when all possible principal components are extracted in the PCA objects; when it is not the case, \code{cos2} is \code{NA}. In several packages, the number of principal components to keep is an argument of the PCA function (and the default is not "all").}
   \item{.contrib:}{the contribution of each object to the selected PCs. NB: same comment as for \code{cos2} regarding the number of PCs kept in the PCA object.}
   \item{.type:}{the nature of the data extracted : \code{row} or \code{col}.}
 }
 }
 \description{
-Extract information from a Principal Component Analysis: the scores (i.e. coordinates) on the principal components and some fit statistics.
+Extract diagnostics, coordinates on the principal components (i.e. rows scores and columns loadings) and some fit statistics from a Principal Component Analysis.
+}
+\details{
+Scaling of scores follows the conventions of package \code{vegan}. In summary, except for scaling 0, scores are all multiplied by a constant:
+  \deqn{c = \sqrt[4]{(n-1) \times \sum{eig}}}{c = sqrt(sqrt((n-1) * sum(eig)))}
+where \eqn{n} is the number of active rows in the ordination and \eqn{eig} are the eigenvalues.
+In addition, for scaling 1 (resp. 2), row scores (resp. column scores) are multiplied by:
+  \deqn{\sqrt{\frac{eig}{\sum{eig}}}}{sqrt(eig/sum(eig))}
+For scaling 3, both row and column scores are multiplied by:
+  \deqn{\sqrt[4]{\frac{eig}{\sum{eig}}}}{sqrt(sqrt(eig/sum(eig)))}
+For details and justification, see \code{vignette("decision-vegan")}.
 }
 \examples{
 pca <- prcomp(USArrests, scale = TRUE)
@@ -120,7 +109,7 @@ if (require("pcaMethods")) {
 \seealso{
 Functions to perform PCA: \code{\link[stats]{prcomp}} in package \code{stats}, \code{\link[FactoMineR]{PCA}} in package \code{factoMineR}, \code{\link[vegan]{rda}} in package \code{vegan}, \code{\link[ade4]{dudi.pca}} in package \code{ade4}, \code{\link[pcaMethods]{pca}} in package \code{pcaMethods} (on bioconductor).
 
-Other PCA-related functions: \code{\link{autoplot_pca}},
-  \code{\link{eigenvalues}}, \code{\link{scores}}
+Other PCA.related.functions: \code{\link{autoplot_pca}},
+  \code{\link{ca_tidiers}}
 }
 

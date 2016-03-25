@@ -30,7 +30,7 @@ choose_plots <- function(type, choices) {
 
 
 # Concatenate aes() definitions
-as.aes <- function(...) {
+aes_c <- function(...) {
   x <- list(...)
   # check those are aes definitions
   classes <- sapply(x, class)

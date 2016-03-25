@@ -1,10 +1,8 @@
-# Data in an ordination analysis
-# 
-# Extract data from an ordination analysis (Principal Components Analysis, Correspondence Analysis, etc.) object in a standard way.
+# Extract data from an ordination analysis
 #
 # @param x an object returned by an ordination function.
 #
-# @return A data.frame containing the data.
+# @return A data.frame containing the data or NULL when the data cannot be found.
 #
 # @template pca_seealso
 # @template ca_seealso
@@ -28,8 +26,25 @@
 # head(get_data(xF))
 # head(get_data(xM))
 # head(get_data(xC))
+#
+# @export
 
-# generic function to actually extract the data
+#' @include ordination_utilities.R
+
+# "user-facing" function that homogenises the output
+get_data <- function(x) {
+  d <- get_data_(x)
+  if ( ! is.null(d) ) {
+    # convert to data.frame
+    d <- as.data.frame(d)
+    # add rownames as a data column and remove them from the d.f
+    d$.rownames <- row.names(d)
+    row.names(d) <- NULL
+  }
+  return(d)
+}
+
+# internal generic function to actually extract the data
 get_data_ <- function(x) { UseMethod("get_data_") }
 
 # methods for PCA
@@ -47,34 +62,4 @@ get_data_.ca <- function(x) {
   colnames(d) <- x$colnames
   rownames(d) <- x$rownames
   return(d)
-}
-
-# "user-facing" function which homogenises the output
-get_data <- function(x) {
-  d <- get_data_(x)
-  if ( ! is.null(d) ) {
-    # convert to data.frame
-    d <- as.data.frame(d)
-    # add rownames
-    d$.rownames <- row.names(d)
-    row.names(d) <- NULL
-  }
-  return(d)
-}
-
-# Remove centering and scaling done by function scale()
-unscale <- function(x, center=NULL, scale=NULL) {
-  if (is.null(center)) {
-    center <- attr(x, "scaled:center")
-  }
-  if (is.null(scale)) {
-    scale <- attr(x, "scaled:scale")
-  }
-  # TODO handle cases when only centering or only scaling is done
-  if (is.null(center) | is.null(scale)) {
-    stop("Cannot extract center and/or scale from the data and none is provided.")
-  }
-  unscaledx <- scale(x, center=(-center/scale), scale=1/scale)
-  attr(unscaledx, "scaled:center") <- attr(unscaledx, "scaled:scale") <- NULL
-  return(unscaledx)
 }

@@ -1,89 +1,20 @@
-#' Extract scores from an ordination object
-#'
-#' @inheritParams eigenvalues
-#'
-#' @param which the scores (i.e. coordinates in the new space) to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, scores of rows are returned.
-#'
-#' @param scaling scaling for the scores. Can be
-#' \describe{
-#'   \item{"none" (or 0)}{for raw scores,}
-#'   \item{"rows" (or 1, or a synonym of "rows")}{to scale row scores by the eigenvalues,}
-#'   \item{"columns" (or 2, or a synonym of "columns")}{to scale column scores by the eigenvalues,}
-#'   \item{"both" (or 3)}{to scale both row and column scores.}
-#' }
-#' By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores, scaling 2 for column scores, and scaling 3 when scores are extracted for a biplot).
-#' 
-#' @details
-#' Scaling of scores follows the conventions of package \code{vegan}. In summary, except for scaling 0, scores are all multiplied by a constant:
-#'	\deqn{c = \sqrt[4]{(n-1) \times \sum{eig}}}{c = sqrt(sqrt((n-1) * sum(eig)))}
-#' where \eqn{n} is the number of active rows in the ordination and \eqn{eig} are the eigenvalues (see function \code{\link{eigenvalues}}).
-#' In addition, for scaling 1 (resp. 2), row scores (resp. column scores) are multiplied by:
-#' \deqn{\sqrt{\frac{eig}{\sum{eig}}}}{sqrt(eig/sum(eig))}
-#' For scaling 3, both row and column scores are multiplied by:
-#' \deqn{\sqrt[4]{\frac{eig}{\sum{eig}}}}{sqrt(sqrt(eig/sum(eig)))}
-#' For details and justification, see \code{vignette("decision-vegan")}.
-#' 
-#' @return A data.frame containing
-#' \describe{
-#'   \item{PC#:}{the scores (i.e., coordinates) of the data objects on the new dimensions.}
-#'   \item{rownames:}{the identifier of the row or column, extracted from the row or column names in the original data.}
-#'   \item{type:}{the nature of the data extracted : \code{row} or \code{col}.}
-#' }
-#'
-#' @template pca_seealso
-#' @template ca_seealso
-#'
-#' @examples
-#' # Principal Component Analysis
-#' pca <- prcomp(USArrests, scale=TRUE)
-#' head(scores(pca))
-#' head(scores(pca, which="columns"))
-#' head(scores(pca, which="columns", scaling=0))
-#' head(scores(pca, which="columns", scaling=3))
-#'
-#' sc <- scores(pca)
-#' plot(sc$PC1, sc$PC2, asp=1)
-#' text(sc$PC1, sc$PC2, label=sc$rownames, adj=c(-0.1,0.5))
-#'
-#' if (require("FactoMineR")) {
-#'   head(scores(PCA(USArrests, graph=F)))
-#' }
-#' if (require("vegan")) {
-#'   head(scores(rda(USArrests, scale=TRUE)))
-#' }
-#' if (require("ade4")) {
-#'   head(scores(dudi.pca(USArrests, scannf=FALSE, nf=4)))
-#' }
-#' if (require("pcaMethods")) {
-#'   head(scores(pca(USArrests, scale="uv", nPcs=4)))
-#' }
-#'
-#' # Correspondence analysis
-#' clr <- HairEyeColor[,,1]
-#' if (require("FactoMineR")) {
-#'   CA.res <- CA(clr, graph=F)
-#'   scores(CA.res, which="row", scaling="none")
-#'   scores(CA.res, which="col", scaling="none")
-#'   # for a correspondence analysis, scaling="both" makes most sense
-#'   scores(CA.res, which="row", scaling="both")
-#'   scores(CA.res, which="col", scaling="both")
-#' }
-#' if (require("MASS")) {
-#'   corresp.res <- corresp(clr, nf=3)
-#'   scores(corresp.res, which="row", scaling="both")
-#'   scores(corresp.res, which="col", scaling="both")
-#' }
-#' if (require("ca")) {
-#'   ca.res <- ca(clr, nf=3)
-#'   scores(corresp.res, which="row", scaling="both")
-#'   scores(corresp.res, which="col", scaling="both")
-#' }
-#'
-#' @export
+# Extract scores from an ordination analysis
+#
+# @param x an object returned by an ordination function.
+#
+# @return A data.frame containing the scores, rownames, and score type
+
+#' @include ordination_utilities.R
+#' @include ordination_eigenvalues.R
+#' @include ordination_dimensions.R
+
+# generic
 scores <- function(x, which="rows", scaling=which, ...) {
   UseMethod("scores")
 }
 
+
+# internal functions to actually extract and scale the scores
 scores_ <- function(x, which="rows", scaling=which, ...) {
   # check arguments for the type of scores and scaling
   which <- match_type(which)
@@ -117,81 +48,7 @@ scores_ <- function(x, which="rows", scaling=which, ...) {
   return(scaled)
 }
 
-#' @name scores
-#' @export
-scores.prcomp <- scores_
-#' @name scores
-#' @export
-scores.PCA <- scores_
-#' @name scores
-#' @export
-scores.rda <- scores_
-#' @name scores
-#' @export
-scores.pca <- scores_
-#' @name scores
-#' @export
-scores.pcaRes <- scores_
-
-#' @name scores
-#' @export
-scores.CA <- scores_
-#' @name scores
-#' @export
-scores.correspondence <- scores_
-#' @name scores
-#' @export
-scores.ca <- scores_
-
-
-## Utility functions for scores extraction and scaling ----
-
-# Determine the type of scores to extract from an ordination object
-# This defines synonyms to allow the vocabulary from different packages to co-exist
-match_type <- function(type, ...) {
-  # define synonyms
-  row_types <- c("rows", "lines", "observations", "objects", "individuals", "sites")
-  col_types <- c("columns", "variables", "descriptors", "species")
-
-  # allow abbreviation
-  type <- match.arg(type, c(row_types, col_types, ...), several.ok=FALSE)
-  # TODO consider allowing several.ok=TRUE to be able to match several elements of a vector
-
-  # reduce synonyms
-  type[type %in% row_types] <- "row"
-  type[type %in% col_types] <- "col"
-
-  return(type)
-}
-
-# Determine the type scaling for scores extracted from an ordination object
-# This uses the same synonyms
-match_scaling <- function(scaling) {
-  # otherwise select a type of scaling
-  if (is.numeric(scaling)) {
-    # scaling can be a number, in a way compatible with most of the code out there (vegan in particular)
-    if (! scaling %in% 0:3) {
-      stop("Scaling should be 0, 1, 2, or 3")
-    }
-    scaling <- c("none", "row", "col", "both")[scaling+1]
-
-  } else if (is.character(scaling)) {
-    # or a character string, specifying in which "direction" to scale
-    scaling <- match_type(scaling, c("none", "both", "biplot"))
-    if (scaling == "biplot") { scaling <- "both" }
-
-  } else {
-    stop("Scaling should be a number between 0 and 3 or a character string")
-  }
-  
-  return(scaling)
-}
-# TODO generalise to matches in a list cf choose plot
-
-
-# Extract scale 0 scores
-
-# generics to dispatch to methods
+# generics to extract scale 0 scores, that dispatch to appropriate methods
 col_scores <- function(x, ...) { UseMethod("col_scores") }
 row_scores <- function(x, ...) { UseMethod("row_scores") }
 
@@ -202,37 +59,37 @@ unscale_scores_n_1 <- function(x, eig, nr) { t(t(x) / sqrt((nr - 1) * eig)) }
 
 # define methods for row_scores
 row_scores.prcomp <- function(x, eig, nr) { unscale_scores_n_1(x$x, eig, nr) }
-row_scores.PCA <- function(x, eig, nr) { unscale_scores_n(x$ind$coord, eig, nr) } # TODO deal with supplementary
-row_scores.rda <- function(x, ...) { x$CA$u }
-row_scores.pca <- function(x, eig, nr) { unscale_scores_n(x$li, eig, nr) }
+row_scores.PCA    <- function(x, eig, nr) { unscale_scores_n(x$ind$coord, eig, nr) } # TODO deal with supplementary
+row_scores.rda    <- function(x, ...) { x$CA$u }
+row_scores.pca    <- function(x, eig, nr) { unscale_scores_n(x$li, eig, nr) }
 row_scores.pcaRes <- function(x, eig, nr) { unscale_scores_n_1(x@scores, eig, nr) }
 
-row_scores.CA <- function(x, eig, ...) { unscale_scores(x$row$coord, eig) }
+row_scores.CA             <- function(x, eig, ...) { unscale_scores(x$row$coord, eig) }
 row_scores.correspondence <- function(x, ...) {
   # MASS allows to extract the last dimension which is meaningless (eigenvalue ~ 0)
   # discard it if needed
   x$rscore[,1:npc(x)]
 }
-row_scores.ca <- function(x, ...) { x$rowcoord }
+row_scores.ca             <- function(x, ...) { x$rowcoord }
 
 # define methods for col_scores
 col_scores.prcomp <- function(x, ...) { x$rotation }
-col_scores.PCA <- function(x, eig) { unscale_scores(x$var$coord, eig) } # TODO deal with supplementary
-col_scores.rda <- function(x, ...) { x$CA$v }
-col_scores.pca <- function(x, ...) { x$c1 }
+col_scores.PCA    <- function(x, eig) { unscale_scores(x$var$coord, eig) } # TODO deal with supplementary
+col_scores.rda    <- function(x, ...) { x$CA$v }
+col_scores.pca    <- function(x, ...) { x$c1 }
 col_scores.pcaRes <- function(x, ...) { x@loadings }
 
-col_scores.CA <- function(x, eig) { unscale_scores(x$col$coord, eig) }
+col_scores.CA             <- function(x, eig) { unscale_scores(x$col$coord, eig) }
 col_scores.correspondence <- function(x, ...) {
   # MASS allows to extract the last dimension which is meaningless (eigenvalue ~ 0)
   # discard it if needed
   x$cscore[,1:npc(x)]
 }
-col_scores.ca <- function(x, ...) { x$colcoord }
+col_scores.ca             <- function(x, ...) { x$colcoord }
 
 
-# Scale scores
-# Conventions are those of vegan. See vignette("decision-vegan") for details.
+# scale scores
+# conventions are those of vegan. See vignette("decision-vegan") for details.
 scale_row_scores <- function(x, eig, nr, scaling="none", ...) {
   # define scaling factors
   prop_eig_2 <- sqrt(eig/sum(eig))
@@ -262,4 +119,16 @@ scale_col_scores <- function(x, eig, nr, scaling="none", ...) {
     both = t(t(x) * (prop_eig_4 * const))
   )
 }
+
+
+# methods
+scores.prcomp <- scores_
+scores.PCA <- scores_
+scores.rda <- scores_
+scores.pca <- scores_
+scores.pcaRes <- scores_
+
+scores.CA <- scores_
+scores.correspondence <- scores_
+scores.ca <- scores_
 

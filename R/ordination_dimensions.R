@@ -1,4 +1,11 @@
-# Get number of potential objects = *active* data rows
+# Compute the length of the dimensions in an ordination analysis
+#
+# nr() number of potential objects = *active* data rows
+# nc() number of potential principal components = based on *active* data columns
+# npc() number of principal components actually kept in the object (can be < nc)
+
+
+# Rows
 # generic
 nr <- function(x) { UseMethod("nr") }
 # define methods
@@ -13,7 +20,7 @@ nr.correspondence <- function(x) { nrow(x$rscore) }
 nr.ca <- function(x) { sum(!is.na(x$rowinertia)) }
 
 
-# Get number of potential dimensions = *active* data columns
+# Columns
 # generic
 nc <- function(x) { UseMethod("nc") }
 # define methods
@@ -29,11 +36,11 @@ nc.correspondence <- function(x) { ncol(x$Freq) - 1 }
 nc.ca <- function(x) { sum(!is.na(x$colinertia)) - 1 }
 
 
-# Get number of kept principal components
+# Principal components
 # generic
 npc <- function(x) { UseMethod("npc") }
 # define methods
-npc.prcomp <- nc.prcomp
+npc.prcomp <- nc.prcomp   # cannot choose the number of PCs kept, always equal to nc
 npc.PCA    <- function(x) { x$call$ncp }
 npc.rda    <- nc.rda
 npc.pca    <- function(x) { x$nf }

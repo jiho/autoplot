@@ -20,7 +20,7 @@ Description: ggplot2 is a versatile plotting package which allows to produce
 License: GPL-3
 Depends:
     ggplot2 (>= 0.9.0),
-	broom
+    broom
 Imports:
     grid,
     plyr,
@@ -34,3 +34,19 @@ Suggests:
     ade4,
     testthat
 RoxygenNote: 5.0.1
+Collate:
+    'autoplot-ca.R'
+    'autoplot-list.R'
+    'autoplot-package.R'
+    'ordination_tidy.R'
+    'ca_tidiers.R'
+    'fortify-ca.R'
+    'fortify-list.R'
+    'helpers.R'
+    'ordination_utilities.R'
+    'ordination_data.R'
+    'ordination_dimensions.R'
+    'ordination_eigenvalues.R'
+    'ordination_scores.R'
+    'pca_autoplot.R'
+    'pca_tidiers.R'
