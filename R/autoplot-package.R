@@ -10,7 +10,7 @@
 #'
 #' @keywords package
 #'
-#' @seealso The \code{\link[ggplot2:ggplot2]{ggplot2}} package.
+#' @seealso The \code{\link[ggplot2]{ggplot2}} package.
 #'
 #' @importFrom ggplot2 autoplot fortify
 NULL

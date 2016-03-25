@@ -14,7 +14,7 @@ Jean-Olivier Irisson \email{irisson@normalesup.org}
 H. Wickham. Ggplot2: elegant graphics for data analysis. Springer-Verlag, New York, 2009.
 }
 \seealso{
-The \code{\link[ggplot2:ggplot2]{ggplot2}} package.
+The \code{\link[ggplot2]{ggplot2}} package.
 }
 \keyword{package}
 
