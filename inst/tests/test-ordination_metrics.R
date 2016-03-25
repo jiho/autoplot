@@ -152,29 +152,22 @@ test_that("scale 0 scores are equal among packages", {
   expect_equivalent(scores_caF, abs_scores(caC, which="col"))
 })
 
-test_that("scaling matches vegan", {
+test_that("scaling matches FactoMineR", {
+  rows <- data.frame(abs(pcaF$ind$coord))
+  cols <- data.frame(abs(pcaF$var$coord))
+  
   abs_scores <- function(x, ...) {
     sco <- scores(x, ...)
     abs(sco[sapply(sco, is.numeric)])
   }
   
-  abs_vegan_scores <- function(x, ...) {
-    data.frame(abs(vegan:::scores.rda(x, ...)))
-  }
-  
-  rows1 <- abs_vegan_scores(pcaV, choices=1:6, display="sites", scaling="sites")
-  rows2 <- abs_vegan_scores(pcaV, choices=1:6, display="sites", scaling="species")
-  cols1 <- abs_vegan_scores(pcaV, choices=1:6, display="species", scaling="sites")
-  cols2 <- abs_vegan_scores(pcaV, choices=1:6, display="species", scaling="species")
-  
   for (pca_obj in list(pcaS, pcaF, pcaV, pcaA, pcaM)) {
-    pca_obj <- pcaF
-    expect_equivalent(rows1, abs_scores(pca_obj, which="sites", scaling="sites")[,1:6])
-    expect_equivalent(rows2, abs_scores(pca_obj, which="sites", scaling="species")[,1:6])
-    expect_equivalent(cols1, abs_scores(pca_obj, which="species", scaling="sites")[,1:6])
-    expect_equivalent(cols2, abs_scores(pca_obj, which="species", scaling="species")[,1:6])    
+    expect_equivalent(rows, abs_scores(pca_obj, which="rows", scaling=1)[,1:6])
+    expect_equivalent(cols, abs_scores(pca_obj, which="columns", scaling=2)[,1:6])    
   }
 })
+
+
 # # PCA
 # pcaS <- stats::prcomp(d, scale=TRUE)
 # pcaF <- FactoMinR::PCA(d, graph=FALSE, ncp=2)

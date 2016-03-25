@@ -20,32 +20,36 @@ scores_ <- function(x, which="rows", scaling=which, ...) {
   which <- match_type(which)
   scaling <- match_scaling(scaling)
   
-  # get eigenvalues to convert scores computed by the various packages to a common "scale 0"
+  # get eigenvalues and number of active rows to convert scores computed by the various packages to a common "scale 0"
   eig <- eigenvalues(x)
-  # get number of rows to scale scores to a scaling != 0
   nr <- nr(x)
   
-  # get and scale scores
+  # extract and scale scores
   if (which == "row") {
     scores <- row_scores(x, eig, nr)
-    scaled <- scale_row_scores(scores, eig, nr, scaling)
+    if (scaling %in% c("row", "both")) {
+      # TODO biplot scaling is likely wrong. But biplots are "wrong" anyway!
+      scores <- scale_scores_n(scores, eig, nr)
+    }
   } else if (which == "col") {
     scores <- col_scores(x, eig)
-    scaled <- scale_col_scores(scores, eig, nr, scaling)
+    if (scaling %in% c("col", "both")) {
+      scores <- scale_scores(scores, eig)
+    }
   }
 
   # convert to a nicely formatted data.frame
-  scaled <- as.data.frame(scaled)
+  scores <- as.data.frame(scores)
   # homogenise column names
   npc <- npc(x) # NB: PCs are always extracted in order, by all functions
-  names(scaled)[1:npc] <- paste0("PC", 1:npc)
+  names(scores)[1:npc] <- paste0("PC", 1:npc)
   # get rownames as a proper data.frame column
-  scaled$rownames <- row.names(scaled)
-  row.names(scaled) <- NULL
+  scores$rownames <- row.names(scores)
+  row.names(scores) <- NULL
   # set score type
-  scaled$type <- which
+  scores$type <- which
   
-  return(scaled)
+  return(scores)
 }
 
 # generics to extract scale 0 scores, that dispatch to appropriate methods
@@ -89,37 +93,11 @@ col_scores.ca             <- function(x, ...) { x$colcoord }
 
 
 # scale scores
-# conventions are those of vegan. See vignette("decision-vegan") for details.
-scale_row_scores <- function(x, eig, nr, scaling="none", ...) {
-  # define scaling factors
-  prop_eig_2 <- sqrt(eig/sum(eig))
-  prop_eig_4 <- sqrt(prop_eig_2)
-  const <- ((nr-1)*sum(eig))^(1/4)
-  
-  # perform scaling
-  switch(scaling,
-    none = x,
-    row = t(t(x) * (prop_eig_2 * const)),
-    col = x * const,
-    both = t(t(x) * (prop_eig_4 * const))
-  )
-}
-
-scale_col_scores <- function(x, eig, nr, scaling="none", ...) {
-  # define scaling factors
-  prop_eig_2 <- sqrt(eig/sum(eig))
-  prop_eig_4 <- sqrt(prop_eig_2)
-  const <- ((nr-1)*sum(eig))^(1/4)
-  
-  # perform scaling
-  switch(scaling,
-    none = x,
-    row = x * const,
-    col = t(t(x) * (prop_eig_2 * const)),
-    both = t(t(x) * (prop_eig_4 * const))
-  )
-}
-
+# convention defined somewhat by Numercial Ecology, Legendre & Legendre
+#            implemented in FactoMineR
+scale_scores <- function(x, eig) { t(t(x) * sqrt(eig)) } 
+scale_scores_n <- function(x, eig, nr) { t(t(x) * sqrt(nr * eig)) }
+scale_scores_n_1 <- function(x, eig, nr) { t(t(x) * sqrt((nr - 1) * eig)) } 
 
 # methods
 scores.prcomp <- scores_

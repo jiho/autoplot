@@ -20,14 +20,11 @@
 #' By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores, scaling 2 for column scores, and scaling 3 when scores are extracted for a biplot).
 #' 
 #' @details
-#' Scaling of scores follows the conventions of package \code{vegan}. In summary, except for scaling 0, scores are all multiplied by a constant:
-#'   \deqn{c = \sqrt[4]{(n-1) \times \sum{eig}}}{c = sqrt(sqrt((n-1) * sum(eig)))}
-#' where \eqn{n} is the number of active rows in the ordination and \eqn{eig} are the eigenvalues.
-#' In addition, for scaling 1 (resp. 2), row scores (resp. column scores) are multiplied by:
-#'   \deqn{\sqrt{\frac{eig}{\sum{eig}}}}{sqrt(eig/sum(eig))}
-#' For scaling 3, both row and column scores are multiplied by:
-#'   \deqn{\sqrt[4]{\frac{eig}{\sum{eig}}}}{sqrt(sqrt(eig/sum(eig)))}
-#' For details and justification, see \code{vignette("decision-vegan")}.
+#' Scaling of scores follows the conventions of package \code{FactoMineR}. In summary, scaling 0 yields unscaled scores, in scaling 1, row scores are multiplied by
+#'   \deqn{\sqrt{n \times eig}}{sqrt(n * eig)}
+#' where \eqn{n} is the number of active rows in the ordination and \eqn{eig} are the eigenvalues. In scaling 2, column scores are multiplied by
+#'   \deqn{\sqrt{eig}}{sqrt(eig)}
+#' In scaling 3 both rows and columns are scaled.
 #' 
 #' @template param_..._ignored
 #'
