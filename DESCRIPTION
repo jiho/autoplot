@@ -39,7 +39,6 @@ Collate:
     'autoplot-list.R'
     'autoplot-package.R'
     'ordination_tidy.R'
-    'ca_tidiers.R'
     'fortify-ca.R'
     'fortify-list.R'
     'helpers.R'
