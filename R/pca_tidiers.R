@@ -6,7 +6,7 @@
 #'
 #' @param data the original dataset, to be concatenated with the output when extracting row scores. When \code{NULL} (the default) data will be extracted from the PCA object when it contains it (i.e. for all functions but \code{\link[stats]{prcomp}}).
 #'
-#' @param dimensions vector giving the indexes of the principal components to extract. Typically two are extracted to create a plot. 
+#' @param dimensions vector giving the indexes of the principal components to extract. Typically two are extracted to create a plot.
 #'
 #' @param which the type of coordinates in the new space to extract: either "rows", "lines", "observations", "objects", "individuals", "sites" (which are all treated as synonyms) or "columns", "variables", "descriptors", "species" (which are, again, synonyms). All can be abbreviated. By default, coordinates of rows are returned. Row coordinates are commonly called 'scores' and column coordinates usually called 'loadings'.
 #'
@@ -18,19 +18,19 @@
 #'   \item{"both" (or 3)}{to scale both row and column scores.}
 #' }
 #' By default, scaling is adapted to the type of scores extracted (scaling 1 for row scores, scaling 2 for column scores, and scaling 3 when scores are extracted for a biplot).
-#' 
+#'
 #' @details
 #' Scaling of scores follows the conventions of package \code{FactoMineR}. In summary, scaling 0 yields unscaled scores, in scaling 1, row scores are multiplied by
 #'   \deqn{\sqrt{n \times eig}}{sqrt(n * eig)}
 #' where \eqn{n} is the number of active rows in the ordination and \eqn{eig} are the eigenvalues. In scaling 2, column scores are multiplied by
 #'   \deqn{\sqrt{eig}}{sqrt(eig)}
 #' In scaling 3 both rows and columns are scaled.
-#' 
+#'
 #' @template param_..._ignored
 #'
 #' @return
 #' For \code{tidy}, a data.frame containing the variance (i.e. eigenvalue), the proportion of variance, and the cumulative proportion of variance associated to each principal component.
-#' 
+#'
 #' For \code{augment}, a data.frame containing the original data (when \code{which="rows"} and \code{data} is supplied or can be extracted from the object) and the additional columns:
 #' \describe{
 #'   \item{.rownames:}{the identifier of the row or column, extracted from the row or column names in the original data.}
@@ -145,18 +145,18 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), which="row", scaling=wh
   # if (length(dimensions) > 2) {
   #   warning("Extracting information for more than two dimensions. The plot might be difficult to read.")
   # }
-  
+
   # compute eigenvalues
   # (used for scaling contribution and for archiving as attribute)
   eig <- tidy(x)
-  
+
   # extract scores
   sco <- scores(x, which=which, scaling=scaling)
-  
+
   # if all potential PCs are kept and scaling is appropriate for the type of scores, compute cos2 and contrib
   if (n == nc(x) & which == scaling) {
     sco_num <- sco[,1:n]
-  
+
     # squared cosine: quality of the representation in the current space
     cos2 <- ( sco_num / sqrt(rowSums(sco_num^2)) )^2
 
@@ -178,14 +178,14 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), which="row", scaling=wh
     cos2 <- NA
     contrib <- NA
   }
-  
+
   # reduce scores to the dimensions of interest
   sco <- sco[,c("rownames", "type", names(sco)[dimensions])]
   eig <- eig[dimensions,]
 
   # # remove contributions of non active elements
   # contrib[scores$.type != type] <- NA
-  
+
   # prepare result
   res <- data.frame(sco, cos2, contrib, stringsAsFactors=FALSE)
   names(res) <- paste0(".", names(res))
@@ -205,11 +205,11 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), which="row", scaling=wh
       res <- dplyr::full_join(data, res, by=".rownames")
     }
   }
-  
+
   # store eigenvalues, variance explained, etc. and  as attributes
   attr(res, "eig") <- eig
   attr(res, "axes.names") <- ordination_axes_titles(eig)
-  
+
   return(res)
 }
 
