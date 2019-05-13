@@ -172,6 +172,7 @@ augment_pca <- function(x, data=NULL, dimensions=c(1,2), which="row", scaling=wh
       cos2 <- rowSums(cos2)
       # contributions are scaled by the proportion of variance explained by each PC so that the contribution displayed is the contribution to the total variance projectable in the current space
       contrib <- apply(contrib, 1, function(x,v) {sum(x*v)}, v=eig$prop.variance)
+      # TODO check this in particular relative to the scaling
     }
   } else {
     cos2 <- NA
