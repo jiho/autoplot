@@ -12,7 +12,7 @@ eigenvalues <- function(x) {
 
 eigenvalues.prcomp <- function(x) { x$sdev^2 }
 
-eigenvalues.PCA <- function(x) { x$eig$eigenvalue }
+eigenvalues.PCA <- function(x) { x$eig[,"eigenvalue"] }
 
 eigenvalues.rda <- function(x) { as.numeric(x$CA$eig) }
 
